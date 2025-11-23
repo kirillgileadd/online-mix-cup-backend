@@ -93,4 +93,18 @@ export class RoleService {
 
     return roles.map((relation) => relation.role.name);
   }
+
+  async updateUserRoles(userId: number, roleNames: string[]) {
+    // Удаляем все текущие роли пользователя
+    await prisma.userRole.deleteMany({
+      where: { userId },
+    });
+
+    // Добавляем новые роли
+    for (const roleName of roleNames) {
+      await this.assignRoleToUser(userId, roleName);
+    }
+
+    return this.getUserRoleNames(userId);
+  }
 }

@@ -7,6 +7,7 @@ import cors from "@fastify/cors";
 
 import { env } from "./config/env";
 import { loggerConfig } from "./config/logger";
+import { errorHandler } from "./config/error-handler";
 import { userRoutes } from "./modules/users/user.routes";
 import { applicationRoutes } from "./modules/applications/application.routes";
 import { tournamentRoutes } from "./modules/tournaments/tournament.routes";
@@ -59,8 +60,11 @@ export const buildServer = () => {
   });
 
   app.register(cors, {
-    origin: "https://erich-phlogotic-dolores.ngrok-free.dev", // Or a more specific origin, array of origins, or a function/RegExp
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    origin: [
+      "https://erich-phlogotic-dolores.ngrok-free.dev",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
     credentials: true, // Allow cookies and authentication tokens
   });
 
@@ -72,6 +76,8 @@ export const buildServer = () => {
     secret: env.JWT_SECRET,
     hook: "onRequest",
   });
+
+  app.setErrorHandler(errorHandler);
 
   app.decorate(
     "authenticate",

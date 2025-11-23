@@ -59,7 +59,12 @@ export class UserService {
       },
     });
 
-    await this.roleService.ensureDefaultRole(user.id);
+    // Назначаем роли, если они указаны, иначе назначаем дефолтную роль
+    if (payload.roles && payload.roles.length > 0) {
+      await this.roleService.updateUserRoles(user.id, payload.roles);
+    } else {
+      await this.roleService.ensureDefaultRole(user.id);
+    }
 
     return user;
   }
@@ -90,15 +95,24 @@ export class UserService {
     });
   }
 
-  updateUser(id: number, data: UpdateUserPayload) {
+  updateUser(id: number, data: Omit<UpdateUserPayload, "roles">) {
     return prisma.user.update({
       where: { id },
       data: data as Prisma.UserUpdateInput,
     });
   }
 
-  deleteUser(id: number) {
-    return prisma.user.delete({
+  async deleteUser(id: number): Promise<void> {
+    // Проверяем, существует ли пользователь
+    const user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await prisma.user.delete({
       where: { id },
     });
   }

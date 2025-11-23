@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { env } from "../../config/env";
 import { errorResponseSchema, tokenPairSchema } from "../../docs/schemas";
+import { parseWithValidation } from "../../utils/validation";
 import { UserService } from "../users/user.service";
 import { TelegramAuthService } from "./telegram-auth.service";
 import { TokenService } from "./token.service";
@@ -19,14 +20,6 @@ const telegramLoginSchema = z.object({
   photo_url: z.string().url().optional(),
   auth_date: z.number(),
   hash: z.string(),
-});
-
-const devLoginSchema = z.object({
-  telegramId: z.string().min(1).default("dev-admin"),
-  username: z.string().optional().nullable(),
-  photoUrl: z.string().url().optional().nullable(),
-  discordUsername: z.string().optional().nullable(),
-  role: z.string().min(1).default("admin"),
 });
 
 export async function authRoutes(app: FastifyInstance) {
@@ -102,7 +95,7 @@ export async function authRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       try {
-        const payload = telegramLoginSchema.parse(request.body);
+        const payload = parseWithValidation(telegramLoginSchema, request.body);
         const user = await telegramAuthService.authenticate(payload);
 
         const tokens = await issueTokenPair(user);
@@ -212,17 +205,8 @@ export async function authRoutes(app: FastifyInstance) {
         tags: ["auth"],
         summary: "Dev-авторизация без Telegram",
         description:
-          "Создаёт (или обновляет) пользователя и выдаёт токены. Доступно только вне production.",
-        body: {
-          type: "object",
-          properties: {
-            telegramId: { type: "string" },
-            username: { type: ["string", "null"] },
-            photoUrl: { type: ["string", "null"] },
-            discordUsername: { type: ["string", "null"] },
-            role: { type: "string" },
-          },
-        },
+          "Создаёт admin пользователя (если его нет), присваивает ему админскую роль и выдаёт токены. Доступно только вне production.",
+        body: { type: "null" },
         response: {
           200: tokenPairSchema,
           403: errorResponseSchema,
@@ -233,14 +217,15 @@ export async function authRoutes(app: FastifyInstance) {
       if (env.NODE_ENV === "production") {
         return reply.code(403).send({ message: "Dev login disabled" });
       }
-      const payload = devLoginSchema.parse(request.body ?? {});
+
       const user = await userService.getOrCreate({
-        telegramId: payload.telegramId,
-        username: payload.username ?? undefined,
-        photoUrl: payload.photoUrl ?? undefined,
-        discordUsername: payload.discordUsername ?? undefined,
+        telegramId: "admin",
+        username: "admin",
+        photoUrl: null,
+        discordUsername: null,
       });
-      await roleService.assignRoleToUser(user.id, payload.role);
+
+      await roleService.assignRoleToUser(user.id, "admin");
 
       const tokens = await issueTokenPair(user);
       reply

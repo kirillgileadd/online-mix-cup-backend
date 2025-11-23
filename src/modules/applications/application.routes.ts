@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 
 import { applicationSchema, errorResponseSchema } from "../../docs/schemas";
+import { parseWithValidation } from "../../utils/validation";
 import { applicationPayloadSchema } from "./application.schema";
 import { ApplicationService } from "./application.service";
 
@@ -47,7 +48,10 @@ export async function applicationRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const payload = applicationPayloadSchema.parse(request.body);
+      const payload = parseWithValidation(
+        applicationPayloadSchema,
+        request.body
+      );
       const application = await service.createApplication(payload);
       reply.code(201).send(application);
     }

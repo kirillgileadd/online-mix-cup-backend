@@ -107,6 +107,13 @@ export const errorResponseSchema = {
   type: "object",
   properties: {
     message: { type: "string" },
+    data: {
+      type: "object",
+      additionalProperties: {
+        type: "array",
+        items: { type: "string" },
+      },
+    },
   },
 };
 

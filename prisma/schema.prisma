@@ -68,7 +68,7 @@ model Application {
   status       ApplicationStatus @default(pending)
   createdAt    DateTime          @default(now())
 
-  user       User       @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   tournament Tournament @relation(fields: [tournamentId], references: [id])
 }
 
@@ -81,7 +81,7 @@ model Player {
   status       PlayerStatus @default(active)
   createdAt    DateTime     @default(now())
 
-  user       User       @relation(fields: [userId], references: [id])
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   tournament Tournament @relation(fields: [tournamentId], references: [id])
 }
 
@@ -92,7 +92,7 @@ model RefreshToken {
   expiresAt DateTime
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Role {
@@ -109,7 +109,7 @@ model UserRole {
   roleId Int
   assignedAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   role Role @relation(fields: [roleId], references: [id])
 
   @@id([userId, roleId])

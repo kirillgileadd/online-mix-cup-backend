@@ -12,6 +12,8 @@ import {
 } from "./user.schema";
 import { UserRegistrationService } from "./user.registration.service";
 import { UserService, type UserWithRoles } from "./user.service";
+import { parseWithValidation } from "../../utils/validation";
+import { RoleService } from "../roles/role.service";
 
 const createOrUpdateBodySchema = {
   type: "object",
@@ -20,6 +22,11 @@ const createOrUpdateBodySchema = {
     telegramId: { type: "string" },
     username: { type: ["string", "null"] },
     photoUrl: { type: ["string", "null"] },
+    discordUsername: { type: ["string", "null"] },
+    roles: {
+      type: "array",
+      items: { type: "string" },
+    },
   },
 };
 
@@ -101,7 +108,7 @@ export async function userRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const payload = userPayloadSchema.parse(request.body);
+      const payload = parseWithValidation(userPayloadSchema, request.body);
       const user = await service.getOrCreate(payload);
       const fullUser = await service.findByIdWithRoles(user.id);
       reply
@@ -170,6 +177,10 @@ export async function userRoutes(app: FastifyInstance) {
             username: { type: ["string", "null"] },
             photoUrl: { type: ["string", "null"] },
             discordUsername: { type: ["string", "null"] },
+            roles: {
+              type: "array",
+              items: { type: "string" },
+            },
           },
         },
         response: {
@@ -181,9 +192,18 @@ export async function userRoutes(app: FastifyInstance) {
     async (request, reply) => {
       const { id } = request.params as { id: number };
       const userId = Number(id);
-      const body = updateUserSchema.parse(request.body ?? {});
+      const body = parseWithValidation(updateUserSchema, request.body ?? {});
+
       try {
-        const user = await service.updateUser(userId, body);
+        // Обновляем роли, если они переданы
+        if (body.roles !== undefined) {
+          const roleService = new RoleService();
+          await roleService.updateUserRoles(userId, body.roles);
+        }
+
+        // Обновляем данные пользователя (исключая roles)
+        const { roles, ...userData } = body;
+        const user = await service.updateUser(userId, userData);
         const full = await service.findByIdWithRoles(user.id);
         return full ? serializeUser(full) : serializeBasicUser(user);
       } catch {
@@ -207,7 +227,9 @@ export async function userRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { id } = request.params as { id: number };
+      console.log(id, "userIdof delete");
       const userId = Number(id);
+      console.log(userId, "userId");
       try {
         await service.deleteUser(userId);
         reply.code(204).send();
@@ -244,7 +266,7 @@ export async function userRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const payload = userRegistrationSchema.parse(request.body);
+      const payload = parseWithValidation(userRegistrationSchema, request.body);
       const application = await registrationService.registerForTournament(
         payload
       );
