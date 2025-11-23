@@ -4,7 +4,9 @@ import { tournamentSchema, errorResponseSchema } from "../../docs/schemas";
 import {
   createTournamentSchema,
   updateTournamentStatusSchema,
+  updateTournamentSchema,
 } from "./tournament.schema";
+import { parseWithValidation } from "../../utils/validation";
 import { TournamentService } from "./tournament.service";
 
 const tournamentParamsSchema = {
@@ -46,6 +48,30 @@ export async function tournamentRoutes(app: FastifyInstance) {
     async () => service.listTournaments()
   );
 
+  app.get(
+    "/:id",
+    {
+      schema: {
+        tags: ["tournaments"],
+        summary: "Получить турнир по ID",
+        params: tournamentParamsSchema,
+        response: {
+          200: tournamentSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: string | number };
+      const tournamentId = Number(id);
+      const tournament = await service.getById(tournamentId);
+      if (!tournament) {
+        return reply.code(404).send({ message: "Tournament not found" });
+      }
+      return tournament;
+    }
+  );
+
   app.post(
     "/",
     {
@@ -78,6 +104,47 @@ export async function tournamentRoutes(app: FastifyInstance) {
         payload.prizePool
       );
       reply.code(201).send(tournament);
+    }
+  );
+
+  app.put(
+    "/:id",
+    {
+      // preHandler: app.authenticate,
+      schema: {
+        tags: ["tournaments"],
+        summary: "Обновить турнир",
+        security: [{ bearerAuth: [] }],
+        params: tournamentParamsSchema,
+        body: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            eventDate: { type: ["string", "null"], format: "date-time" },
+            price: { type: "integer", minimum: 0 },
+            prizePool: { type: ["integer", "null"], minimum: 0 },
+          },
+        },
+        response: {
+          200: tournamentSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: string | number };
+      const tournamentId = Number(id);
+      const payload = parseWithValidation(updateTournamentSchema, request.body);
+
+      try {
+        const tournament = await service.updateTournament(
+          tournamentId,
+          payload
+        );
+        return tournament;
+      } catch {
+        return reply.code(404).send({ message: "Tournament not found" });
+      }
     }
   );
 

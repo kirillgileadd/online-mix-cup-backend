@@ -13,6 +13,11 @@ const envSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
   PORT: z.coerce.number().int().positive().default(3000),
+  ENABLE_DEV_LOGIN: z
+    .string()
+    .transform((val) => val === "true")
+    .optional()
+    .default("false"),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -23,4 +28,5 @@ export const env: Env = envSchema.parse({
   TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
+  ENABLE_DEV_LOGIN: process.env.ENABLE_DEV_LOGIN,
 });

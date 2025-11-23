@@ -197,49 +197,53 @@ export async function authRoutes(app: FastifyInstance) {
     }
   );
 
-  app.post(
-    "/dev/login",
-    {
-      schema: {
-        hide: env.NODE_ENV === "production",
-        tags: ["auth"],
-        summary: "Dev-авторизация без Telegram",
-        description:
-          "Создаёт admin пользователя (если его нет), присваивает ему админскую роль и выдаёт токены. Доступно только вне production.",
-        body: { type: "null" },
-        response: {
-          200: tokenPairSchema,
-          403: errorResponseSchema,
+  // Регистрируем dev/login только в dev режиме
+  if (env.NODE_ENV !== "production" && env.ENABLE_DEV_LOGIN) {
+    app.post(
+      "/dev/login",
+      {
+        schema: {
+          hide: true, // Скрываем из Swagger документации
+          tags: ["auth"],
+          summary: "Dev-авторизация без Telegram",
+          description:
+            "Создаёт admin пользователя (если его нет), присваивает ему админскую роль и выдаёт токены. Доступно только в dev режиме с ENABLE_DEV_LOGIN=true.",
+          body: { type: "null" },
+          response: {
+            200: tokenPairSchema,
+            403: errorResponseSchema,
+          },
         },
       },
-    },
-    async (request, reply) => {
-      if (env.NODE_ENV === "production") {
-        return reply.code(403).send({ message: "Dev login disabled" });
-      }
+      async (request, reply) => {
+        // Дополнительная проверка на всякий случай
+        if (env.NODE_ENV === "production" || !env.ENABLE_DEV_LOGIN) {
+          return reply.code(403).send({ message: "Dev login disabled" });
+        }
 
-      const user = await userService.getOrCreate({
-        telegramId: "admin",
-        username: "admin",
-        photoUrl: null,
-        discordUsername: null,
-      });
-
-      await roleService.assignRoleToUser(user.id, "admin");
-
-      const tokens = await issueTokenPair(user);
-      reply
-        .setCookie("refreshToken", tokens.refreshToken, {
-          ...refreshCookieOptions,
-          expires: new Date(tokens.refreshExpiresAt),
-        })
-        .send({
-          accessToken: tokens.accessToken,
-          tokenType: tokens.tokenType,
-          expiresIn: tokens.expiresIn,
-          roles: tokens.roles,
-          user: tokens.user,
+        const user = await userService.getOrCreate({
+          telegramId: "admin",
+          username: "admin",
+          photoUrl: null,
+          discordUsername: null,
         });
-    }
-  );
+
+        await roleService.assignRoleToUser(user.id, "admin");
+
+        const tokens = await issueTokenPair(user);
+        reply
+          .setCookie("refreshToken", tokens.refreshToken, {
+            ...refreshCookieOptions,
+            expires: new Date(tokens.refreshExpiresAt),
+          })
+          .send({
+            accessToken: tokens.accessToken,
+            tokenType: tokens.tokenType,
+            expiresIn: tokens.expiresIn,
+            roles: tokens.roles,
+            user: tokens.user,
+          });
+      }
+    );
+  }
 }

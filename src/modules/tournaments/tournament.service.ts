@@ -1,6 +1,7 @@
 import type { Tournament, TournamentStatus } from "@prisma/client";
 
 import { prisma } from "../../config/prisma";
+import type { UpdateTournamentInput } from "./tournament.schema";
 
 export class TournamentService {
   createTournament(
@@ -38,6 +39,33 @@ export class TournamentService {
     return prisma.tournament.update({
       where: { id },
       data: { status },
+    });
+  }
+
+  updateTournament(id: number, data: UpdateTournamentInput) {
+    const updateData: {
+      name?: string;
+      eventDate?: Date | null;
+      price?: number;
+      prizePool?: number | null;
+    } = {};
+
+    if (data.name !== undefined) {
+      updateData.name = data.name;
+    }
+    if (data.eventDate !== undefined) {
+      updateData.eventDate = data.eventDate ? new Date(data.eventDate) : null;
+    }
+    if (data.price !== undefined) {
+      updateData.price = data.price;
+    }
+    if (data.prizePool !== undefined) {
+      updateData.prizePool = data.prizePool;
+    }
+
+    return prisma.tournament.update({
+      where: { id },
+      data: updateData,
     });
   }
 
@@ -79,4 +107,3 @@ export class TournamentService {
     });
   }
 }
-
