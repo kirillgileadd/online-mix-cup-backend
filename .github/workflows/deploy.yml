@@ -18,8 +18,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/online-mix-cup-backend:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/online-mix-cup-backend:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/mixify_be:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/mixify_be:latest
 
       - name: Setup SSH key
         run: |
@@ -31,8 +31,8 @@ jobs:
       - name: SSH and deploy
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/online-mix-cup-backend:latest
-            cd online-mix-cup
+            docker pull ${{ secrets.DOCKER_USERNAME }}mixify_be:latest
+            cd mixify
             docker compose down
             docker compose up -d
           EOF
