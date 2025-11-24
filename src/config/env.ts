@@ -1,13 +1,19 @@
 import "dotenv/config";
 import { z } from "zod";
 
+const stripQuotes = (value?: string | null) =>
+  value?.trim().replace(/^['"]+|['"]+$/g, "") || undefined;
+
 const envSchema = z.object({
   DATABASE_URL: z
     .string()
-    .url()
-    .or(z.string().startsWith("postgresql://")),
+    .min(1, "DATABASE_URL is required")
+    .default("postgresql://postgres:postgres@localhost:5432/tournament_bot"),
   JWT_SECRET: z.string().min(8).default("test-jwt-secret-key-for-testing-only"),
-  TELEGRAM_BOT_TOKEN: z.string().min(10).default("1234567890:test-token-for-testing"),
+  TELEGRAM_BOT_TOKEN: z
+    .string()
+    .min(10)
+    .default("1234567890:test-token-for-testing"),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
@@ -22,9 +28,9 @@ const envSchema = z.object({
 export type Env = z.infer<typeof envSchema>;
 
 export const env: Env = envSchema.parse({
-  DATABASE_URL: process.env.DATABASE_URL,
+  DATABASE_URL: stripQuotes(process.env.DATABASE_URL),
   JWT_SECRET: process.env.JWT_SECRET ?? "change-me",
-  TELEGRAM_BOT_TOKEN: process.env.TELEGRAM_BOT_TOKEN,
+  TELEGRAM_BOT_TOKEN: stripQuotes(process.env.TELEGRAM_BOT_TOKEN),
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   ENABLE_DEV_LOGIN: process.env.ENABLE_DEV_LOGIN,

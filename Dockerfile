@@ -10,6 +10,7 @@ RUN npm ci
 COPY prisma ./prisma
 COPY src ./src
 COPY tsconfig.json ./
+COPY prisma.config.ts ./
 
 # Генерируем Prisma клиент и собираем проект
 RUN npx prisma generate
@@ -25,6 +26,7 @@ WORKDIR /app
 COPY --from=base /app/node_modules ./node_modules
 COPY --from=base /app/dist ./dist
 COPY --from=base /app/prisma ./prisma
+COPY --from=base /app/prisma.config.ts ./prisma.config.ts
 COPY package.json package-lock.json ./
 
 EXPOSE 8000

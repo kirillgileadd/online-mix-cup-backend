@@ -8,7 +8,14 @@ async function applyMigrations() {
   }
 
   try {
-    execSync("npx prisma migrate deploy", { stdio: "inherit" });
+    const sanitizedDatabaseUrl = env.DATABASE_URL.replace(/^['"]+|['"]+$/g, "");
+    execSync("npx prisma migrate deploy", {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        DATABASE_URL: sanitizedDatabaseUrl,
+      },
+    });
   } catch (error) {
     console.error("Не удалось применить миграции", error);
     throw error;
