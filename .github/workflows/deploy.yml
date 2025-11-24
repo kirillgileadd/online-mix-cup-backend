@@ -24,15 +24,15 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          printf "%s" "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
         shell: bash
 
       - name: SSH and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}mixify_be:latest
-            cd mixify
-            docker compose down
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
+            docker pull ${{ secrets.DOCKER_USERNAME }}/mixify_be:latest &&
+            cd mixify &&
+            docker compose down &&
             docker compose up -d
-          EOF
+          "
