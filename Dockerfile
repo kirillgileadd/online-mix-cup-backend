@@ -1,5 +1,7 @@
 FROM node:22-alpine AS base
 
+ENV DATABASE_URL=postgresql://postgres:postgres@localhost:5432/tournament_bot
+
 WORKDIR /app
 
 # Устанавливаем зависимости
