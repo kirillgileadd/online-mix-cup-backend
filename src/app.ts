@@ -66,6 +66,7 @@ export const buildServer = () => {
 
   app.register(cors, {
     origin: [
+      "https://mixifycup.ru",
       "https://erich-phlogotic-dolores.ngrok-free.dev",
       "http://localhost:5173",
     ],
