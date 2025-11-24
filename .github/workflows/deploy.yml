@@ -33,6 +33,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_IP }} "
             docker pull ${{ secrets.DOCKER_USERNAME }}/mixify_be:latest &&
             cd mixify &&
-            docker compose down &&
-            docker compose up -d
+            docker-compose down &&
+            docker-compose up -d
           "
