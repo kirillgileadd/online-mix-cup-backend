@@ -60,6 +60,7 @@ export type PlayerMinAggregateOutputType = {
   chillZoneValue: number | null
   lives: number | null
   mmr: number | null
+  gameRoles: string | null
 }
 
 export type PlayerMaxAggregateOutputType = {
@@ -74,6 +75,7 @@ export type PlayerMaxAggregateOutputType = {
   chillZoneValue: number | null
   lives: number | null
   mmr: number | null
+  gameRoles: string | null
 }
 
 export type PlayerCountAggregateOutputType = {
@@ -88,6 +90,7 @@ export type PlayerCountAggregateOutputType = {
   chillZoneValue: number
   lives: number
   mmr: number
+  gameRoles: number
   _all: number
 }
 
@@ -126,6 +129,7 @@ export type PlayerMinAggregateInputType = {
   chillZoneValue?: true
   lives?: true
   mmr?: true
+  gameRoles?: true
 }
 
 export type PlayerMaxAggregateInputType = {
@@ -140,6 +144,7 @@ export type PlayerMaxAggregateInputType = {
   chillZoneValue?: true
   lives?: true
   mmr?: true
+  gameRoles?: true
 }
 
 export type PlayerCountAggregateInputType = {
@@ -154,6 +159,7 @@ export type PlayerCountAggregateInputType = {
   chillZoneValue?: true
   lives?: true
   mmr?: true
+  gameRoles?: true
   _all?: true
 }
 
@@ -255,6 +261,7 @@ export type PlayerGroupByOutputType = {
   chillZoneValue: number
   lives: number
   mmr: number
+  gameRoles: string
   _count: PlayerCountAggregateOutputType | null
   _avg: PlayerAvgAggregateOutputType | null
   _sum: PlayerSumAggregateOutputType | null
@@ -292,6 +299,7 @@ export type PlayerWhereInput = {
   chillZoneValue?: Prisma.IntFilter<"Player"> | number
   lives?: Prisma.IntFilter<"Player"> | number
   mmr?: Prisma.IntFilter<"Player"> | number
+  gameRoles?: Prisma.StringFilter<"Player"> | string
   participations?: Prisma.ParticipationListRelationFilter
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -309,6 +317,7 @@ export type PlayerOrderByWithRelationInput = {
   chillZoneValue?: Prisma.SortOrder
   lives?: Prisma.SortOrder
   mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
   tournament?: Prisma.TournamentOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
@@ -329,6 +338,7 @@ export type PlayerWhereUniqueInput = Prisma.AtLeast<{
   chillZoneValue?: Prisma.IntFilter<"Player"> | number
   lives?: Prisma.IntFilter<"Player"> | number
   mmr?: Prisma.IntFilter<"Player"> | number
+  gameRoles?: Prisma.StringFilter<"Player"> | string
   participations?: Prisma.ParticipationListRelationFilter
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -346,6 +356,7 @@ export type PlayerOrderByWithAggregationInput = {
   chillZoneValue?: Prisma.SortOrder
   lives?: Prisma.SortOrder
   mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
   _count?: Prisma.PlayerCountOrderByAggregateInput
   _avg?: Prisma.PlayerAvgOrderByAggregateInput
   _max?: Prisma.PlayerMaxOrderByAggregateInput
@@ -368,6 +379,7 @@ export type PlayerScalarWhereWithAggregatesInput = {
   chillZoneValue?: Prisma.IntWithAggregatesFilter<"Player"> | number
   lives?: Prisma.IntWithAggregatesFilter<"Player"> | number
   mmr?: Prisma.IntWithAggregatesFilter<"Player"> | number
+  gameRoles?: Prisma.StringWithAggregatesFilter<"Player"> | string
 }
 
 export type PlayerCreateInput = {
@@ -379,6 +391,7 @@ export type PlayerCreateInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
   user: Prisma.UserCreateNestedOneWithoutPlayersInput
@@ -396,6 +409,7 @@ export type PlayerUncheckedCreateInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -408,6 +422,7 @@ export type PlayerUpdateInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
@@ -425,6 +440,7 @@ export type PlayerUncheckedUpdateInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -440,6 +456,7 @@ export type PlayerCreateManyInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
 }
 
 export type PlayerUpdateManyMutationInput = {
@@ -451,6 +468,7 @@ export type PlayerUpdateManyMutationInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PlayerUncheckedUpdateManyInput = {
@@ -465,6 +483,7 @@ export type PlayerUncheckedUpdateManyInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PlayerListRelationFilter = {
@@ -489,6 +508,7 @@ export type PlayerCountOrderByAggregateInput = {
   chillZoneValue?: Prisma.SortOrder
   lives?: Prisma.SortOrder
   mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
 }
 
 export type PlayerAvgOrderByAggregateInput = {
@@ -514,6 +534,7 @@ export type PlayerMaxOrderByAggregateInput = {
   chillZoneValue?: Prisma.SortOrder
   lives?: Prisma.SortOrder
   mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
 }
 
 export type PlayerMinOrderByAggregateInput = {
@@ -528,6 +549,7 @@ export type PlayerMinOrderByAggregateInput = {
   chillZoneValue?: Prisma.SortOrder
   lives?: Prisma.SortOrder
   mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
 }
 
 export type PlayerSumOrderByAggregateInput = {
@@ -657,6 +679,7 @@ export type PlayerCreateWithoutUserInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
 }
@@ -672,6 +695,7 @@ export type PlayerUncheckedCreateWithoutUserInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -716,6 +740,7 @@ export type PlayerScalarWhereInput = {
   chillZoneValue?: Prisma.IntFilter<"Player"> | number
   lives?: Prisma.IntFilter<"Player"> | number
   mmr?: Prisma.IntFilter<"Player"> | number
+  gameRoles?: Prisma.StringFilter<"Player"> | string
 }
 
 export type PlayerCreateWithoutTournamentInput = {
@@ -727,6 +752,7 @@ export type PlayerCreateWithoutTournamentInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   user: Prisma.UserCreateNestedOneWithoutPlayersInput
 }
@@ -742,6 +768,7 @@ export type PlayerUncheckedCreateWithoutTournamentInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
@@ -780,6 +807,7 @@ export type PlayerCreateWithoutParticipationsInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
   tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
   user: Prisma.UserCreateNestedOneWithoutPlayersInput
 }
@@ -796,6 +824,7 @@ export type PlayerUncheckedCreateWithoutParticipationsInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
 }
 
 export type PlayerCreateOrConnectWithoutParticipationsInput = {
@@ -823,6 +852,7 @@ export type PlayerUpdateWithoutParticipationsInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
 }
@@ -839,6 +869,7 @@ export type PlayerUncheckedUpdateWithoutParticipationsInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PlayerCreateManyUserInput = {
@@ -852,6 +883,7 @@ export type PlayerCreateManyUserInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
 }
 
 export type PlayerUpdateWithoutUserInput = {
@@ -863,6 +895,7 @@ export type PlayerUpdateWithoutUserInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
 }
@@ -878,6 +911,7 @@ export type PlayerUncheckedUpdateWithoutUserInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -892,6 +926,7 @@ export type PlayerUncheckedUpdateManyWithoutUserInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type PlayerCreateManyTournamentInput = {
@@ -905,6 +940,7 @@ export type PlayerCreateManyTournamentInput = {
   chillZoneValue?: number
   lives?: number
   mmr?: number
+  gameRoles: string
 }
 
 export type PlayerUpdateWithoutTournamentInput = {
@@ -916,6 +952,7 @@ export type PlayerUpdateWithoutTournamentInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
 }
@@ -931,6 +968,7 @@ export type PlayerUncheckedUpdateWithoutTournamentInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
@@ -945,6 +983,7 @@ export type PlayerUncheckedUpdateManyWithoutTournamentInput = {
   chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
   lives?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -990,6 +1029,7 @@ export type PlayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   chillZoneValue?: boolean
   lives?: boolean
   mmr?: boolean
+  gameRoles?: boolean
   participations?: boolean | Prisma.Player$participationsArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1008,6 +1048,7 @@ export type PlayerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   chillZoneValue?: boolean
   lives?: boolean
   mmr?: boolean
+  gameRoles?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
@@ -1024,6 +1065,7 @@ export type PlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   chillZoneValue?: boolean
   lives?: boolean
   mmr?: boolean
+  gameRoles?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
@@ -1040,9 +1082,10 @@ export type PlayerSelectScalar = {
   chillZoneValue?: boolean
   lives?: boolean
   mmr?: boolean
+  gameRoles?: boolean
 }
 
-export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tournamentId" | "nickname" | "seed" | "score" | "status" | "createdAt" | "chillZoneValue" | "lives" | "mmr", ExtArgs["result"]["player"]>
+export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tournamentId" | "nickname" | "seed" | "score" | "status" | "createdAt" | "chillZoneValue" | "lives" | "mmr" | "gameRoles", ExtArgs["result"]["player"]>
 export type PlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   participations?: boolean | Prisma.Player$participationsArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
@@ -1077,6 +1120,7 @@ export type $PlayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     chillZoneValue: number
     lives: number
     mmr: number
+    gameRoles: string
   }, ExtArgs["result"]["player"]>
   composites: {}
 }
@@ -1514,6 +1558,7 @@ export interface PlayerFieldRefs {
   readonly chillZoneValue: Prisma.FieldRef<"Player", 'Int'>
   readonly lives: Prisma.FieldRef<"Player", 'Int'>
   readonly mmr: Prisma.FieldRef<"Player", 'Int'>
+  readonly gameRoles: Prisma.FieldRef<"Player", 'String'>
 }
     
 

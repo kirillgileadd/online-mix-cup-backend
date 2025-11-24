@@ -101,6 +101,7 @@ export class TournamentService {
               ? application.nickname.trim()
               : `Player_${application.userId}`,
           mmr: application.mmr,
+          gameRoles: application.gameRoles,
           lives: 3,
           chillZoneValue: 0,
         })),

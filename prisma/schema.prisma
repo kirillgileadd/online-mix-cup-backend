@@ -58,6 +58,7 @@ model Player {
   chillZoneValue Int             @default(0)
   lives          Int             @default(3)
   mmr            Int             @default(1000)
+  gameRoles      String
   participations Participation[]
   tournament     Tournament      @relation(fields: [tournamentId], references: [id])
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)

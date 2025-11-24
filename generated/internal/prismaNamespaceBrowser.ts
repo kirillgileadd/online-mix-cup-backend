@@ -128,7 +128,8 @@ export const PlayerScalarFieldEnum = {
   createdAt: 'createdAt',
   chillZoneValue: 'chillZoneValue',
   lives: 'lives',
-  mmr: 'mmr'
+  mmr: 'mmr',
+  gameRoles: 'gameRoles'
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
