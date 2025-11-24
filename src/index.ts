@@ -3,7 +3,7 @@ import { env } from "./config/env";
 import { buildServer } from "./app";
 
 async function applyMigrations() {
-  if (env.NODE_ENV === "test") {
+  if (env.NODE_ENV === "development") {
     return;
   }
 

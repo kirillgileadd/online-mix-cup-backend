@@ -65,11 +65,7 @@ export const buildServer = () => {
   });
 
   app.register(cors, {
-    origin: [
-      "https://mixifycup.ru",
-      "https://erich-phlogotic-dolores.ngrok-free.dev",
-      "http://localhost:5173",
-    ],
+    origin: env.CORS_ORIGINS,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
     credentials: true, // Allow cookies and authentication tokens
   });
