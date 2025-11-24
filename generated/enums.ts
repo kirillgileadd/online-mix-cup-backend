@@ -34,3 +34,22 @@ export const PlayerStatus = {
 } as const
 
 export type PlayerStatus = (typeof PlayerStatus)[keyof typeof PlayerStatus]
+
+
+export const LobbyStatus = {
+  PENDING: 'PENDING',
+  DRAFTING: 'DRAFTING',
+  PLAYING: 'PLAYING',
+  FINISHED: 'FINISHED'
+} as const
+
+export type LobbyStatus = (typeof LobbyStatus)[keyof typeof LobbyStatus]
+
+
+export const ParticipationResult = {
+  WIN: 'WIN',
+  LOSS: 'LOSS',
+  NONE: 'NONE'
+} as const
+
+export type ParticipationResult = (typeof ParticipationResult)[keyof typeof ParticipationResult]

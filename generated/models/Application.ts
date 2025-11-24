@@ -27,99 +27,99 @@ export type AggregateApplication = {
 }
 
 export type ApplicationAvgAggregateOutputType = {
+  mmr: number | null
   id: number | null
   userId: number | null
   tournamentId: number | null
-  mmr: number | null
 }
 
 export type ApplicationSumAggregateOutputType = {
+  mmr: number | null
   id: number | null
   userId: number | null
   tournamentId: number | null
-  mmr: number | null
 }
 
 export type ApplicationMinAggregateOutputType = {
+  mmr: number | null
+  gameRoles: string | null
+  status: $Enums.ApplicationStatus | null
+  createdAt: Date | null
   id: number | null
   userId: number | null
   tournamentId: number | null
-  mmr: number | null
-  gameRoles: string | null
   nickname: string | null
-  status: $Enums.ApplicationStatus | null
-  createdAt: Date | null
 }
 
 export type ApplicationMaxAggregateOutputType = {
+  mmr: number | null
+  gameRoles: string | null
+  status: $Enums.ApplicationStatus | null
+  createdAt: Date | null
   id: number | null
   userId: number | null
   tournamentId: number | null
-  mmr: number | null
-  gameRoles: string | null
   nickname: string | null
-  status: $Enums.ApplicationStatus | null
-  createdAt: Date | null
 }
 
 export type ApplicationCountAggregateOutputType = {
+  mmr: number
+  gameRoles: number
+  status: number
+  createdAt: number
   id: number
   userId: number
   tournamentId: number
-  mmr: number
-  gameRoles: number
   nickname: number
-  status: number
-  createdAt: number
   _all: number
 }
 
 
 export type ApplicationAvgAggregateInputType = {
+  mmr?: true
   id?: true
   userId?: true
   tournamentId?: true
-  mmr?: true
 }
 
 export type ApplicationSumAggregateInputType = {
+  mmr?: true
   id?: true
   userId?: true
   tournamentId?: true
-  mmr?: true
 }
 
 export type ApplicationMinAggregateInputType = {
+  mmr?: true
+  gameRoles?: true
+  status?: true
+  createdAt?: true
   id?: true
   userId?: true
   tournamentId?: true
-  mmr?: true
-  gameRoles?: true
   nickname?: true
-  status?: true
-  createdAt?: true
 }
 
 export type ApplicationMaxAggregateInputType = {
+  mmr?: true
+  gameRoles?: true
+  status?: true
+  createdAt?: true
   id?: true
   userId?: true
   tournamentId?: true
-  mmr?: true
-  gameRoles?: true
   nickname?: true
-  status?: true
-  createdAt?: true
 }
 
 export type ApplicationCountAggregateInputType = {
+  mmr?: true
+  gameRoles?: true
+  status?: true
+  createdAt?: true
   id?: true
   userId?: true
   tournamentId?: true
-  mmr?: true
-  gameRoles?: true
   nickname?: true
-  status?: true
-  createdAt?: true
   _all?: true
 }
 
@@ -210,14 +210,14 @@ export type ApplicationGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 export type ApplicationGroupByOutputType = {
+  mmr: number
+  gameRoles: string
+  status: $Enums.ApplicationStatus
+  createdAt: Date
   id: number
   userId: number
   tournamentId: number
-  mmr: number
-  gameRoles: string
   nickname: string | null
-  status: $Enums.ApplicationStatus
-  createdAt: Date
   _count: ApplicationCountAggregateOutputType | null
   _avg: ApplicationAvgAggregateOutputType | null
   _sum: ApplicationSumAggregateOutputType | null
@@ -244,29 +244,29 @@ export type ApplicationWhereInput = {
   AND?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
   OR?: Prisma.ApplicationWhereInput[]
   NOT?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
+  mmr?: Prisma.IntFilter<"Application"> | number
+  gameRoles?: Prisma.StringFilter<"Application"> | string
+  status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
+  createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
   id?: Prisma.IntFilter<"Application"> | number
   userId?: Prisma.IntFilter<"Application"> | number
   tournamentId?: Prisma.IntFilter<"Application"> | number
-  mmr?: Prisma.IntFilter<"Application"> | number
-  gameRoles?: Prisma.StringFilter<"Application"> | string
   nickname?: Prisma.StringNullableFilter<"Application"> | string | null
-  status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
-  createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type ApplicationOrderByWithRelationInput = {
+  mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
-  gameRoles?: Prisma.SortOrder
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
   tournament?: Prisma.TournamentOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
@@ -274,26 +274,26 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
   OR?: Prisma.ApplicationWhereInput[]
   NOT?: Prisma.ApplicationWhereInput | Prisma.ApplicationWhereInput[]
-  userId?: Prisma.IntFilter<"Application"> | number
-  tournamentId?: Prisma.IntFilter<"Application"> | number
   mmr?: Prisma.IntFilter<"Application"> | number
   gameRoles?: Prisma.StringFilter<"Application"> | string
-  nickname?: Prisma.StringNullableFilter<"Application"> | string | null
   status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  userId?: Prisma.IntFilter<"Application"> | number
+  tournamentId?: Prisma.IntFilter<"Application"> | number
+  nickname?: Prisma.StringNullableFilter<"Application"> | string | null
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type ApplicationOrderByWithAggregationInput = {
+  mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
-  gameRoles?: Prisma.SortOrder
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
   _count?: Prisma.ApplicationCountOrderByAggregateInput
   _avg?: Prisma.ApplicationAvgOrderByAggregateInput
   _max?: Prisma.ApplicationMaxOrderByAggregateInput
@@ -305,86 +305,86 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   AND?: Prisma.ApplicationScalarWhereWithAggregatesInput | Prisma.ApplicationScalarWhereWithAggregatesInput[]
   OR?: Prisma.ApplicationScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ApplicationScalarWhereWithAggregatesInput | Prisma.ApplicationScalarWhereWithAggregatesInput[]
+  mmr?: Prisma.IntWithAggregatesFilter<"Application"> | number
+  gameRoles?: Prisma.StringWithAggregatesFilter<"Application"> | string
+  status?: Prisma.EnumApplicationStatusWithAggregatesFilter<"Application"> | $Enums.ApplicationStatus
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
   id?: Prisma.IntWithAggregatesFilter<"Application"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Application"> | number
   tournamentId?: Prisma.IntWithAggregatesFilter<"Application"> | number
-  mmr?: Prisma.IntWithAggregatesFilter<"Application"> | number
-  gameRoles?: Prisma.StringWithAggregatesFilter<"Application"> | string
   nickname?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
-  status?: Prisma.EnumApplicationStatusWithAggregatesFilter<"Application"> | $Enums.ApplicationStatus
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Application"> | Date | string
 }
 
 export type ApplicationCreateInput = {
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutApplicationsInput
+  nickname?: string | null
   tournament: Prisma.TournamentCreateNestedOneWithoutApplicationsInput
+  user: Prisma.UserCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateInput = {
+  mmr: number
+  gameRoles: string
+  status?: $Enums.ApplicationStatus
+  createdAt?: Date | string
   id?: number
   userId: number
   tournamentId: number
-  mmr: number
-  gameRoles: string
   nickname?: string | null
-  status?: $Enums.ApplicationStatus
-  createdAt?: Date | string
 }
 
 export type ApplicationUpdateInput = {
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutApplicationsNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateInput = {
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
-  mmr?: Prisma.IntFieldUpdateOperationsInput | number
-  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApplicationCreateManyInput = {
+  mmr: number
+  gameRoles: string
+  status?: $Enums.ApplicationStatus
+  createdAt?: Date | string
   id?: number
   userId: number
   tournamentId: number
-  mmr: number
-  gameRoles: string
   nickname?: string | null
-  status?: $Enums.ApplicationStatus
-  createdAt?: Date | string
 }
 
 export type ApplicationUpdateManyMutationInput = {
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyInput = {
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
-  mmr?: Prisma.IntFieldUpdateOperationsInput | number
-  gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ApplicationListRelationFilter = {
@@ -398,50 +398,50 @@ export type ApplicationOrderByRelationAggregateInput = {
 }
 
 export type ApplicationCountOrderByAggregateInput = {
+  mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
-  gameRoles?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
 }
 
 export type ApplicationAvgOrderByAggregateInput = {
+  mmr?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
 }
 
 export type ApplicationMaxOrderByAggregateInput = {
+  mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
-  gameRoles?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
 }
 
 export type ApplicationMinOrderByAggregateInput = {
+  mmr?: Prisma.SortOrder
+  gameRoles?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
-  gameRoles?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
-  status?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
 }
 
 export type ApplicationSumOrderByAggregateInput = {
+  mmr?: Prisma.SortOrder
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  mmr?: Prisma.SortOrder
 }
 
 export type ApplicationCreateNestedManyWithoutUserInput = {
@@ -535,20 +535,20 @@ export type EnumApplicationStatusFieldUpdateOperationsInput = {
 export type ApplicationCreateWithoutUserInput = {
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  nickname?: string | null
   tournament: Prisma.TournamentCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateWithoutUserInput = {
-  id?: number
-  tournamentId: number
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  id?: number
+  tournamentId: number
+  nickname?: string | null
 }
 
 export type ApplicationCreateOrConnectWithoutUserInput = {
@@ -581,33 +581,33 @@ export type ApplicationScalarWhereInput = {
   AND?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
   OR?: Prisma.ApplicationScalarWhereInput[]
   NOT?: Prisma.ApplicationScalarWhereInput | Prisma.ApplicationScalarWhereInput[]
+  mmr?: Prisma.IntFilter<"Application"> | number
+  gameRoles?: Prisma.StringFilter<"Application"> | string
+  status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
+  createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
   id?: Prisma.IntFilter<"Application"> | number
   userId?: Prisma.IntFilter<"Application"> | number
   tournamentId?: Prisma.IntFilter<"Application"> | number
-  mmr?: Prisma.IntFilter<"Application"> | number
-  gameRoles?: Prisma.StringFilter<"Application"> | string
   nickname?: Prisma.StringNullableFilter<"Application"> | string | null
-  status?: Prisma.EnumApplicationStatusFilter<"Application"> | $Enums.ApplicationStatus
-  createdAt?: Prisma.DateTimeFilter<"Application"> | Date | string
 }
 
 export type ApplicationCreateWithoutTournamentInput = {
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  nickname?: string | null
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
 }
 
 export type ApplicationUncheckedCreateWithoutTournamentInput = {
-  id?: number
-  userId: number
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  id?: number
+  userId: number
+  nickname?: string | null
 }
 
 export type ApplicationCreateOrConnectWithoutTournamentInput = {
@@ -637,164 +637,164 @@ export type ApplicationUpdateManyWithWhereWithoutTournamentInput = {
 }
 
 export type ApplicationCreateManyUserInput = {
-  id?: number
-  tournamentId: number
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  id?: number
+  tournamentId: number
+  nickname?: string | null
 }
 
 export type ApplicationUpdateWithoutUserInput = {
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyWithoutUserInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationCreateManyTournamentInput = {
-  id?: number
-  userId: number
   mmr: number
   gameRoles: string
-  nickname?: string | null
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
+  id?: number
+  userId: number
+  nickname?: string | null
 }
 
 export type ApplicationUpdateWithoutTournamentInput = {
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
 export type ApplicationUncheckedUpdateWithoutTournamentInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyWithoutTournamentInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
   mmr?: Prisma.IntFieldUpdateOperationsInput | number
   gameRoles?: Prisma.StringFieldUpdateOperationsInput | string
-  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
 
 export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  mmr?: boolean
+  gameRoles?: boolean
+  status?: boolean
+  createdAt?: boolean
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
-  mmr?: boolean
-  gameRoles?: boolean
   nickname?: boolean
-  status?: boolean
-  createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
 
 export type ApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  mmr?: boolean
+  gameRoles?: boolean
+  status?: boolean
+  createdAt?: boolean
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
-  mmr?: boolean
-  gameRoles?: boolean
   nickname?: boolean
-  status?: boolean
-  createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
 
 export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  mmr?: boolean
+  gameRoles?: boolean
+  status?: boolean
+  createdAt?: boolean
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
-  mmr?: boolean
-  gameRoles?: boolean
   nickname?: boolean
-  status?: boolean
-  createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
 
 export type ApplicationSelectScalar = {
+  mmr?: boolean
+  gameRoles?: boolean
+  status?: boolean
+  createdAt?: boolean
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
-  mmr?: boolean
-  gameRoles?: boolean
   nickname?: boolean
-  status?: boolean
-  createdAt?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tournamentId" | "mmr" | "gameRoles" | "nickname" | "status" | "createdAt", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"mmr" | "gameRoles" | "status" | "createdAt" | "id" | "userId" | "tournamentId" | "nickname", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ApplicationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type ApplicationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Application"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
     tournament: Prisma.$TournamentPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    mmr: number
+    gameRoles: string
+    status: $Enums.ApplicationStatus
+    createdAt: Date
     id: number
     userId: number
     tournamentId: number
-    mmr: number
-    gameRoles: string
     nickname: string | null
-    status: $Enums.ApplicationStatus
-    createdAt: Date
   }, ExtArgs["result"]["application"]>
   composites: {}
 }
@@ -878,8 +878,8 @@ export interface ApplicationDelegate<ExtArgs extends runtime.Types.Extensions.In
    * // Get first 10 Applications
    * const applications = await prisma.application.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const applicationWithIdOnly = await prisma.application.findMany({ select: { id: true } })
+   * // Only select the `mmr`
+   * const applicationWithMmrOnly = await prisma.application.findMany({ select: { mmr: true } })
    * 
    */
   findMany<T extends ApplicationFindManyArgs>(args?: Prisma.SelectSubset<T, ApplicationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApplicationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -923,9 +923,9 @@ export interface ApplicationDelegate<ExtArgs extends runtime.Types.Extensions.In
    *   ]
    * })
    * 
-   * // Create many Applications and only return the `id`
-   * const applicationWithIdOnly = await prisma.application.createManyAndReturn({
-   *   select: { id: true },
+   * // Create many Applications and only return the `mmr`
+   * const applicationWithMmrOnly = await prisma.application.createManyAndReturn({
+   *   select: { mmr: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -1014,9 +1014,9 @@ export interface ApplicationDelegate<ExtArgs extends runtime.Types.Extensions.In
    *   ]
    * })
    * 
-   * // Update zero or more Applications and only return the `id`
-   * const applicationWithIdOnly = await prisma.application.updateManyAndReturn({
-   *   select: { id: true },
+   * // Update zero or more Applications and only return the `mmr`
+   * const applicationWithMmrOnly = await prisma.application.updateManyAndReturn({
+   *   select: { mmr: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -1189,8 +1189,8 @@ readonly fields: ApplicationFieldRefs;
  */
 export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   tournament<T extends Prisma.TournamentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TournamentDefaultArgs<ExtArgs>>): Prisma.Prisma__TournamentClient<runtime.Types.Result.GetResult<Prisma.$TournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1220,14 +1220,14 @@ export interface Prisma__ApplicationClient<T, Null = never, ExtArgs extends runt
  * Fields of the Application model
  */
 export interface ApplicationFieldRefs {
+  readonly mmr: Prisma.FieldRef<"Application", 'Int'>
+  readonly gameRoles: Prisma.FieldRef<"Application", 'String'>
+  readonly status: Prisma.FieldRef<"Application", 'ApplicationStatus'>
+  readonly createdAt: Prisma.FieldRef<"Application", 'DateTime'>
   readonly id: Prisma.FieldRef<"Application", 'Int'>
   readonly userId: Prisma.FieldRef<"Application", 'Int'>
   readonly tournamentId: Prisma.FieldRef<"Application", 'Int'>
-  readonly mmr: Prisma.FieldRef<"Application", 'Int'>
-  readonly gameRoles: Prisma.FieldRef<"Application", 'String'>
   readonly nickname: Prisma.FieldRef<"Application", 'String'>
-  readonly status: Prisma.FieldRef<"Application", 'ApplicationStatus'>
-  readonly createdAt: Prisma.FieldRef<"Application", 'DateTime'>
 }
     
 

@@ -29,6 +29,18 @@ export class ApplicationService {
     });
   }
 
+  listApplications(tournamentId?: number) {
+    return prisma.application.findMany({
+      where: {
+        ...(typeof tournamentId === "number" ? { tournamentId } : {}),
+      },
+      orderBy: { createdAt: "asc" },
+      include: {
+        user: true,
+      },
+    });
+  }
+
   private updateStatus(id: number, status: ApplicationStatus) {
     return prisma.application.update({
       where: { id },

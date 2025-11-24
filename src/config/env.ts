@@ -7,8 +7,8 @@ const envSchema = z.object({
     .url()
     .or(z.string().startsWith("postgresql://"))
     .default("postgresql://postgres:postgres@localhost:5432/tournament_bot"),
-  JWT_SECRET: z.string().min(8),
-  TELEGRAM_BOT_TOKEN: z.string().min(10),
+  JWT_SECRET: z.string().min(8).default("test-jwt-secret-key-for-testing-only"),
+  TELEGRAM_BOT_TOKEN: z.string().min(10).default("1234567890:test-token-for-testing"),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
@@ -17,7 +17,7 @@ const envSchema = z.object({
     .string()
     .transform((val) => val === "true")
     .optional()
-    .default("false"),
+    .default(false),
 });
 
 export type Env = z.infer<typeof envSchema>;

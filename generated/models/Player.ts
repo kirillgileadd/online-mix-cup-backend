@@ -32,6 +32,9 @@ export type PlayerAvgAggregateOutputType = {
   tournamentId: number | null
   seed: number | null
   score: number | null
+  chillZoneValue: number | null
+  lives: number | null
+  mmr: number | null
 }
 
 export type PlayerSumAggregateOutputType = {
@@ -40,36 +43,51 @@ export type PlayerSumAggregateOutputType = {
   tournamentId: number | null
   seed: number | null
   score: number | null
+  chillZoneValue: number | null
+  lives: number | null
+  mmr: number | null
 }
 
 export type PlayerMinAggregateOutputType = {
   id: number | null
   userId: number | null
   tournamentId: number | null
+  nickname: string | null
   seed: number | null
   score: number | null
   status: $Enums.PlayerStatus | null
   createdAt: Date | null
+  chillZoneValue: number | null
+  lives: number | null
+  mmr: number | null
 }
 
 export type PlayerMaxAggregateOutputType = {
   id: number | null
   userId: number | null
   tournamentId: number | null
+  nickname: string | null
   seed: number | null
   score: number | null
   status: $Enums.PlayerStatus | null
   createdAt: Date | null
+  chillZoneValue: number | null
+  lives: number | null
+  mmr: number | null
 }
 
 export type PlayerCountAggregateOutputType = {
   id: number
   userId: number
   tournamentId: number
+  nickname: number
   seed: number
   score: number
   status: number
   createdAt: number
+  chillZoneValue: number
+  lives: number
+  mmr: number
   _all: number
 }
 
@@ -80,6 +98,9 @@ export type PlayerAvgAggregateInputType = {
   tournamentId?: true
   seed?: true
   score?: true
+  chillZoneValue?: true
+  lives?: true
+  mmr?: true
 }
 
 export type PlayerSumAggregateInputType = {
@@ -88,36 +109,51 @@ export type PlayerSumAggregateInputType = {
   tournamentId?: true
   seed?: true
   score?: true
+  chillZoneValue?: true
+  lives?: true
+  mmr?: true
 }
 
 export type PlayerMinAggregateInputType = {
   id?: true
   userId?: true
   tournamentId?: true
+  nickname?: true
   seed?: true
   score?: true
   status?: true
   createdAt?: true
+  chillZoneValue?: true
+  lives?: true
+  mmr?: true
 }
 
 export type PlayerMaxAggregateInputType = {
   id?: true
   userId?: true
   tournamentId?: true
+  nickname?: true
   seed?: true
   score?: true
   status?: true
   createdAt?: true
+  chillZoneValue?: true
+  lives?: true
+  mmr?: true
 }
 
 export type PlayerCountAggregateInputType = {
   id?: true
   userId?: true
   tournamentId?: true
+  nickname?: true
   seed?: true
   score?: true
   status?: true
   createdAt?: true
+  chillZoneValue?: true
+  lives?: true
+  mmr?: true
   _all?: true
 }
 
@@ -211,10 +247,14 @@ export type PlayerGroupByOutputType = {
   id: number
   userId: number
   tournamentId: number
+  nickname: string
   seed: number | null
   score: number | null
   status: $Enums.PlayerStatus
   createdAt: Date
+  chillZoneValue: number
+  lives: number
+  mmr: number
   _count: PlayerCountAggregateOutputType | null
   _avg: PlayerAvgAggregateOutputType | null
   _sum: PlayerSumAggregateOutputType | null
@@ -244,24 +284,34 @@ export type PlayerWhereInput = {
   id?: Prisma.IntFilter<"Player"> | number
   userId?: Prisma.IntFilter<"Player"> | number
   tournamentId?: Prisma.IntFilter<"Player"> | number
+  nickname?: Prisma.StringFilter<"Player"> | string
   seed?: Prisma.IntNullableFilter<"Player"> | number | null
   score?: Prisma.IntNullableFilter<"Player"> | number | null
   status?: Prisma.EnumPlayerStatusFilter<"Player"> | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFilter<"Player"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  chillZoneValue?: Prisma.IntFilter<"Player"> | number
+  lives?: Prisma.IntFilter<"Player"> | number
+  mmr?: Prisma.IntFilter<"Player"> | number
+  participations?: Prisma.ParticipationListRelationFilter
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type PlayerOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   seed?: Prisma.SortOrderInput | Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  user?: Prisma.UserOrderByWithRelationInput
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
+  participations?: Prisma.ParticipationOrderByRelationAggregateInput
   tournament?: Prisma.TournamentOrderByWithRelationInput
+  user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type PlayerWhereUniqueInput = Prisma.AtLeast<{
@@ -271,22 +321,31 @@ export type PlayerWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.PlayerWhereInput | Prisma.PlayerWhereInput[]
   userId?: Prisma.IntFilter<"Player"> | number
   tournamentId?: Prisma.IntFilter<"Player"> | number
+  nickname?: Prisma.StringFilter<"Player"> | string
   seed?: Prisma.IntNullableFilter<"Player"> | number | null
   score?: Prisma.IntNullableFilter<"Player"> | number | null
   status?: Prisma.EnumPlayerStatusFilter<"Player"> | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFilter<"Player"> | Date | string
-  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  chillZoneValue?: Prisma.IntFilter<"Player"> | number
+  lives?: Prisma.IntFilter<"Player"> | number
+  mmr?: Prisma.IntFilter<"Player"> | number
+  participations?: Prisma.ParticipationListRelationFilter
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
+  user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
 
 export type PlayerOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   seed?: Prisma.SortOrderInput | Prisma.SortOrder
   score?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
   _count?: Prisma.PlayerCountOrderByAggregateInput
   _avg?: Prisma.PlayerAvgOrderByAggregateInput
   _max?: Prisma.PlayerMaxOrderByAggregateInput
@@ -301,75 +360,111 @@ export type PlayerScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Player"> | number
   userId?: Prisma.IntWithAggregatesFilter<"Player"> | number
   tournamentId?: Prisma.IntWithAggregatesFilter<"Player"> | number
+  nickname?: Prisma.StringWithAggregatesFilter<"Player"> | string
   seed?: Prisma.IntNullableWithAggregatesFilter<"Player"> | number | null
   score?: Prisma.IntNullableWithAggregatesFilter<"Player"> | number | null
   status?: Prisma.EnumPlayerStatusWithAggregatesFilter<"Player"> | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Player"> | Date | string
+  chillZoneValue?: Prisma.IntWithAggregatesFilter<"Player"> | number
+  lives?: Prisma.IntWithAggregatesFilter<"Player"> | number
+  mmr?: Prisma.IntWithAggregatesFilter<"Player"> | number
 }
 
 export type PlayerCreateInput = {
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
-  user: Prisma.UserCreateNestedOneWithoutPlayersInput
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
+  user: Prisma.UserCreateNestedOneWithoutPlayersInput
 }
 
 export type PlayerUncheckedCreateInput = {
   id?: number
   userId: number
   tournamentId: number
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerUpdateInput = {
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
 }
 
 export type PlayerUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerCreateManyInput = {
   id?: number
   userId: number
   tournamentId: number
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
 }
 
 export type PlayerUpdateManyMutationInput = {
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PlayerUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PlayerListRelationFilter = {
@@ -386,10 +481,14 @@ export type PlayerCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
 }
 
 export type PlayerAvgOrderByAggregateInput = {
@@ -398,26 +497,37 @@ export type PlayerAvgOrderByAggregateInput = {
   tournamentId?: Prisma.SortOrder
   seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
 }
 
 export type PlayerMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
 }
 
 export type PlayerMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
 }
 
 export type PlayerSumOrderByAggregateInput = {
@@ -426,6 +536,14 @@ export type PlayerSumOrderByAggregateInput = {
   tournamentId?: Prisma.SortOrder
   seed?: Prisma.SortOrder
   score?: Prisma.SortOrder
+  chillZoneValue?: Prisma.SortOrder
+  lives?: Prisma.SortOrder
+  mmr?: Prisma.SortOrder
+}
+
+export type PlayerScalarRelationFilter = {
+  is?: Prisma.PlayerWhereInput
+  isNot?: Prisma.PlayerWhereInput
 }
 
 export type PlayerCreateNestedManyWithoutUserInput = {
@@ -516,21 +634,45 @@ export type EnumPlayerStatusFieldUpdateOperationsInput = {
   set?: $Enums.PlayerStatus
 }
 
+export type PlayerCreateNestedOneWithoutParticipationsInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutParticipationsInput, Prisma.PlayerUncheckedCreateWithoutParticipationsInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutParticipationsInput
+  connect?: Prisma.PlayerWhereUniqueInput
+}
+
+export type PlayerUpdateOneRequiredWithoutParticipationsNestedInput = {
+  create?: Prisma.XOR<Prisma.PlayerCreateWithoutParticipationsInput, Prisma.PlayerUncheckedCreateWithoutParticipationsInput>
+  connectOrCreate?: Prisma.PlayerCreateOrConnectWithoutParticipationsInput
+  upsert?: Prisma.PlayerUpsertWithoutParticipationsInput
+  connect?: Prisma.PlayerWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.PlayerUpdateToOneWithWhereWithoutParticipationsInput, Prisma.PlayerUpdateWithoutParticipationsInput>, Prisma.PlayerUncheckedUpdateWithoutParticipationsInput>
+}
+
 export type PlayerCreateWithoutUserInput = {
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
 }
 
 export type PlayerUncheckedCreateWithoutUserInput = {
   id?: number
   tournamentId: number
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutUserInput = {
@@ -566,27 +708,41 @@ export type PlayerScalarWhereInput = {
   id?: Prisma.IntFilter<"Player"> | number
   userId?: Prisma.IntFilter<"Player"> | number
   tournamentId?: Prisma.IntFilter<"Player"> | number
+  nickname?: Prisma.StringFilter<"Player"> | string
   seed?: Prisma.IntNullableFilter<"Player"> | number | null
   score?: Prisma.IntNullableFilter<"Player"> | number | null
   status?: Prisma.EnumPlayerStatusFilter<"Player"> | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFilter<"Player"> | Date | string
+  chillZoneValue?: Prisma.IntFilter<"Player"> | number
+  lives?: Prisma.IntFilter<"Player"> | number
+  mmr?: Prisma.IntFilter<"Player"> | number
 }
 
 export type PlayerCreateWithoutTournamentInput = {
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationCreateNestedManyWithoutPlayerInput
   user: Prisma.UserCreateNestedOneWithoutPlayersInput
 }
 
 export type PlayerUncheckedCreateWithoutTournamentInput = {
   id?: number
   userId: number
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutPlayerInput
 }
 
 export type PlayerCreateOrConnectWithoutTournamentInput = {
@@ -615,152 +771,312 @@ export type PlayerUpdateManyWithWhereWithoutTournamentInput = {
   data: Prisma.XOR<Prisma.PlayerUpdateManyMutationInput, Prisma.PlayerUncheckedUpdateManyWithoutTournamentInput>
 }
 
-export type PlayerCreateManyUserInput = {
-  id?: number
-  tournamentId: number
+export type PlayerCreateWithoutParticipationsInput = {
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+  tournament: Prisma.TournamentCreateNestedOneWithoutPlayersInput
+  user: Prisma.UserCreateNestedOneWithoutPlayersInput
 }
 
-export type PlayerUpdateWithoutUserInput = {
+export type PlayerUncheckedCreateWithoutParticipationsInput = {
+  id?: number
+  userId: number
+  tournamentId: number
+  nickname: string
+  seed?: number | null
+  score?: number | null
+  status?: $Enums.PlayerStatus
+  createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+}
+
+export type PlayerCreateOrConnectWithoutParticipationsInput = {
+  where: Prisma.PlayerWhereUniqueInput
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutParticipationsInput, Prisma.PlayerUncheckedCreateWithoutParticipationsInput>
+}
+
+export type PlayerUpsertWithoutParticipationsInput = {
+  update: Prisma.XOR<Prisma.PlayerUpdateWithoutParticipationsInput, Prisma.PlayerUncheckedUpdateWithoutParticipationsInput>
+  create: Prisma.XOR<Prisma.PlayerCreateWithoutParticipationsInput, Prisma.PlayerUncheckedCreateWithoutParticipationsInput>
+  where?: Prisma.PlayerWhereInput
+}
+
+export type PlayerUpdateToOneWithWhereWithoutParticipationsInput = {
+  where?: Prisma.PlayerWhereInput
+  data: Prisma.XOR<Prisma.PlayerUpdateWithoutParticipationsInput, Prisma.PlayerUncheckedUpdateWithoutParticipationsInput>
+}
+
+export type PlayerUpdateWithoutParticipationsInput = {
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
+  user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
+}
+
+export type PlayerUncheckedUpdateWithoutParticipationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
+  seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+}
+
+export type PlayerCreateManyUserInput = {
+  id?: number
+  tournamentId: number
+  nickname: string
+  seed?: number | null
+  score?: number | null
+  status?: $Enums.PlayerStatus
+  createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
+}
+
+export type PlayerUpdateWithoutUserInput = {
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
+  seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutPlayersNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type PlayerCreateManyTournamentInput = {
   id?: number
   userId: number
+  nickname: string
   seed?: number | null
   score?: number | null
   status?: $Enums.PlayerStatus
   createdAt?: Date | string
+  chillZoneValue?: number
+  lives?: number
+  mmr?: number
 }
 
 export type PlayerUpdateWithoutTournamentInput = {
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUpdateManyWithoutPlayerNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutPlayersNestedInput
 }
 
 export type PlayerUncheckedUpdateWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutPlayerNestedInput
 }
 
 export type PlayerUncheckedUpdateManyWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
+  nickname?: Prisma.StringFieldUpdateOperationsInput | string
   seed?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status?: Prisma.EnumPlayerStatusFieldUpdateOperationsInput | $Enums.PlayerStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  chillZoneValue?: Prisma.IntFieldUpdateOperationsInput | number
+  lives?: Prisma.IntFieldUpdateOperationsInput | number
+  mmr?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
+
+/**
+ * Count Type PlayerCountOutputType
+ */
+
+export type PlayerCountOutputType = {
+  participations: number
+}
+
+export type PlayerCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  participations?: boolean | PlayerCountOutputTypeCountParticipationsArgs
+}
+
+/**
+ * PlayerCountOutputType without action
+ */
+export type PlayerCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlayerCountOutputType
+   */
+  select?: Prisma.PlayerCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * PlayerCountOutputType without action
+ */
+export type PlayerCountOutputTypeCountParticipationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ParticipationWhereInput
+}
 
 
 export type PlayerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
+  nickname?: boolean
   seed?: boolean
   score?: boolean
   status?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  chillZoneValue?: boolean
+  lives?: boolean
+  mmr?: boolean
+  participations?: boolean | Prisma.Player$participationsArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
+  nickname?: boolean
   seed?: boolean
   score?: boolean
   status?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  chillZoneValue?: boolean
+  lives?: boolean
+  mmr?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
+  nickname?: boolean
   seed?: boolean
   score?: boolean
   status?: boolean
   createdAt?: boolean
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  chillZoneValue?: boolean
+  lives?: boolean
+  mmr?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["player"]>
 
 export type PlayerSelectScalar = {
   id?: boolean
   userId?: boolean
   tournamentId?: boolean
+  nickname?: boolean
   seed?: boolean
   score?: boolean
   status?: boolean
   createdAt?: boolean
+  chillZoneValue?: boolean
+  lives?: boolean
+  mmr?: boolean
 }
 
-export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tournamentId" | "seed" | "score" | "status" | "createdAt", ExtArgs["result"]["player"]>
+export type PlayerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "tournamentId" | "nickname" | "seed" | "score" | "status" | "createdAt" | "chillZoneValue" | "lives" | "mmr", ExtArgs["result"]["player"]>
 export type PlayerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  participations?: boolean | Prisma.Player$participationsArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  _count?: boolean | Prisma.PlayerCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PlayerIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type PlayerIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
+  user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $PlayerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Player"
   objects: {
-    user: Prisma.$UserPayload<ExtArgs>
+    participations: Prisma.$ParticipationPayload<ExtArgs>[]
     tournament: Prisma.$TournamentPayload<ExtArgs>
+    user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     userId: number
     tournamentId: number
+    nickname: string
     seed: number | null
     score: number | null
     status: $Enums.PlayerStatus
     createdAt: Date
+    chillZoneValue: number
+    lives: number
+    mmr: number
   }, ExtArgs["result"]["player"]>
   composites: {}
 }
@@ -1155,8 +1471,9 @@ readonly fields: PlayerFieldRefs;
  */
 export interface Prisma__PlayerClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  participations<T extends Prisma.Player$participationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Player$participationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tournament<T extends Prisma.TournamentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TournamentDefaultArgs<ExtArgs>>): Prisma.Prisma__TournamentClient<runtime.Types.Result.GetResult<Prisma.$TournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1189,10 +1506,14 @@ export interface PlayerFieldRefs {
   readonly id: Prisma.FieldRef<"Player", 'Int'>
   readonly userId: Prisma.FieldRef<"Player", 'Int'>
   readonly tournamentId: Prisma.FieldRef<"Player", 'Int'>
+  readonly nickname: Prisma.FieldRef<"Player", 'String'>
   readonly seed: Prisma.FieldRef<"Player", 'Int'>
   readonly score: Prisma.FieldRef<"Player", 'Int'>
   readonly status: Prisma.FieldRef<"Player", 'PlayerStatus'>
   readonly createdAt: Prisma.FieldRef<"Player", 'DateTime'>
+  readonly chillZoneValue: Prisma.FieldRef<"Player", 'Int'>
+  readonly lives: Prisma.FieldRef<"Player", 'Int'>
+  readonly mmr: Prisma.FieldRef<"Player", 'Int'>
 }
     
 
@@ -1586,6 +1907,30 @@ export type PlayerDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Limit how many Players to delete.
    */
   limit?: number
+}
+
+/**
+ * Player.participations
+ */
+export type Player$participationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Participation
+   */
+  select?: Prisma.ParticipationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Participation
+   */
+  omit?: Prisma.ParticipationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ParticipationInclude<ExtArgs> | null
+  where?: Prisma.ParticipationWhereInput
+  orderBy?: Prisma.ParticipationOrderByWithRelationInput | Prisma.ParticipationOrderByWithRelationInput[]
+  cursor?: Prisma.ParticipationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ParticipationScalarFieldEnum | Prisma.ParticipationScalarFieldEnum[]
 }
 
 /**

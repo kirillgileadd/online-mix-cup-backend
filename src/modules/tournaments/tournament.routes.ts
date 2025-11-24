@@ -75,7 +75,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.post(
     "/",
     {
-      // preHandler: app.authenticate,
+      preHandler: app.authenticate,
       schema: {
         tags: ["tournaments"],
         summary: "Создать турнир",
@@ -110,7 +110,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.put(
     "/:id",
     {
-      // preHandler: app.authenticate,
+      preHandler: app.authenticate,
       schema: {
         tags: ["tournaments"],
         summary: "Обновить турнир",

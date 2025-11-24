@@ -390,7 +390,9 @@ export const ModelName = {
   Player: 'Player',
   RefreshToken: 'RefreshToken',
   Role: 'Role',
-  UserRole: 'UserRole'
+  UserRole: 'UserRole',
+  Lobby: 'Lobby',
+  Participation: 'Participation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tournament" | "application" | "player" | "refreshToken" | "role" | "userRole"
+    modelProps: "user" | "tournament" | "application" | "player" | "refreshToken" | "role" | "userRole" | "lobby" | "participation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -928,6 +930,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Lobby: {
+      payload: Prisma.$LobbyPayload<ExtArgs>
+      fields: Prisma.LobbyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LobbyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LobbyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        findFirst: {
+          args: Prisma.LobbyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LobbyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        findMany: {
+          args: Prisma.LobbyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>[]
+        }
+        create: {
+          args: Prisma.LobbyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        createMany: {
+          args: Prisma.LobbyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LobbyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>[]
+        }
+        delete: {
+          args: Prisma.LobbyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        update: {
+          args: Prisma.LobbyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        deleteMany: {
+          args: Prisma.LobbyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LobbyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LobbyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>[]
+        }
+        upsert: {
+          args: Prisma.LobbyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LobbyPayload>
+        }
+        aggregate: {
+          args: Prisma.LobbyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLobby>
+        }
+        groupBy: {
+          args: Prisma.LobbyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LobbyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LobbyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LobbyCountAggregateOutputType> | number
+        }
+      }
+    }
+    Participation: {
+      payload: Prisma.$ParticipationPayload<ExtArgs>
+      fields: Prisma.ParticipationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ParticipationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ParticipationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        findFirst: {
+          args: Prisma.ParticipationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ParticipationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        findMany: {
+          args: Prisma.ParticipationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        create: {
+          args: Prisma.ParticipationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        createMany: {
+          args: Prisma.ParticipationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ParticipationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        delete: {
+          args: Prisma.ParticipationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        update: {
+          args: Prisma.ParticipationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        deleteMany: {
+          args: Prisma.ParticipationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ParticipationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ParticipationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>[]
+        }
+        upsert: {
+          args: Prisma.ParticipationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ParticipationPayload>
+        }
+        aggregate: {
+          args: Prisma.ParticipationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateParticipation>
+        }
+        groupBy: {
+          args: Prisma.ParticipationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ParticipationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ParticipationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ParticipationCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -968,39 +1118,39 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const UserScalarFieldEnum = {
-  id: 'id',
   telegramId: 'telegramId',
   username: 'username',
+  createdAt: 'createdAt',
   photoUrl: 'photoUrl',
   discordUsername: 'discordUsername',
-  createdAt: 'createdAt'
+  id: 'id'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const TournamentScalarFieldEnum = {
-  id: 'id',
   name: 'name',
   status: 'status',
+  createdAt: 'createdAt',
   eventDate: 'eventDate',
   price: 'price',
   prizePool: 'prizePool',
-  createdAt: 'createdAt'
+  id: 'id'
 } as const
 
 export type TournamentScalarFieldEnum = (typeof TournamentScalarFieldEnum)[keyof typeof TournamentScalarFieldEnum]
 
 
 export const ApplicationScalarFieldEnum = {
+  mmr: 'mmr',
+  gameRoles: 'gameRoles',
+  status: 'status',
+  createdAt: 'createdAt',
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
-  mmr: 'mmr',
-  gameRoles: 'gameRoles',
-  nickname: 'nickname',
-  status: 'status',
-  createdAt: 'createdAt'
+  nickname: 'nickname'
 } as const
 
 export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -1010,43 +1160,71 @@ export const PlayerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
+  nickname: 'nickname',
   seed: 'seed',
   score: 'score',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  chillZoneValue: 'chillZoneValue',
+  lives: 'lives',
+  mmr: 'mmr'
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
 
 
 export const RefreshTokenScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
   token: 'token',
   expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  id: 'id',
+  userId: 'userId'
 } as const
 
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
-  id: 'id',
   name: 'name',
   description: 'description',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  id: 'id'
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
 export const UserRoleScalarFieldEnum = {
+  assignedAt: 'assignedAt',
   userId: 'userId',
-  roleId: 'roleId',
-  assignedAt: 'assignedAt'
+  roleId: 'roleId'
 } as const
 
 export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
+
+
+export const LobbyScalarFieldEnum = {
+  id: 'id',
+  round: 'round',
+  status: 'status',
+  tournamentId: 'tournamentId',
+  createdAt: 'createdAt'
+} as const
+
+export type LobbyScalarFieldEnum = (typeof LobbyScalarFieldEnum)[keyof typeof LobbyScalarFieldEnum]
+
+
+export const ParticipationScalarFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  playerId: 'playerId',
+  team: 'team',
+  isCaptain: 'isCaptain',
+  pickedAt: 'pickedAt',
+  result: 'result'
+} as const
+
+export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1080,20 +1258,6 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
 /**
- * Reference to a field of type 'Int'
- */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
-    
-
-
-/**
- * Reference to a field of type 'Int[]'
- */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
-    
-
-
-/**
  * Reference to a field of type 'String'
  */
 export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String'>
@@ -1118,6 +1282,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
 
 
@@ -1160,6 +1338,41 @@ export type EnumPlayerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
  * Reference to a field of type 'PlayerStatus[]'
  */
 export type ListEnumPlayerStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PlayerStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'LobbyStatus'
+ */
+export type EnumLobbyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LobbyStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'LobbyStatus[]'
+ */
+export type ListEnumLobbyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LobbyStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'ParticipationResult'
+ */
+export type EnumParticipationResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParticipationResult'>
+    
+
+
+/**
+ * Reference to a field of type 'ParticipationResult[]'
+ */
+export type ListEnumParticipationResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ParticipationResult[]'>
     
 
 
@@ -1262,6 +1475,8 @@ export type GlobalOmitConfig = {
   refreshToken?: Prisma.RefreshTokenOmit
   role?: Prisma.RoleOmit
   userRole?: Prisma.UserRoleOmit
+  lobby?: Prisma.LobbyOmit
+  participation?: Prisma.ParticipationOmit
 }
 
 /* Types for Logging */

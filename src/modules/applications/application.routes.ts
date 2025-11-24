@@ -25,7 +25,7 @@ const idParamSchema = {
   },
 };
 
-const pendingQuerySchema = {
+const applicationsQuerySchema = {
   type: "object",
   properties: {
     tournamentId: { type: "integer" },
@@ -58,14 +58,14 @@ export async function applicationRoutes(app: FastifyInstance) {
   );
 
   app.get(
-    "/pending",
+    "/",
     {
       // preHandler: app.authenticate,
       schema: {
         tags: ["applications"],
-        summary: "Список заявок на модерации",
+        summary: "Список всех заявок",
         security: [{ bearerAuth: [] }],
-        querystring: pendingQuerySchema,
+        querystring: applicationsQuerySchema,
         response: {
           200: {
             type: "array",
@@ -80,7 +80,7 @@ export async function applicationRoutes(app: FastifyInstance) {
         query.tournamentId !== undefined
           ? Number(query.tournamentId)
           : undefined;
-      return service.listPendingApplications(tournamentId);
+      return service.listApplications(tournamentId);
     }
   );
 

@@ -14,6 +14,7 @@ import { tournamentRoutes } from "./modules/tournaments/tournament.routes";
 import { playerRoutes } from "./modules/players/player.routes";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { roleRoutes } from "./modules/roles/role.routes";
+import { lobbyRoutes } from "./modules/lobbies/lobby.routes";
 
 export const buildServer = () => {
   const app = Fastify({
@@ -37,6 +38,10 @@ export const buildServer = () => {
         {
           name: "roles",
           description: "Система ролей и привязка к пользователям",
+        },
+        {
+          name: "lobbies",
+          description: "Генерация лобби, драфт и управление матчами",
         },
       ],
       components: {
@@ -113,6 +118,7 @@ export const buildServer = () => {
   app.register(tournamentRoutes, { prefix: "/tournaments" });
   app.register(playerRoutes, { prefix: "/players" });
   app.register(roleRoutes, { prefix: "/roles" });
+  app.register(lobbyRoutes, { prefix: "/lobbies" });
 
   return app;
 };

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated"
@@ -11,6 +5,113 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  telegramId      String         @unique
+  username        String?
+  createdAt       DateTime       @default(now())
+  photoUrl        String?
+  discordUsername String?
+  id              Int            @id @default(autoincrement())
+  applications    Application[]
+  players         Player[]
+  refreshTokens   RefreshToken[]
+  roles           UserRole[]
+}
+
+model Tournament {
+  name         String
+  status       TournamentStatus @default(draft)
+  createdAt    DateTime         @default(now())
+  eventDate    DateTime?
+  price        Int
+  prizePool    Int?
+  id           Int              @id @default(autoincrement())
+  applications Application[]
+  lobbies      Lobby[]
+  players      Player[]
+}
+
+model Application {
+  mmr          Int
+  gameRoles    String
+  status       ApplicationStatus @default(pending)
+  createdAt    DateTime          @default(now())
+  id           Int               @id @default(autoincrement())
+  userId       Int
+  tournamentId Int
+  nickname     String?
+  tournament   Tournament        @relation(fields: [tournamentId], references: [id])
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Player {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  tournamentId   Int
+  nickname       String
+  seed           Int?
+  score          Int?
+  status         PlayerStatus    @default(active)
+  createdAt      DateTime        @default(now())
+  chillZoneValue Int             @default(0)
+  lives          Int             @default(3)
+  mmr            Int             @default(1000)
+  participations Participation[]
+  tournament     Tournament      @relation(fields: [tournamentId], references: [id])
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  id          Int        @id @default(autoincrement())
+  users       UserRole[]
+}
+
+model UserRole {
+  assignedAt DateTime @default(now())
+  userId     Int
+  roleId     Int
+  role       Role     @relation(fields: [roleId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+}
+
+model Lobby {
+  id             Int             @id @default(autoincrement())
+  round          Int
+  status         LobbyStatus     @default(PENDING)
+  tournamentId   Int?
+  createdAt      DateTime        @default(now())
+  tournament     Tournament?     @relation(fields: [tournamentId], references: [id])
+  participations Participation[]
+}
+
+model Participation {
+  id        Int                  @id @default(autoincrement())
+  lobbyId   Int
+  playerId  Int
+  team      Int?
+  isCaptain Boolean              @default(false)
+  pickedAt  DateTime?
+  result    ParticipationResult?
+  lobby     Lobby                @relation(fields: [lobbyId], references: [id])
+  player    Player               @relation(fields: [playerId], references: [id])
+
+  @@unique([playerId, lobbyId])
 }
 
 enum TournamentStatus {
@@ -31,86 +132,15 @@ enum PlayerStatus {
   eliminated
 }
 
-model User {
-  id             Int           @id @default(autoincrement())
-  telegramId     String        @unique
-  username       String?
-  photoUrl       String?
-  discordUsername String?
-  createdAt      DateTime      @default(now())
-
-  applications Application[]
-  players      Player[]
-  refreshTokens RefreshToken[]
-  roles        UserRole[]
+enum LobbyStatus {
+  PENDING
+  DRAFTING
+  PLAYING
+  FINISHED
 }
 
-model Tournament {
-  id        Int              @id @default(autoincrement())
-  name      String
-  status    TournamentStatus @default(draft)
-  eventDate DateTime?
-  price     Int
-  prizePool Int?
-  createdAt DateTime         @default(now())
-
-  applications Application[]
-  players      Player[]
-}
-
-model Application {
-  id           Int               @id @default(autoincrement())
-  userId       Int
-  tournamentId Int
-  mmr          Int
-  gameRoles    String
-  nickname     String?
-  status       ApplicationStatus @default(pending)
-  createdAt    DateTime          @default(now())
-
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tournament Tournament @relation(fields: [tournamentId], references: [id])
-}
-
-model Player {
-  id           Int          @id @default(autoincrement())
-  userId       Int
-  tournamentId Int
-  seed         Int?
-  score        Int?
-  status       PlayerStatus @default(active)
-  createdAt    DateTime     @default(now())
-
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tournament Tournament @relation(fields: [tournamentId], references: [id])
-}
-
-model RefreshToken {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Role {
-  id          Int        @id @default(autoincrement())
-  name        String     @unique
-  description String?
-  createdAt   DateTime   @default(now())
-
-  users UserRole[]
-}
-
-model UserRole {
-  userId Int
-  roleId Int
-  assignedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  role Role @relation(fields: [roleId], references: [id])
-
-  @@id([userId, roleId])
+enum ParticipationResult {
+  WIN
+  LOSS
+  NONE
 }

@@ -90,13 +90,27 @@ export const applicationWithTournamentSchema = {
 
 export const playerSchema = {
   type: "object",
-  required: ["id", "userId", "tournamentId", "status", "createdAt"],
+  required: [
+    "id",
+    "userId",
+    "tournamentId",
+    "nickname",
+    "mmr",
+    "chillZoneValue",
+    "lives",
+    "status",
+    "createdAt",
+  ],
   properties: {
     id: integerSchema,
     userId: integerSchema,
     tournamentId: integerSchema,
+    nickname: { type: "string" },
+    mmr: { type: "integer" },
     seed: { type: ["integer", "null"] },
     score: { type: ["integer", "null"] },
+    chillZoneValue: { type: "integer" },
+    lives: { type: "integer" },
     status: { type: "string", enum: ["active", "eliminated"] },
     createdAt: { type: "string", format: "date-time" },
     user: userSchema,
@@ -145,6 +159,69 @@ export const tokenPairSchema = {
         username: { type: ["string", "null"] },
         photoUrl: { type: ["string", "null"] },
       },
+    },
+  },
+};
+
+export const participationSchema = {
+  type: "object",
+  required: ["id", "lobbyId", "playerId", "isCaptain"],
+  properties: {
+    id: integerSchema,
+    lobbyId: integerSchema,
+    playerId: integerSchema,
+    team: { type: ["integer", "null"] },
+    isCaptain: { type: "boolean" },
+    pickedAt: { type: ["string", "null"], format: "date-time" },
+    result: {
+      type: ["string", "null"],
+      enum: ["WIN", "LOSS", "NONE", null],
+    },
+    player: {
+      type: ["object", "null"],
+      properties: {
+        id: integerSchema,
+        userId: integerSchema,
+        tournamentId: integerSchema,
+        nickname: { type: "string" },
+        mmr: { type: "integer" },
+        seed: { type: ["integer", "null"] },
+        score: { type: ["integer", "null"] },
+        chillZoneValue: { type: "integer" },
+        lives: { type: "integer" },
+        status: { type: "string", enum: ["active", "eliminated"] },
+        createdAt: { type: "string", format: "date-time" },
+        user: {
+          type: ["object", "null"],
+          properties: {
+            id: integerSchema,
+            telegramId: { type: "string" },
+            username: { type: ["string", "null"] },
+            photoUrl: { type: ["string", "null"] },
+            discordUsername: { type: ["string", "null"] },
+            createdAt: { type: "string", format: "date-time" },
+          },
+        },
+      },
+    },
+  },
+};
+
+export const lobbySchema = {
+  type: "object",
+  required: ["id", "round", "status", "createdAt"],
+  properties: {
+    id: integerSchema,
+    round: { type: "integer" },
+    status: {
+      type: "string",
+      enum: ["PENDING", "DRAFTING", "PLAYING", "FINISHED"],
+    },
+    tournamentId: { type: ["integer", "null"] },
+    createdAt: { type: "string", format: "date-time" },
+    participations: {
+      type: "array",
+      items: participationSchema,
     },
   },
 };

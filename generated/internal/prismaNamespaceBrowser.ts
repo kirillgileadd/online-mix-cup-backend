@@ -57,7 +57,9 @@ export const ModelName = {
   Player: 'Player',
   RefreshToken: 'RefreshToken',
   Role: 'Role',
-  UserRole: 'UserRole'
+  UserRole: 'UserRole',
+  Lobby: 'Lobby',
+  Participation: 'Participation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -77,39 +79,39 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 
 export const UserScalarFieldEnum = {
-  id: 'id',
   telegramId: 'telegramId',
   username: 'username',
+  createdAt: 'createdAt',
   photoUrl: 'photoUrl',
   discordUsername: 'discordUsername',
-  createdAt: 'createdAt'
+  id: 'id'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const TournamentScalarFieldEnum = {
-  id: 'id',
   name: 'name',
   status: 'status',
+  createdAt: 'createdAt',
   eventDate: 'eventDate',
   price: 'price',
   prizePool: 'prizePool',
-  createdAt: 'createdAt'
+  id: 'id'
 } as const
 
 export type TournamentScalarFieldEnum = (typeof TournamentScalarFieldEnum)[keyof typeof TournamentScalarFieldEnum]
 
 
 export const ApplicationScalarFieldEnum = {
+  mmr: 'mmr',
+  gameRoles: 'gameRoles',
+  status: 'status',
+  createdAt: 'createdAt',
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
-  mmr: 'mmr',
-  gameRoles: 'gameRoles',
-  nickname: 'nickname',
-  status: 'status',
-  createdAt: 'createdAt'
+  nickname: 'nickname'
 } as const
 
 export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]
@@ -119,43 +121,71 @@ export const PlayerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
+  nickname: 'nickname',
   seed: 'seed',
   score: 'score',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  chillZoneValue: 'chillZoneValue',
+  lives: 'lives',
+  mmr: 'mmr'
 } as const
 
 export type PlayerScalarFieldEnum = (typeof PlayerScalarFieldEnum)[keyof typeof PlayerScalarFieldEnum]
 
 
 export const RefreshTokenScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
   token: 'token',
   expiresAt: 'expiresAt',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  id: 'id',
+  userId: 'userId'
 } as const
 
 export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
 export const RoleScalarFieldEnum = {
-  id: 'id',
   name: 'name',
   description: 'description',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  id: 'id'
 } as const
 
 export type RoleScalarFieldEnum = (typeof RoleScalarFieldEnum)[keyof typeof RoleScalarFieldEnum]
 
 
 export const UserRoleScalarFieldEnum = {
+  assignedAt: 'assignedAt',
   userId: 'userId',
-  roleId: 'roleId',
-  assignedAt: 'assignedAt'
+  roleId: 'roleId'
 } as const
 
 export type UserRoleScalarFieldEnum = (typeof UserRoleScalarFieldEnum)[keyof typeof UserRoleScalarFieldEnum]
+
+
+export const LobbyScalarFieldEnum = {
+  id: 'id',
+  round: 'round',
+  status: 'status',
+  tournamentId: 'tournamentId',
+  createdAt: 'createdAt'
+} as const
+
+export type LobbyScalarFieldEnum = (typeof LobbyScalarFieldEnum)[keyof typeof LobbyScalarFieldEnum]
+
+
+export const ParticipationScalarFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  playerId: 'playerId',
+  team: 'team',
+  isCaptain: 'isCaptain',
+  pickedAt: 'pickedAt',
+  result: 'result'
+} as const
+
+export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
 
 
 export const SortOrder = {

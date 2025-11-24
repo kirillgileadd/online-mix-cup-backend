@@ -96,6 +96,13 @@ export class TournamentService {
         data: approvedApplications.map((application) => ({
           userId: application.userId,
           tournamentId: application.tournamentId,
+          nickname:
+            application.nickname && application.nickname.trim().length > 0
+              ? application.nickname.trim()
+              : `Player_${application.userId}`,
+          mmr: application.mmr,
+          lives: 3,
+          chillZoneValue: 0,
         })),
         skipDuplicates: true,
       });
