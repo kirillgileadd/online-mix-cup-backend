@@ -30,6 +30,7 @@ const tournamentStatusBodySchema = {
 
 export async function tournamentRoutes(app: FastifyInstance) {
   const service = new TournamentService();
+  const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.get(
     "/",
@@ -75,7 +76,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.post(
     "/",
     {
-      preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["tournaments"],
         summary: "Создать турнир",
@@ -110,7 +111,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.put(
     "/:id",
     {
-      preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["tournaments"],
         summary: "Обновить турнир",
@@ -151,7 +152,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.patch(
     "/:id/status",
     {
-      // preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["tournaments"],
         summary: "Обновить статус турнира",
@@ -179,7 +180,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
   app.post(
     "/:id/start",
     {
-      // preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["tournaments"],
         summary: "Стартовать турнир и сформировать игроков",

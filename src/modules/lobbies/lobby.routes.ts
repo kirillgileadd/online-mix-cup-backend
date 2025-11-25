@@ -44,10 +44,12 @@ const sleep = (ms: number) =>
 
 export async function lobbyRoutes(app: FastifyInstance) {
   const service = new LobbyService();
+  const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.post(
     "/generate-lobbies",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["lobbies"],
         summary: "Генерация лобби для турнира",
@@ -95,6 +97,7 @@ export async function lobbyRoutes(app: FastifyInstance) {
   app.post(
     "/:id/start-draft",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["lobbies"],
         summary: "Начать драфт в лобби",
@@ -130,6 +133,7 @@ export async function lobbyRoutes(app: FastifyInstance) {
   app.post(
     "/draft-pick",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["lobbies"],
         summary: "Выбор игрока в драфте",
@@ -176,6 +180,7 @@ export async function lobbyRoutes(app: FastifyInstance) {
   app.post(
     "/finish-lobby",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["lobbies"],
         summary: "Завершить лобби и проставить результаты",

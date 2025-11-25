@@ -10,6 +10,7 @@ export class PlayerService {
         userId: data.userId,
         tournamentId: data.tournamentId,
         nickname: data.nickname,
+        gameRoles: data.gameRoles,
         mmr: data.mmr ?? 1000,
         seed: data.seed ?? null,
         score: data.score ?? null,
@@ -97,9 +98,7 @@ export class PlayerService {
       where: {
         tournamentId,
         status: "active",
-        ...(playerIdsInRound.length
-          ? { id: { notIn: playerIdsInRound } }
-          : {}),
+        ...(playerIdsInRound.length ? { id: { notIn: playerIdsInRound } } : {}),
       },
       include: {
         user: true,
@@ -112,6 +111,7 @@ export class PlayerService {
   updatePlayer(id: number, data: UpdatePlayerInput) {
     const updateData: {
       nickname?: string;
+      gameRoles?: string;
       mmr?: number;
       seed?: number | null;
       score?: number | null;
@@ -122,6 +122,9 @@ export class PlayerService {
 
     if (data.nickname !== undefined) {
       updateData.nickname = data.nickname;
+    }
+    if (data.gameRoles !== undefined) {
+      updateData.gameRoles = data.gameRoles;
     }
     if (data.mmr !== undefined) {
       updateData.mmr = data.mmr;

@@ -47,14 +47,14 @@ const envSchema = z
           )
       : z
           .string()
-          .default("http://localhost:3000")
+          .default("http://localhost:5173")
           .transform((val) =>
             val
               ? val
                   .split(",")
                   .map((origin) => origin.trim())
                   .filter(Boolean)
-              : ["http://localhost:3000"]
+              : ["http://localhost:5173"]
           ),
   })
   .superRefine((data, ctx) => {

@@ -34,10 +34,12 @@ const applicationsQuerySchema = {
 
 export async function applicationRoutes(app: FastifyInstance) {
   const service = new ApplicationService();
+  const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.post(
     "/",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["applications"],
         summary: "Создать заявку",
@@ -87,7 +89,7 @@ export async function applicationRoutes(app: FastifyInstance) {
   app.post(
     "/:id/approve",
     {
-      // preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["applications"],
         summary: "Одобрить заявку",
@@ -113,7 +115,7 @@ export async function applicationRoutes(app: FastifyInstance) {
   app.post(
     "/:id/reject",
     {
-      // preHandler: app.authenticate,
+      preHandler: adminPreHandler,
       schema: {
         tags: ["applications"],
         summary: "Отклонить заявку",

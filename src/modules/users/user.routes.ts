@@ -74,6 +74,7 @@ const serializeUser = (user: UserWithRoles) =>
 export async function userRoutes(app: FastifyInstance) {
   const service = new UserService();
   const registrationService = new UserRegistrationService();
+  const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.get(
     "/",
@@ -98,6 +99,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.post(
     "/",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Создать или получить пользователя",
@@ -167,6 +169,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.patch(
     "/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Обновить пользователя",
@@ -215,6 +218,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.delete(
     "/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Удалить пользователя",
@@ -242,6 +246,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.post(
     "/register",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users", "applications"],
         summary: "Регистрация пользователя на турнир",

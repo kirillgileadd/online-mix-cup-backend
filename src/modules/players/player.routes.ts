@@ -37,20 +37,23 @@ const roundQuerySchema = {
 
 export async function playerRoutes(app: FastifyInstance) {
   const service = new PlayerService();
+  const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.post(
     "/",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["players"],
         summary: "Создать игрока",
         body: {
           type: "object",
-          required: ["userId", "tournamentId", "nickname"],
+          required: ["userId", "tournamentId", "nickname", "gameRoles"],
           properties: {
             userId: { type: "integer" },
             tournamentId: { type: "integer" },
             nickname: { type: "string" },
+            gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },
             score: { type: ["integer", "null"] },
@@ -123,6 +126,7 @@ export async function playerRoutes(app: FastifyInstance) {
   app.put(
     "/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["players"],
         summary: "Обновить игрока",
@@ -131,6 +135,7 @@ export async function playerRoutes(app: FastifyInstance) {
           type: "object",
           properties: {
             nickname: { type: "string" },
+            gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },
             score: { type: ["integer", "null"] },
@@ -162,6 +167,7 @@ export async function playerRoutes(app: FastifyInstance) {
   app.patch(
     "/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["players"],
         summary: "Частично обновить игрока",
@@ -170,6 +176,7 @@ export async function playerRoutes(app: FastifyInstance) {
           type: "object",
           properties: {
             nickname: { type: "string" },
+            gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },
             score: { type: ["integer", "null"] },
@@ -201,6 +208,7 @@ export async function playerRoutes(app: FastifyInstance) {
   app.delete(
     "/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["players"],
         summary: "Удалить игрока",
