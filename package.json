@@ -11,7 +11,8 @@
     "prisma:generate": "prisma generate",
     "lint": "tsc --noEmit",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "test:seed": "vitest run --config vitest.manual.config.ts"
   },
   "keywords": [],
   "author": "",

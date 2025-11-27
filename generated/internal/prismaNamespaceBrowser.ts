@@ -170,7 +170,8 @@ export const LobbyScalarFieldEnum = {
   round: 'round',
   status: 'status',
   tournamentId: 'tournamentId',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type LobbyScalarFieldEnum = (typeof LobbyScalarFieldEnum)[keyof typeof LobbyScalarFieldEnum]
@@ -183,7 +184,8 @@ export const ParticipationScalarFieldEnum = {
   team: 'team',
   isCaptain: 'isCaptain',
   pickedAt: 'pickedAt',
-  result: 'result'
+  result: 'result',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]

@@ -48,6 +48,7 @@ export type ParticipationMinAggregateOutputType = {
   isCaptain: boolean | null
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
+  updatedAt: Date | null
 }
 
 export type ParticipationMaxAggregateOutputType = {
@@ -58,6 +59,7 @@ export type ParticipationMaxAggregateOutputType = {
   isCaptain: boolean | null
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
+  updatedAt: Date | null
 }
 
 export type ParticipationCountAggregateOutputType = {
@@ -68,6 +70,7 @@ export type ParticipationCountAggregateOutputType = {
   isCaptain: number
   pickedAt: number
   result: number
+  updatedAt: number
   _all: number
 }
 
@@ -94,6 +97,7 @@ export type ParticipationMinAggregateInputType = {
   isCaptain?: true
   pickedAt?: true
   result?: true
+  updatedAt?: true
 }
 
 export type ParticipationMaxAggregateInputType = {
@@ -104,6 +108,7 @@ export type ParticipationMaxAggregateInputType = {
   isCaptain?: true
   pickedAt?: true
   result?: true
+  updatedAt?: true
 }
 
 export type ParticipationCountAggregateInputType = {
@@ -114,6 +119,7 @@ export type ParticipationCountAggregateInputType = {
   isCaptain?: true
   pickedAt?: true
   result?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -211,6 +217,7 @@ export type ParticipationGroupByOutputType = {
   isCaptain: boolean
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
+  updatedAt: Date
   _count: ParticipationCountAggregateOutputType | null
   _avg: ParticipationAvgAggregateOutputType | null
   _sum: ParticipationSumAggregateOutputType | null
@@ -244,6 +251,7 @@ export type ParticipationWhereInput = {
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   lobby?: Prisma.XOR<Prisma.LobbyScalarRelationFilter, Prisma.LobbyWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
 }
@@ -256,6 +264,7 @@ export type ParticipationOrderByWithRelationInput = {
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   lobby?: Prisma.LobbyOrderByWithRelationInput
   player?: Prisma.PlayerOrderByWithRelationInput
 }
@@ -272,6 +281,7 @@ export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   lobby?: Prisma.XOR<Prisma.LobbyScalarRelationFilter, Prisma.LobbyWhereInput>
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
 }, "id" | "playerId_lobbyId">
@@ -284,6 +294,7 @@ export type ParticipationOrderByWithAggregationInput = {
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.ParticipationCountOrderByAggregateInput
   _avg?: Prisma.ParticipationAvgOrderByAggregateInput
   _max?: Prisma.ParticipationMaxOrderByAggregateInput
@@ -302,6 +313,7 @@ export type ParticipationScalarWhereWithAggregatesInput = {
   isCaptain?: Prisma.BoolWithAggregatesFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableWithAggregatesFilter<"Participation"> | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Participation"> | Date | string
 }
 
 export type ParticipationCreateInput = {
@@ -309,6 +321,7 @@ export type ParticipationCreateInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
   lobby: Prisma.LobbyCreateNestedOneWithoutParticipationsInput
   player: Prisma.PlayerCreateNestedOneWithoutParticipationsInput
 }
@@ -321,6 +334,7 @@ export type ParticipationUncheckedCreateInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationUpdateInput = {
@@ -328,6 +342,7 @@ export type ParticipationUpdateInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lobby?: Prisma.LobbyUpdateOneRequiredWithoutParticipationsNestedInput
   player?: Prisma.PlayerUpdateOneRequiredWithoutParticipationsNestedInput
 }
@@ -340,6 +355,7 @@ export type ParticipationUncheckedUpdateInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationCreateManyInput = {
@@ -350,6 +366,7 @@ export type ParticipationCreateManyInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationUpdateManyMutationInput = {
@@ -357,6 +374,7 @@ export type ParticipationUpdateManyMutationInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationUncheckedUpdateManyInput = {
@@ -367,6 +385,7 @@ export type ParticipationUncheckedUpdateManyInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationListRelationFilter = {
@@ -392,6 +411,7 @@ export type ParticipationCountOrderByAggregateInput = {
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ParticipationAvgOrderByAggregateInput = {
@@ -409,6 +429,7 @@ export type ParticipationMaxOrderByAggregateInput = {
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ParticipationMinOrderByAggregateInput = {
@@ -419,6 +440,7 @@ export type ParticipationMinOrderByAggregateInput = {
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type ParticipationSumOrderByAggregateInput = {
@@ -525,6 +547,7 @@ export type ParticipationCreateWithoutPlayerInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
   lobby: Prisma.LobbyCreateNestedOneWithoutParticipationsInput
 }
 
@@ -535,6 +558,7 @@ export type ParticipationUncheckedCreateWithoutPlayerInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationCreateOrConnectWithoutPlayerInput = {
@@ -574,6 +598,7 @@ export type ParticipationScalarWhereInput = {
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
 }
 
 export type ParticipationCreateWithoutLobbyInput = {
@@ -581,6 +606,7 @@ export type ParticipationCreateWithoutLobbyInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
   player: Prisma.PlayerCreateNestedOneWithoutParticipationsInput
 }
 
@@ -591,6 +617,7 @@ export type ParticipationUncheckedCreateWithoutLobbyInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationCreateOrConnectWithoutLobbyInput = {
@@ -626,6 +653,7 @@ export type ParticipationCreateManyPlayerInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationUpdateWithoutPlayerInput = {
@@ -633,6 +661,7 @@ export type ParticipationUpdateWithoutPlayerInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lobby?: Prisma.LobbyUpdateOneRequiredWithoutParticipationsNestedInput
 }
 
@@ -643,6 +672,7 @@ export type ParticipationUncheckedUpdateWithoutPlayerInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationUncheckedUpdateManyWithoutPlayerInput = {
@@ -652,6 +682,7 @@ export type ParticipationUncheckedUpdateManyWithoutPlayerInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationCreateManyLobbyInput = {
@@ -661,6 +692,7 @@ export type ParticipationCreateManyLobbyInput = {
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
 }
 
 export type ParticipationUpdateWithoutLobbyInput = {
@@ -668,6 +700,7 @@ export type ParticipationUpdateWithoutLobbyInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   player?: Prisma.PlayerUpdateOneRequiredWithoutParticipationsNestedInput
 }
 
@@ -678,6 +711,7 @@ export type ParticipationUncheckedUpdateWithoutLobbyInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type ParticipationUncheckedUpdateManyWithoutLobbyInput = {
@@ -687,6 +721,7 @@ export type ParticipationUncheckedUpdateManyWithoutLobbyInput = {
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -699,6 +734,7 @@ export type ParticipationSelect<ExtArgs extends runtime.Types.Extensions.Interna
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
+  updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
@@ -711,6 +747,7 @@ export type ParticipationSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
+  updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
@@ -723,6 +760,7 @@ export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
+  updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
@@ -735,9 +773,10 @@ export type ParticipationSelectScalar = {
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
+  updatedAt?: boolean
 }
 
-export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lobbyId" | "playerId" | "team" | "isCaptain" | "pickedAt" | "result", ExtArgs["result"]["participation"]>
+export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lobbyId" | "playerId" | "team" | "isCaptain" | "pickedAt" | "result" | "updatedAt", ExtArgs["result"]["participation"]>
 export type ParticipationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
@@ -765,6 +804,7 @@ export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.Inter
     isCaptain: boolean
     pickedAt: Date | null
     result: $Enums.ParticipationResult | null
+    updatedAt: Date
   }, ExtArgs["result"]["participation"]>
   composites: {}
 }
@@ -1197,6 +1237,7 @@ export interface ParticipationFieldRefs {
   readonly isCaptain: Prisma.FieldRef<"Participation", 'Boolean'>
   readonly pickedAt: Prisma.FieldRef<"Participation", 'DateTime'>
   readonly result: Prisma.FieldRef<"Participation", 'ParticipationResult'>
+  readonly updatedAt: Prisma.FieldRef<"Participation", 'DateTime'>
 }
     
 

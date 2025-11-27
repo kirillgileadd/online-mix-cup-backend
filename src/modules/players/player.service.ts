@@ -10,7 +10,7 @@ export class PlayerService {
         userId: data.userId,
         tournamentId: data.tournamentId,
         nickname: data.nickname,
-        gameRoles: data.gameRoles,
+        gameRoles: data.gameRoles ?? "flex",
         mmr: data.mmr ?? 1000,
         seed: data.seed ?? null,
         score: data.score ?? null,

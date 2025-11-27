@@ -97,6 +97,7 @@ model Lobby {
   status         LobbyStatus     @default(PENDING)
   tournamentId   Int?
   createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   tournament     Tournament?     @relation(fields: [tournamentId], references: [id])
   participations Participation[]
 }
@@ -109,6 +110,7 @@ model Participation {
   isCaptain Boolean              @default(false)
   pickedAt  DateTime?
   result    ParticipationResult?
+  updatedAt DateTime             @updatedAt
   lobby     Lobby                @relation(fields: [lobbyId], references: [id])
   player    Player               @relation(fields: [playerId], references: [id])
 

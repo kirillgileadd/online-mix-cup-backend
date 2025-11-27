@@ -44,6 +44,7 @@ export type LobbyMinAggregateOutputType = {
   status: $Enums.LobbyStatus | null
   tournamentId: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LobbyMaxAggregateOutputType = {
@@ -52,6 +53,7 @@ export type LobbyMaxAggregateOutputType = {
   status: $Enums.LobbyStatus | null
   tournamentId: number | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type LobbyCountAggregateOutputType = {
@@ -60,6 +62,7 @@ export type LobbyCountAggregateOutputType = {
   status: number
   tournamentId: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -82,6 +85,7 @@ export type LobbyMinAggregateInputType = {
   status?: true
   tournamentId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type LobbyMaxAggregateInputType = {
@@ -90,6 +94,7 @@ export type LobbyMaxAggregateInputType = {
   status?: true
   tournamentId?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type LobbyCountAggregateInputType = {
@@ -98,6 +103,7 @@ export type LobbyCountAggregateInputType = {
   status?: true
   tournamentId?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -193,6 +199,7 @@ export type LobbyGroupByOutputType = {
   status: $Enums.LobbyStatus
   tournamentId: number | null
   createdAt: Date
+  updatedAt: Date
   _count: LobbyCountAggregateOutputType | null
   _avg: LobbyAvgAggregateOutputType | null
   _sum: LobbySumAggregateOutputType | null
@@ -224,6 +231,7 @@ export type LobbyWhereInput = {
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   tournament?: Prisma.XOR<Prisma.TournamentNullableScalarRelationFilter, Prisma.TournamentWhereInput> | null
   participations?: Prisma.ParticipationListRelationFilter
 }
@@ -234,6 +242,7 @@ export type LobbyOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   tournament?: Prisma.TournamentOrderByWithRelationInput
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
 }
@@ -247,6 +256,7 @@ export type LobbyWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   tournament?: Prisma.XOR<Prisma.TournamentNullableScalarRelationFilter, Prisma.TournamentWhereInput> | null
   participations?: Prisma.ParticipationListRelationFilter
 }, "id">
@@ -257,6 +267,7 @@ export type LobbyOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.LobbyCountOrderByAggregateInput
   _avg?: Prisma.LobbyAvgOrderByAggregateInput
   _max?: Prisma.LobbyMaxOrderByAggregateInput
@@ -273,12 +284,14 @@ export type LobbyScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumLobbyStatusWithAggregatesFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableWithAggregatesFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lobby"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lobby"> | Date | string
 }
 
 export type LobbyCreateInput = {
   round: number
   status?: $Enums.LobbyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   tournament?: Prisma.TournamentCreateNestedOneWithoutLobbiesInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutLobbyInput
 }
@@ -289,6 +302,7 @@ export type LobbyUncheckedCreateInput = {
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutLobbyInput
 }
 
@@ -296,6 +310,7 @@ export type LobbyUpdateInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tournament?: Prisma.TournamentUpdateOneWithoutLobbiesNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutLobbyNestedInput
 }
@@ -306,6 +321,7 @@ export type LobbyUncheckedUpdateInput = {
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
@@ -315,12 +331,14 @@ export type LobbyCreateManyInput = {
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LobbyUpdateManyMutationInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LobbyUncheckedUpdateManyInput = {
@@ -329,6 +347,7 @@ export type LobbyUncheckedUpdateManyInput = {
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LobbyListRelationFilter = {
@@ -347,6 +366,7 @@ export type LobbyCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LobbyAvgOrderByAggregateInput = {
@@ -361,6 +381,7 @@ export type LobbyMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LobbyMinOrderByAggregateInput = {
@@ -369,6 +390,7 @@ export type LobbyMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type LobbySumOrderByAggregateInput = {
@@ -446,6 +468,7 @@ export type LobbyCreateWithoutTournamentInput = {
   round: number
   status?: $Enums.LobbyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   participations?: Prisma.ParticipationCreateNestedManyWithoutLobbyInput
 }
 
@@ -454,6 +477,7 @@ export type LobbyUncheckedCreateWithoutTournamentInput = {
   round: number
   status?: $Enums.LobbyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutLobbyInput
 }
 
@@ -492,12 +516,14 @@ export type LobbyScalarWhereInput = {
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
 }
 
 export type LobbyCreateWithoutParticipationsInput = {
   round: number
   status?: $Enums.LobbyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   tournament?: Prisma.TournamentCreateNestedOneWithoutLobbiesInput
 }
 
@@ -507,6 +533,7 @@ export type LobbyUncheckedCreateWithoutParticipationsInput = {
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LobbyCreateOrConnectWithoutParticipationsInput = {
@@ -529,6 +556,7 @@ export type LobbyUpdateWithoutParticipationsInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tournament?: Prisma.TournamentUpdateOneWithoutLobbiesNestedInput
 }
 
@@ -538,6 +566,7 @@ export type LobbyUncheckedUpdateWithoutParticipationsInput = {
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type LobbyCreateManyTournamentInput = {
@@ -545,12 +574,14 @@ export type LobbyCreateManyTournamentInput = {
   round: number
   status?: $Enums.LobbyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type LobbyUpdateWithoutTournamentInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUpdateManyWithoutLobbyNestedInput
 }
 
@@ -559,6 +590,7 @@ export type LobbyUncheckedUpdateWithoutTournamentInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
@@ -567,6 +599,7 @@ export type LobbyUncheckedUpdateManyWithoutTournamentInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -606,6 +639,7 @@ export type LobbySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   tournamentId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
   participations?: boolean | Prisma.Lobby$participationsArgs<ExtArgs>
   _count?: boolean | Prisma.LobbyCountOutputTypeDefaultArgs<ExtArgs>
@@ -617,6 +651,7 @@ export type LobbySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   tournamentId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
 }, ExtArgs["result"]["lobby"]>
 
@@ -626,6 +661,7 @@ export type LobbySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   tournamentId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
 }, ExtArgs["result"]["lobby"]>
 
@@ -635,9 +671,10 @@ export type LobbySelectScalar = {
   status?: boolean
   tournamentId?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type LobbyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "round" | "status" | "tournamentId" | "createdAt", ExtArgs["result"]["lobby"]>
+export type LobbyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "round" | "status" | "tournamentId" | "createdAt" | "updatedAt", ExtArgs["result"]["lobby"]>
 export type LobbyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
   participations?: boolean | Prisma.Lobby$participationsArgs<ExtArgs>
@@ -662,6 +699,7 @@ export type $LobbyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: $Enums.LobbyStatus
     tournamentId: number | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["lobby"]>
   composites: {}
 }
@@ -1092,6 +1130,7 @@ export interface LobbyFieldRefs {
   readonly status: Prisma.FieldRef<"Lobby", 'LobbyStatus'>
   readonly tournamentId: Prisma.FieldRef<"Lobby", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Lobby", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Lobby", 'DateTime'>
 }
     
 

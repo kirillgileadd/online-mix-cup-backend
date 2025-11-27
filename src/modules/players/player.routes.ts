@@ -48,7 +48,7 @@ export async function playerRoutes(app: FastifyInstance) {
         summary: "Создать игрока",
         body: {
           type: "object",
-          required: ["userId", "tournamentId", "nickname", "gameRoles"],
+          required: ["userId", "tournamentId", "nickname"],
           properties: {
             userId: { type: "integer" },
             tournamentId: { type: "integer" },

@@ -87,26 +87,31 @@ export class TournamentService {
           status: "approved",
         },
       });
+      const existingPlayersCount = await tx.player.count({
+        where: { tournamentId: id },
+      });
 
-      if (approvedApplications.length === 0) {
+      if (approvedApplications.length === 0 && existingPlayersCount === 0) {
         throw new Error("No approved applications to form players");
       }
 
-      await tx.player.createMany({
-        data: approvedApplications.map((application) => ({
-          userId: application.userId,
-          tournamentId: application.tournamentId,
-          nickname:
-            application.nickname && application.nickname.trim().length > 0
-              ? application.nickname.trim()
-              : `Player_${application.userId}`,
-          mmr: application.mmr,
-          gameRoles: application.gameRoles,
-          lives: 3,
-          chillZoneValue: 0,
-        })),
-        skipDuplicates: true,
-      });
+      if (approvedApplications.length > 0) {
+        await tx.player.createMany({
+          data: approvedApplications.map((application) => ({
+            userId: application.userId,
+            tournamentId: application.tournamentId,
+            nickname:
+              application.nickname && application.nickname.trim().length > 0
+                ? application.nickname.trim()
+                : `Player_${application.userId}`,
+            mmr: application.mmr,
+            gameRoles: application.gameRoles,
+            lives: 3,
+            chillZoneValue: 0,
+          })),
+          skipDuplicates: true,
+        });
+      }
 
       return tx.tournament.update({
         where: { id },
