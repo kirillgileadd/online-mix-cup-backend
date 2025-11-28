@@ -5,6 +5,7 @@ import { parseWithValidation } from "../../utils/validation";
 import {
   generateLobbiesSchema,
   draftPickSchema,
+  startPlayingSchema,
   finishLobbySchema,
 } from "./lobby.schema";
 import { LobbyService } from "./lobby.service";
@@ -138,13 +139,13 @@ export async function lobbyRoutes(app: FastifyInstance) {
         tags: ["lobbies"],
         summary: "Выбор игрока в драфте",
         description:
-          "Выбирает игрока в команду. Капитан с большим MMR начинает первым",
+          "Выбирает игрока в команду. Капитан с большим MMR начинает первым. Если playerId === null, отменяет последний пик в указанной команде",
         body: {
           type: "object",
-          required: ["lobbyId", "playerId", "team"],
+          required: ["lobbyId", "team"],
           properties: {
             lobbyId: { type: "integer" },
-            playerId: { type: "integer" },
+            playerId: { type: ["integer", "null"] },
             team: { type: "integer", minimum: 1, maximum: 2 },
           },
         },
@@ -172,6 +173,47 @@ export async function lobbyRoutes(app: FastifyInstance) {
         reply.code(statusCode).send({
           message:
             error instanceof Error ? error.message : "Ошибка выбора в драфте",
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/start-playing",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["lobbies"],
+        summary: "Начать игру (перевести лобби в статус PLAYING)",
+        description:
+          "Переводит лобби в статус PLAYING. Проверяет, что все игроки выбраны и в каждой команде по 5 игроков",
+        body: {
+          type: "object",
+          required: ["lobbyId"],
+          properties: {
+            lobbyId: { type: "integer" },
+          },
+        },
+        response: {
+          200: lobbySchema,
+          400: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const payload = parseWithValidation(startPlayingSchema, request.body);
+      try {
+        const lobby = await service.startPlaying(payload.lobbyId);
+        return lobby;
+      } catch (error) {
+        const statusCode =
+          error instanceof Error && error.message.includes("не найдено")
+            ? 404
+            : 400;
+        reply.code(statusCode).send({
+          message:
+            error instanceof Error ? error.message : "Ошибка начала игры",
         });
       }
     }

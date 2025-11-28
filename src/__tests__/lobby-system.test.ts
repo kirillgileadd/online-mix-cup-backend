@@ -192,6 +192,10 @@ describe("Lobby System - Полный сценарий", () => {
       .sort((a, b) => b - a);
 
     expect(captainMmr).toEqual(mmrSorted.slice(0, 2));
+
+    // И у каждой команды есть капитан
+    expect(captains.some((c) => c.team === 1)).toBe(true);
+    expect(captains.some((c) => c.team === 2)).toBe(true);
   });
 
   it("6. Драфт - распределение игроков по командам", async () => {
@@ -203,19 +207,14 @@ describe("Lobby System - Полный сценарий", () => {
     const captains = lobby.participations.filter((p) => p.isCaptain);
     expect(captains).toHaveLength(2);
 
-    // Сортируем капитанов по MMR (капитан с большим MMR начинает)
-    const sortedCaptains = [...captains].sort((a, b) => {
-      const mmrA = a.player?.mmr || 0;
-      const mmrB = b.player?.mmr || 0;
-      return mmrB - mmrA;
-    });
-
-    const captain1 = sortedCaptains[0];
-    const captain2 = sortedCaptains[1];
-
     // Определяем команды капитанов (при старте драфта им автоматически назначены команды)
     const team1 = 1;
     const team2 = 2;
+    const captainTeam1 = captains.find((p) => p.team === team1);
+    const captainTeam2 = captains.find((p) => p.team === team2);
+    if (!captainTeam1 || !captainTeam2) {
+      throw new Error("Не определены капитаны для обеих команд");
+    }
 
     // Получаем список игроков без команды (капитаны уже занимают первые слоты)
     const unassignedPlayers = lobby.participations.filter(
@@ -243,10 +242,17 @@ describe("Lobby System - Полный сценарий", () => {
       throw new Error("Лобби не найдено после драфта");
     }
 
-    // Проверяем, что все игроки распределены
-    expect(lobby.status).toBe("PLAYING");
+    // Проверяем, что все игроки распределены (но статус ещё DRAFTING)
+    expect(lobby.status).toBe("DRAFTING");
     const allAssigned = lobby.participations.every((p) => p.team !== null);
     expect(allAssigned).toBe(true);
+
+    // Переводим лобби в статус PLAYING
+    lobby = await lobbyService.startPlaying(lobbyId);
+    if (!lobby) {
+      throw new Error("Лобби не найдено после начала игры");
+    }
+    expect(lobby.status).toBe("PLAYING");
 
     // Проверяем, что в каждой команде по 5 игроков
     const team1Players = lobby.participations.filter((p) => p.team === team1);

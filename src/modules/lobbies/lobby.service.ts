@@ -245,14 +245,18 @@ export class LobbyService {
         throw new Error("Недостаточно игроков для определения капитанов");
       }
 
+      // Определяем случайно, кто будет выбирать первым
+      const [firstCaptain, secondCaptain] =
+        Math.random() < 0.5 ? [captain1, captain2] : [captain2, captain1];
+
       // Назначаем капитанов и закрепляем за ними первый слот в своих командах
-      const updatedCaptain1 = await tx.participation.update({
-        where: { id: captain1.id },
+      await tx.participation.update({
+        where: { id: firstCaptain.id },
         data: { isCaptain: true, team: 1 },
       });
 
-      const updatedCaptain2 = await tx.participation.update({
-        where: { id: captain2.id },
+      await tx.participation.update({
+        where: { id: secondCaptain.id },
         data: { isCaptain: true, team: 2 },
       });
 
@@ -279,8 +283,9 @@ export class LobbyService {
 
   /**
    * Выбор игрока в драфте
+   * Если playerId === null, отменяет последний пик в указанной команде
    */
-  async draftPick(lobbyId: number, playerId: number, team: number) {
+  async draftPick(lobbyId: number, playerId: number | null, team: number) {
     return prisma.$transaction(async (tx) => {
       const lobby = await tx.lobby.findUnique({
         where: { id: lobbyId },
@@ -293,10 +298,73 @@ export class LobbyService {
         throw new Error("Лобби не найдено");
       }
 
-      if (lobby.status !== "DRAFTING") {
-        throw new Error("Лобби не в стадии драфта");
+      if (lobby.status !== "DRAFTING" && lobby.status !== "PLAYING") {
+        throw new Error("Лобби должно быть в стадии драфта или игры");
       }
 
+      // Проверяем, что команда валидна (1 или 2)
+      if (team !== 1 && team !== 2) {
+        throw new Error("Команда должна быть 1 или 2");
+      }
+
+      // Если playerId === null, отменяем последний пик в команде
+      if (playerId === null) {
+        // Находим последний пик в указанной команде (не капитана)
+        const teamPicks = lobby.participations
+          .filter(
+            (p) => p.team === team && p.isCaptain === false && p.pickedAt !== null
+          )
+          .sort((a, b) => {
+            if (!a.pickedAt || !b.pickedAt) return 0;
+            return b.pickedAt.getTime() - a.pickedAt.getTime();
+          });
+
+        if (teamPicks.length === 0) {
+          throw new Error("Нет пиков для отмены в этой команде");
+        }
+
+        const lastPick = teamPicks[0];
+        if (!lastPick) {
+          throw new Error("Нет пиков для отмены в этой команде");
+        }
+
+        // Отменяем пик
+        await tx.participation.update({
+          where: { id: lastPick.id },
+          data: {
+            team: null,
+            pickedAt: null,
+          },
+        });
+
+        // Если лобби было в статусе PLAYING, возвращаем в DRAFTING
+        const updatedLobbyAfterUnpick = await tx.lobby.findUnique({
+          where: { id: lobbyId },
+        });
+        if (updatedLobbyAfterUnpick?.status === "PLAYING") {
+          await tx.lobby.update({
+            where: { id: lobbyId },
+            data: { status: "DRAFTING" },
+          });
+        }
+
+        return tx.lobby.findUnique({
+          where: { id: lobbyId },
+          include: {
+            participations: {
+              include: {
+                player: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+          },
+        });
+      }
+
+      // Обычный пик игрока
       const participation = lobby.participations.find(
         (p) => p.playerId === playerId
       );
@@ -309,11 +377,6 @@ export class LobbyService {
         throw new Error("Игрок уже выбран");
       }
 
-      // Проверяем, что команда валидна (1 или 2)
-      if (team !== 1 && team !== 2) {
-        throw new Error("Команда должна быть 1 или 2");
-      }
-
       // Обновляем участие
       await tx.participation.update({
         where: { id: participation.id },
@@ -323,28 +386,63 @@ export class LobbyService {
         },
       });
 
-      // Проверяем, все ли игроки выбраны
-      const updatedLobby = await tx.lobby.findUnique({
+      return tx.lobby.findUnique({
+        where: { id: lobbyId },
+        include: {
+          participations: {
+            include: {
+              player: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+        },
+      });
+    });
+  }
+
+  /**
+   * Начать игру (перевести лобби в статус PLAYING)
+   * Проверяет, что все игроки выбраны
+   */
+  async startPlaying(lobbyId: number) {
+    return prisma.$transaction(async (tx) => {
+      const lobby = await tx.lobby.findUnique({
         where: { id: lobbyId },
         include: {
           participations: true,
         },
       });
 
-      const allPicked = updatedLobby?.participations.every(
-        (p) => p.team !== null
-      );
-
-      if (allPicked) {
-        // Все игроки выбраны, переводим лобби в статус PLAYING
-        await tx.lobby.update({
-          where: { id: lobbyId },
-          data: { status: "PLAYING" },
-        });
+      if (!lobby) {
+        throw new Error("Лобби не найдено");
       }
 
-      return tx.lobby.findUnique({
+      if (lobby.status === "FINISHED") {
+        throw new Error("Нельзя начать игру в завершённом лобби");
+      }
+
+      // Проверяем, что все игроки выбраны
+      const allPicked = lobby.participations.every((p) => p.team !== null);
+
+      if (!allPicked) {
+        throw new Error("Не все игроки выбраны в команды");
+      }
+
+      // Проверяем, что в каждой команде по 5 игроков
+      const team1Count = lobby.participations.filter((p) => p.team === 1).length;
+      const team2Count = lobby.participations.filter((p) => p.team === 2).length;
+
+      if (team1Count !== 5 || team2Count !== 5) {
+        throw new Error("В каждой команде должно быть ровно 5 игроков");
+      }
+
+      // Переводим лобби в статус PLAYING
+      return tx.lobby.update({
         where: { id: lobbyId },
+        data: { status: "PLAYING" },
         include: {
           participations: {
             include: {
