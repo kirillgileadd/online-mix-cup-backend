@@ -38,6 +38,15 @@ export async function tournamentRoutes(app: FastifyInstance) {
       schema: {
         tags: ["tournaments"],
         summary: "Список турниров",
+        querystring: {
+          type: "object",
+          properties: {
+            status: {
+              type: "string",
+              enum: ["draft", "collecting", "running", "finished"],
+            },
+          },
+        },
         response: {
           200: {
             type: "array",
@@ -46,7 +55,16 @@ export async function tournamentRoutes(app: FastifyInstance) {
         },
       },
     },
-    async () => service.listTournaments()
+    async (request) => {
+      const query = request.query as { status?: string };
+      const status = query.status as
+        | "draft"
+        | "collecting"
+        | "running"
+        | "finished"
+        | undefined;
+      return service.listTournaments(status);
+    }
   );
 
   app.get(

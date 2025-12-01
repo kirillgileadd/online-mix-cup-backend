@@ -312,7 +312,8 @@ export class LobbyService {
         // Находим последний пик в указанной команде (не капитана)
         const teamPicks = lobby.participations
           .filter(
-            (p) => p.team === team && p.isCaptain === false && p.pickedAt !== null
+            (p) =>
+              p.team === team && p.isCaptain === false && p.pickedAt !== null
           )
           .sort((a, b) => {
             if (!a.pickedAt || !b.pickedAt) return 0;
@@ -432,8 +433,12 @@ export class LobbyService {
       }
 
       // Проверяем, что в каждой команде по 5 игроков
-      const team1Count = lobby.participations.filter((p) => p.team === 1).length;
-      const team2Count = lobby.participations.filter((p) => p.team === 2).length;
+      const team1Count = lobby.participations.filter(
+        (p) => p.team === 1
+      ).length;
+      const team2Count = lobby.participations.filter(
+        (p) => p.team === 2
+      ).length;
 
       if (team1Count !== 5 || team2Count !== 5) {
         throw new Error("В каждой команде должно быть ровно 5 игроков");
@@ -586,6 +591,7 @@ export class LobbyService {
       where: { tournamentId },
       _max: {
         createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -600,15 +606,176 @@ export class LobbyService {
       },
     });
 
-    const lobbyDate = lobbyAgg._max.createdAt ?? null;
+    const lobbyCreatedDate = lobbyAgg._max.createdAt ?? null;
+    const lobbyUpdatedDate = lobbyAgg._max.updatedAt ?? null;
     const participationDate = participationAgg._max.pickedAt ?? null;
 
-    if (lobbyDate && participationDate) {
-      return new Date(
-        Math.max(lobbyDate.getTime(), participationDate.getTime())
-      );
+    const dates = [
+      lobbyCreatedDate,
+      lobbyUpdatedDate,
+      participationDate,
+    ].filter((d): d is Date => d !== null);
+
+    if (dates.length === 0) {
+      return null;
     }
 
-    return lobbyDate ?? participationDate ?? null;
+    return new Date(Math.max(...dates.map((d) => d.getTime())));
+  }
+
+  /**
+   * Замена игрока в лобби
+   * Игрок из лобби меняется местами с рандомным игроком из chillzone
+   * Игрок из лобби получает -1 жизнь
+   * Игрок из chillzone получает -1 chillZoneValue
+   * Лобби переходит в статус PENDING, все игроки теряют статус капитанов и команды
+   */
+  async replacePlayer(lobbyId: number, playerId: number) {
+    return prisma.$transaction(async (tx) => {
+      // Получаем лобби с участиями
+      const lobby = await tx.lobby.findUnique({
+        where: { id: lobbyId },
+        include: {
+          participations: {
+            include: {
+              player: true,
+            },
+          },
+          tournament: true,
+        },
+      });
+
+      if (!lobby) {
+        throw new Error("Лобби не найдено");
+      }
+
+      if (!lobby.tournamentId) {
+        throw new Error("Лобби не привязано к турниру");
+      }
+
+      // Находим participation для заменяемого игрока
+      const participationToReplace = lobby.participations.find(
+        (p) => p.playerId === playerId
+      );
+
+      if (!participationToReplace) {
+        throw new Error("Игрок не найден в этом лобби");
+      }
+
+      // Находим всех игроков, которые участвуют в лобби текущего раунда
+      const allLobbiesInRound = await tx.lobby.findMany({
+        where: {
+          tournamentId: lobby.tournamentId,
+          round: lobby.round,
+        },
+        include: {
+          participations: {
+            select: {
+              playerId: true,
+            },
+          },
+        },
+      });
+
+      // Собираем все ID игроков, которые уже в лобби текущего раунда
+      const playersInLobbies = new Set<number>();
+      for (const l of allLobbiesInRound) {
+        for (const p of l.participations) {
+          playersInLobbies.add(p.playerId);
+        }
+      }
+
+      // Находим игроков в chillzone (не участвуют ни в каком лобби текущего раунда, активные, с жизнями >= 1, того же турнира)
+      const chillzonePlayers = await tx.player.findMany({
+        where: {
+          tournamentId: lobby.tournamentId,
+          status: "active",
+          lives: {
+            gte: 1,
+          },
+          id: {
+            notIn: Array.from(playersInLobbies),
+          },
+        },
+      });
+
+      if (chillzonePlayers.length === 0) {
+        throw new Error("Нет доступных игроков в chillzone для замены");
+      }
+
+      // Выбираем случайного игрока из chillzone
+      const randomIndex = Math.floor(Math.random() * chillzonePlayers.length);
+      const replacementPlayer = chillzonePlayers[randomIndex];
+
+      if (!replacementPlayer) {
+        throw new Error("Не удалось выбрать игрока для замены");
+      }
+
+      // Удаляем participation для заменяемого игрока
+      await tx.participation.delete({
+        where: { id: participationToReplace.id },
+      });
+
+      // Создаем participation для игрока из chillzone
+      await tx.participation.create({
+        data: {
+          lobbyId: lobbyId,
+          playerId: replacementPlayer.id,
+        },
+      });
+
+      // Уменьшаем lives на 1 у заменяемого игрока
+      await tx.player.update({
+        where: { id: playerId },
+        data: {
+          lives: {
+            decrement: 1,
+          },
+          chillZoneValue: {
+            increment: 1,
+          },
+        },
+      });
+
+      // Уменьшаем chillZoneValue на 1 у игрока из chillzone
+      await tx.player.update({
+        where: { id: replacementPlayer.id },
+        data: {
+          chillZoneValue: {
+            decrement: 1,
+          },
+        },
+      });
+
+      // Сбрасываем все isCaptain = false и team = null для всех participations в лобби
+      await tx.participation.updateMany({
+        where: { lobbyId: lobbyId },
+        data: {
+          isCaptain: false,
+          team: null,
+          pickedAt: null,
+        },
+      });
+
+      // Изменяем статус лобби на PENDING
+      const updatedLobby = await tx.lobby.update({
+        where: { id: lobbyId },
+        data: { status: "PENDING" },
+        include: {
+          participations: {
+            include: {
+              player: {
+                include: {
+                  user: true,
+                },
+              },
+            },
+          },
+          tournament: true,
+        },
+      });
+
+      return updatedLobby;
+    });
   }
 }

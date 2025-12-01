@@ -34,16 +34,19 @@ model Tournament {
 }
 
 model Application {
-  mmr          Int
-  gameRoles    String
-  status       ApplicationStatus @default(pending)
-  createdAt    DateTime          @default(now())
-  id           Int               @id @default(autoincrement())
-  userId       Int
-  tournamentId Int
-  nickname     String?
-  tournament   Tournament        @relation(fields: [tournamentId], references: [id])
-  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mmr              Int
+  gameRoles        String
+  status           ApplicationStatus @default(pending)
+  createdAt        DateTime          @default(now())
+  id               Int               @id @default(autoincrement())
+  userId           Int
+  tournamentId     Int
+  nickname         String?
+  dotabuff         String?
+  isPaid           Boolean           @default(false)
+  receiptImageUrl  String?
+  tournament       Tournament        @relation(fields: [tournamentId], references: [id])
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Player {

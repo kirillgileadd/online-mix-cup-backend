@@ -534,10 +534,6 @@ export type ParticipationUncheckedUpdateManyWithoutLobbyNestedInput = {
   deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type NullableEnumParticipationResultFieldUpdateOperationsInput = {
   set?: $Enums.ParticipationResult | null
 }

@@ -6,6 +6,9 @@ export const applicationPayloadSchema = z.object({
   mmr: z.number().int().nonnegative(),
   gameRoles: z.string().min(1),
   nickname: z.string().min(1),
+  dotabuff: z.string().optional(),
+  isPaid: z.boolean().optional(),
+  receiptImageUrl: z.string().optional(),
 });
 
 export type ApplicationPayload = z.infer<typeof applicationPayloadSchema>;

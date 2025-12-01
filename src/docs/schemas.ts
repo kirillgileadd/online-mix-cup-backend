@@ -20,31 +20,6 @@ export const userSchema = {
   },
 };
 
-export const applicationSchema = {
-  type: "object",
-  required: [
-    "id",
-    "userId",
-    "tournamentId",
-    "mmr",
-    "gameRoles",
-    "nickname",
-    "status",
-    "createdAt",
-  ],
-  properties: {
-    id: integerSchema,
-    userId: integerSchema,
-    tournamentId: integerSchema,
-    mmr: { type: "integer" },
-    gameRoles: { type: "string" },
-    nickname: { type: "string" },
-    status: { type: "string", enum: ["pending", "approved", "rejected"] },
-    createdAt: { type: "string", format: "date-time" },
-    user: userSchema,
-  },
-};
-
 export const tournamentSchema = {
   type: "object",
   required: ["id", "name", "status", "price", "createdAt"],
@@ -62,6 +37,36 @@ export const tournamentSchema = {
   },
 };
 
+export const applicationSchema = {
+  type: "object",
+  required: [
+    "id",
+    "userId",
+    "tournamentId",
+    "mmr",
+    "gameRoles",
+    "nickname",
+    "status",
+    "createdAt",
+    "isPaid",
+  ],
+  properties: {
+    id: integerSchema,
+    userId: integerSchema,
+    tournamentId: integerSchema,
+    mmr: { type: "integer" },
+    gameRoles: { type: "string" },
+    nickname: { type: "string" },
+    dotabuff: { type: ["string", "null"] },
+    status: { type: "string", enum: ["pending", "approved", "rejected"] },
+    createdAt: { type: "string", format: "date-time" },
+    isPaid: { type: "boolean" },
+    receiptImageUrl: { type: ["string", "null"] },
+    user: userSchema,
+    tournament: tournamentSchema,
+  },
+};
+
 export const applicationWithTournamentSchema = {
   type: "object",
   required: [
@@ -73,6 +78,7 @@ export const applicationWithTournamentSchema = {
     "nickname",
     "status",
     "createdAt",
+    "isPaid",
     "tournament",
   ],
   properties: {
@@ -82,8 +88,11 @@ export const applicationWithTournamentSchema = {
     mmr: { type: "integer" },
     gameRoles: { type: "string" },
     nickname: { type: "string" },
+    dotabuff: { type: ["string", "null"] },
     status: { type: "string", enum: ["pending", "approved", "rejected"] },
     createdAt: { type: "string", format: "date-time" },
+    isPaid: { type: "boolean" },
+    receiptImageUrl: { type: ["string", "null"] },
     tournament: tournamentSchema,
   },
 };

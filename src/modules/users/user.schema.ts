@@ -22,6 +22,8 @@ export const userRegistrationSchema = userPayloadSchema
     mmr: z.number().int().nonnegative(),
     gameRoles: z.string().min(1),
     nickname: z.string().min(1),
+    dotabuff: z.string().optional(),
+    receiptImageBase64: z.string().optional(),
   });
 
 export type UserPayload = z.infer<typeof userPayloadSchema>;

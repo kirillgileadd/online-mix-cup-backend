@@ -4,6 +4,8 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import cors from "@fastify/cors";
+import fastifyStatic from "@fastify/static";
+import { join } from "path";
 
 import { env } from "./config/env";
 import { loggerConfig } from "./config/logger";
@@ -77,6 +79,12 @@ export const buildServer = () => {
   app.register(fastifyCookie, {
     secret: env.JWT_SECRET,
     hook: "onRequest",
+  });
+
+  // Раздача статических файлов из директории uploads
+  app.register(fastifyStatic, {
+    root: join(process.cwd(), "uploads"),
+    prefix: "/uploads/",
   });
 
   app.setErrorHandler(errorHandler);

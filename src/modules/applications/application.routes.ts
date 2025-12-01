@@ -14,6 +14,7 @@ const applicationBodySchema = {
     mmr: { type: "integer", minimum: 0 },
     gameRoles: { type: "string" },
     nickname: { type: "string" },
+    dotabuff: { type: "string" },
   },
 };
 

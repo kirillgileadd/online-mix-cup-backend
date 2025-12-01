@@ -246,7 +246,6 @@ export async function userRoutes(app: FastifyInstance) {
   app.post(
     "/register",
     {
-      preHandler: adminPreHandler,
       schema: {
         tags: ["users", "applications"],
         summary: "Регистрация пользователя на турнир",
@@ -263,6 +262,8 @@ export async function userRoutes(app: FastifyInstance) {
             mmr: { type: "integer", minimum: 0 },
             gameRoles: { type: "string" },
             nickname: { type: "string" },
+            dotabuff: { type: "string" },
+            receiptImageBase64: { type: "string" },
           },
         },
         response: {

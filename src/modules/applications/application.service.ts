@@ -25,6 +25,7 @@ export class ApplicationService {
       orderBy: { createdAt: "asc" },
       include: {
         user: true,
+        tournament: true,
       },
     });
   }
@@ -37,6 +38,7 @@ export class ApplicationService {
       orderBy: { createdAt: "asc" },
       include: {
         user: true,
+        tournament: true,
       },
     });
   }
@@ -45,6 +47,10 @@ export class ApplicationService {
     return prisma.application.update({
       where: { id },
       data: { status },
+      include: {
+        user: true,
+        tournament: true,
+      },
     });
   }
 

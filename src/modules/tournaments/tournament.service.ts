@@ -21,8 +21,9 @@ export class TournamentService {
     });
   }
 
-  listTournaments() {
+  listTournaments(status?: TournamentStatus) {
     return prisma.tournament.findMany({
+      ...(status ? { where: { status } } : {}),
       orderBy: {
         createdAt: "desc",
       },

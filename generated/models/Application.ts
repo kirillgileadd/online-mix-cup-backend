@@ -49,6 +49,9 @@ export type ApplicationMinAggregateOutputType = {
   userId: number | null
   tournamentId: number | null
   nickname: string | null
+  dotabuff: string | null
+  isPaid: boolean | null
+  receiptImageUrl: string | null
 }
 
 export type ApplicationMaxAggregateOutputType = {
@@ -60,6 +63,9 @@ export type ApplicationMaxAggregateOutputType = {
   userId: number | null
   tournamentId: number | null
   nickname: string | null
+  dotabuff: string | null
+  isPaid: boolean | null
+  receiptImageUrl: string | null
 }
 
 export type ApplicationCountAggregateOutputType = {
@@ -71,6 +77,9 @@ export type ApplicationCountAggregateOutputType = {
   userId: number
   tournamentId: number
   nickname: number
+  dotabuff: number
+  isPaid: number
+  receiptImageUrl: number
   _all: number
 }
 
@@ -98,6 +107,9 @@ export type ApplicationMinAggregateInputType = {
   userId?: true
   tournamentId?: true
   nickname?: true
+  dotabuff?: true
+  isPaid?: true
+  receiptImageUrl?: true
 }
 
 export type ApplicationMaxAggregateInputType = {
@@ -109,6 +121,9 @@ export type ApplicationMaxAggregateInputType = {
   userId?: true
   tournamentId?: true
   nickname?: true
+  dotabuff?: true
+  isPaid?: true
+  receiptImageUrl?: true
 }
 
 export type ApplicationCountAggregateInputType = {
@@ -120,6 +135,9 @@ export type ApplicationCountAggregateInputType = {
   userId?: true
   tournamentId?: true
   nickname?: true
+  dotabuff?: true
+  isPaid?: true
+  receiptImageUrl?: true
   _all?: true
 }
 
@@ -218,6 +236,9 @@ export type ApplicationGroupByOutputType = {
   userId: number
   tournamentId: number
   nickname: string | null
+  dotabuff: string | null
+  isPaid: boolean
+  receiptImageUrl: string | null
   _count: ApplicationCountAggregateOutputType | null
   _avg: ApplicationAvgAggregateOutputType | null
   _sum: ApplicationSumAggregateOutputType | null
@@ -252,6 +273,9 @@ export type ApplicationWhereInput = {
   userId?: Prisma.IntFilter<"Application"> | number
   tournamentId?: Prisma.IntFilter<"Application"> | number
   nickname?: Prisma.StringNullableFilter<"Application"> | string | null
+  dotabuff?: Prisma.StringNullableFilter<"Application"> | string | null
+  isPaid?: Prisma.BoolFilter<"Application"> | boolean
+  receiptImageUrl?: Prisma.StringNullableFilter<"Application"> | string | null
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -265,6 +289,9 @@ export type ApplicationOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
+  dotabuff?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  receiptImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   tournament?: Prisma.TournamentOrderByWithRelationInput
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -281,6 +308,9 @@ export type ApplicationWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.IntFilter<"Application"> | number
   tournamentId?: Prisma.IntFilter<"Application"> | number
   nickname?: Prisma.StringNullableFilter<"Application"> | string | null
+  dotabuff?: Prisma.StringNullableFilter<"Application"> | string | null
+  isPaid?: Prisma.BoolFilter<"Application"> | boolean
+  receiptImageUrl?: Prisma.StringNullableFilter<"Application"> | string | null
   tournament?: Prisma.XOR<Prisma.TournamentScalarRelationFilter, Prisma.TournamentWhereInput>
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id">
@@ -294,6 +324,9 @@ export type ApplicationOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   nickname?: Prisma.SortOrderInput | Prisma.SortOrder
+  dotabuff?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  receiptImageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ApplicationCountOrderByAggregateInput
   _avg?: Prisma.ApplicationAvgOrderByAggregateInput
   _max?: Prisma.ApplicationMaxOrderByAggregateInput
@@ -313,6 +346,9 @@ export type ApplicationScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"Application"> | number
   tournamentId?: Prisma.IntWithAggregatesFilter<"Application"> | number
   nickname?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
+  dotabuff?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
+  isPaid?: Prisma.BoolWithAggregatesFilter<"Application"> | boolean
+  receiptImageUrl?: Prisma.StringNullableWithAggregatesFilter<"Application"> | string | null
 }
 
 export type ApplicationCreateInput = {
@@ -321,6 +357,9 @@ export type ApplicationCreateInput = {
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
   tournament: Prisma.TournamentCreateNestedOneWithoutApplicationsInput
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
 }
@@ -334,6 +373,9 @@ export type ApplicationUncheckedCreateInput = {
   userId: number
   tournamentId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationUpdateInput = {
@@ -342,6 +384,9 @@ export type ApplicationUpdateInput = {
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutApplicationsNestedInput
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
 }
@@ -355,6 +400,9 @@ export type ApplicationUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationCreateManyInput = {
@@ -366,6 +414,9 @@ export type ApplicationCreateManyInput = {
   userId: number
   tournamentId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationUpdateManyMutationInput = {
@@ -374,6 +425,9 @@ export type ApplicationUpdateManyMutationInput = {
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyInput = {
@@ -385,6 +439,9 @@ export type ApplicationUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationListRelationFilter = {
@@ -406,6 +463,9 @@ export type ApplicationCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
+  dotabuff?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  receiptImageUrl?: Prisma.SortOrder
 }
 
 export type ApplicationAvgOrderByAggregateInput = {
@@ -424,6 +484,9 @@ export type ApplicationMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
+  dotabuff?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  receiptImageUrl?: Prisma.SortOrder
 }
 
 export type ApplicationMinOrderByAggregateInput = {
@@ -435,6 +498,9 @@ export type ApplicationMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
   nickname?: Prisma.SortOrder
+  dotabuff?: Prisma.SortOrder
+  isPaid?: Prisma.SortOrder
+  receiptImageUrl?: Prisma.SortOrder
 }
 
 export type ApplicationSumOrderByAggregateInput = {
@@ -532,12 +598,19 @@ export type EnumApplicationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ApplicationStatus
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type ApplicationCreateWithoutUserInput = {
   mmr: number
   gameRoles: string
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
   tournament: Prisma.TournamentCreateNestedOneWithoutApplicationsInput
 }
 
@@ -549,6 +622,9 @@ export type ApplicationUncheckedCreateWithoutUserInput = {
   id?: number
   tournamentId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationCreateOrConnectWithoutUserInput = {
@@ -589,6 +665,9 @@ export type ApplicationScalarWhereInput = {
   userId?: Prisma.IntFilter<"Application"> | number
   tournamentId?: Prisma.IntFilter<"Application"> | number
   nickname?: Prisma.StringNullableFilter<"Application"> | string | null
+  dotabuff?: Prisma.StringNullableFilter<"Application"> | string | null
+  isPaid?: Prisma.BoolFilter<"Application"> | boolean
+  receiptImageUrl?: Prisma.StringNullableFilter<"Application"> | string | null
 }
 
 export type ApplicationCreateWithoutTournamentInput = {
@@ -597,6 +676,9 @@ export type ApplicationCreateWithoutTournamentInput = {
   status?: $Enums.ApplicationStatus
   createdAt?: Date | string
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
   user: Prisma.UserCreateNestedOneWithoutApplicationsInput
 }
 
@@ -608,6 +690,9 @@ export type ApplicationUncheckedCreateWithoutTournamentInput = {
   id?: number
   userId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationCreateOrConnectWithoutTournamentInput = {
@@ -644,6 +729,9 @@ export type ApplicationCreateManyUserInput = {
   id?: number
   tournamentId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationUpdateWithoutUserInput = {
@@ -652,6 +740,9 @@ export type ApplicationUpdateWithoutUserInput = {
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tournament?: Prisma.TournamentUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
@@ -663,6 +754,9 @@ export type ApplicationUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyWithoutUserInput = {
@@ -673,6 +767,9 @@ export type ApplicationUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   tournamentId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationCreateManyTournamentInput = {
@@ -683,6 +780,9 @@ export type ApplicationCreateManyTournamentInput = {
   id?: number
   userId: number
   nickname?: string | null
+  dotabuff?: string | null
+  isPaid?: boolean
+  receiptImageUrl?: string | null
 }
 
 export type ApplicationUpdateWithoutTournamentInput = {
@@ -691,6 +791,9 @@ export type ApplicationUpdateWithoutTournamentInput = {
   status?: Prisma.EnumApplicationStatusFieldUpdateOperationsInput | $Enums.ApplicationStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutApplicationsNestedInput
 }
 
@@ -702,6 +805,9 @@ export type ApplicationUncheckedUpdateWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ApplicationUncheckedUpdateManyWithoutTournamentInput = {
@@ -712,6 +818,9 @@ export type ApplicationUncheckedUpdateManyWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dotabuff?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiptImageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -725,6 +834,9 @@ export type ApplicationSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   userId?: boolean
   tournamentId?: boolean
   nickname?: boolean
+  dotabuff?: boolean
+  isPaid?: boolean
+  receiptImageUrl?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
@@ -738,6 +850,9 @@ export type ApplicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   tournamentId?: boolean
   nickname?: boolean
+  dotabuff?: boolean
+  isPaid?: boolean
+  receiptImageUrl?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
@@ -751,6 +866,9 @@ export type ApplicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   userId?: boolean
   tournamentId?: boolean
   nickname?: boolean
+  dotabuff?: boolean
+  isPaid?: boolean
+  receiptImageUrl?: boolean
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["application"]>
@@ -764,9 +882,12 @@ export type ApplicationSelectScalar = {
   userId?: boolean
   tournamentId?: boolean
   nickname?: boolean
+  dotabuff?: boolean
+  isPaid?: boolean
+  receiptImageUrl?: boolean
 }
 
-export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"mmr" | "gameRoles" | "status" | "createdAt" | "id" | "userId" | "tournamentId" | "nickname", ExtArgs["result"]["application"]>
+export type ApplicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"mmr" | "gameRoles" | "status" | "createdAt" | "id" | "userId" | "tournamentId" | "nickname" | "dotabuff" | "isPaid" | "receiptImageUrl", ExtArgs["result"]["application"]>
 export type ApplicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tournament?: boolean | Prisma.TournamentDefaultArgs<ExtArgs>
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -795,6 +916,9 @@ export type $ApplicationPayload<ExtArgs extends runtime.Types.Extensions.Interna
     userId: number
     tournamentId: number
     nickname: string | null
+    dotabuff: string | null
+    isPaid: boolean
+    receiptImageUrl: string | null
   }, ExtArgs["result"]["application"]>
   composites: {}
 }
@@ -1228,6 +1352,9 @@ export interface ApplicationFieldRefs {
   readonly userId: Prisma.FieldRef<"Application", 'Int'>
   readonly tournamentId: Prisma.FieldRef<"Application", 'Int'>
   readonly nickname: Prisma.FieldRef<"Application", 'String'>
+  readonly dotabuff: Prisma.FieldRef<"Application", 'String'>
+  readonly isPaid: Prisma.FieldRef<"Application", 'Boolean'>
+  readonly receiptImageUrl: Prisma.FieldRef<"Application", 'String'>
 }
     
 

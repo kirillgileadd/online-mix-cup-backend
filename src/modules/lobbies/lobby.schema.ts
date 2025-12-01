@@ -26,7 +26,13 @@ export const finishLobbySchema = z.object({
   winningTeam: z.number().int().min(1).max(2),
 });
 
+export const replacePlayerSchema = z.object({
+  lobbyId: z.number().int().positive(),
+  playerId: z.number().int().positive(),
+});
+
 export type GenerateLobbiesInput = z.infer<typeof generateLobbiesSchema>;
 export type DraftPickInput = z.infer<typeof draftPickSchema>;
 export type StartPlayingInput = z.infer<typeof startPlayingSchema>;
 export type FinishLobbyInput = z.infer<typeof finishLobbySchema>;
+export type ReplacePlayerInput = z.infer<typeof replacePlayerSchema>;

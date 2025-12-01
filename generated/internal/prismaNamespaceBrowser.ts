@@ -111,7 +111,10 @@ export const ApplicationScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
-  nickname: 'nickname'
+  nickname: 'nickname',
+  dotabuff: 'dotabuff',
+  isPaid: 'isPaid',
+  receiptImageUrl: 'receiptImageUrl'
 } as const
 
 export type ApplicationScalarFieldEnum = (typeof ApplicationScalarFieldEnum)[keyof typeof ApplicationScalarFieldEnum]

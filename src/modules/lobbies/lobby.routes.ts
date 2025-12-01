@@ -7,6 +7,7 @@ import {
   draftPickSchema,
   startPlayingSchema,
   finishLobbySchema,
+  replacePlayerSchema,
 } from "./lobby.schema";
 import { LobbyService } from "./lobby.service";
 
@@ -259,6 +260,51 @@ export async function lobbyRoutes(app: FastifyInstance) {
         reply.code(statusCode).send({
           message:
             error instanceof Error ? error.message : "Ошибка завершения лобби",
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/replace-player",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["lobbies"],
+        summary: "Заменить игрока в лобби",
+        description:
+          "Заменяет игрока в лобби на случайного игрока из chillzone. Игрок из лобби получает -1 жизнь, игрок из chillzone получает -1 chillZoneValue. Лобби переходит в статус PENDING, все игроки теряют статус капитанов и команды.",
+        body: {
+          type: "object",
+          required: ["lobbyId", "playerId"],
+          properties: {
+            lobbyId: { type: "integer" },
+            playerId: { type: "integer" },
+          },
+        },
+        response: {
+          200: lobbySchema,
+          400: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const payload = parseWithValidation(replacePlayerSchema, request.body);
+      try {
+        const lobby = await service.replacePlayer(
+          payload.lobbyId,
+          payload.playerId
+        );
+        return lobby;
+      } catch (error) {
+        const statusCode =
+          error instanceof Error && error.message.includes("не найдено")
+            ? 404
+            : 400;
+        reply.code(statusCode).send({
+          message:
+            error instanceof Error ? error.message : "Ошибка замены игрока",
         });
       }
     }
