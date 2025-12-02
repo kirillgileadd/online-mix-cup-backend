@@ -56,6 +56,26 @@ const envSchema = z
                   .filter(Boolean)
               : ["http://localhost:5173"]
           ),
+    DISCORD_BOT_TOKEN: z
+      .string()
+      .min(1, "DISCORD_BOT_TOKEN is required")
+      .optional(),
+    DISCORD_GUILD_ID: z
+      .string()
+      .min(1, "DISCORD_GUILD_ID is required")
+      .optional(),
+    DISCORD_CHANNEL_ID: z
+      .string()
+      .min(1, "DISCORD_CHANNEL_ID is required")
+      .optional(),
+    DISCORD_GENERAL_CHANNEL_ID: z
+      .string()
+      .min(1, "DISCORD_GENERAL_CHANNEL_ID is required")
+      .optional(),
+    DISCORD_GENERAL_TEXT_CHANNEL_ID: z
+      .string()
+      .min(1, "DISCORD_GENERAL_TEXT_CHANNEL_ID is required")
+      .optional(),
   })
   .superRefine((data, ctx) => {
     if (isProduction) {
@@ -112,4 +132,13 @@ export const env: Env = envSchema.parse({
   PORT: process.env.PORT,
   ENABLE_DEV_LOGIN: process.env.ENABLE_DEV_LOGIN,
   CORS_ORIGINS: process.env.CORS_ORIGINS,
+  DISCORD_BOT_TOKEN: stripQuotes(process.env.DISCORD_BOT_TOKEN),
+  DISCORD_GUILD_ID: stripQuotes(process.env.DISCORD_GUILD_ID),
+  DISCORD_CHANNEL_ID: stripQuotes(process.env.DISCORD_CHANNEL_ID),
+  DISCORD_GENERAL_CHANNEL_ID: stripQuotes(
+    process.env.DISCORD_GENERAL_CHANNEL_ID
+  ),
+  DISCORD_GENERAL_TEXT_CHANNEL_ID: stripQuotes(
+    process.env.DISCORD_GENERAL_TEXT_CHANNEL_ID
+  ),
 });

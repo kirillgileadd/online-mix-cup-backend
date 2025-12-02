@@ -33,6 +33,7 @@ export const tournamentSchema = {
     eventDate: { type: ["string", "null"] },
     price: { type: "integer" },
     prizePool: { type: ["integer", "null"] },
+    previewUrl: { type: ["string", "null"] },
     createdAt: { type: "string", format: "date-time" },
   },
 };

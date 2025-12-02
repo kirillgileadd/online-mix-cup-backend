@@ -27,6 +27,7 @@ model Tournament {
   eventDate    DateTime?
   price        Int
   prizePool    Int?
+  previewUrl   String?
   id           Int              @id @default(autoincrement())
   applications Application[]
   lobbies      Lobby[]
@@ -95,14 +96,16 @@ model UserRole {
 }
 
 model Lobby {
-  id             Int             @id @default(autoincrement())
-  round          Int
-  status         LobbyStatus     @default(PENDING)
-  tournamentId   Int?
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  tournament     Tournament?     @relation(fields: [tournamentId], references: [id])
-  participations Participation[]
+  id               Int             @id @default(autoincrement())
+  round            Int
+  status           LobbyStatus     @default(PENDING)
+  tournamentId     Int?
+  team1ChannelId   String?
+  team2ChannelId   String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  tournament       Tournament?     @relation(fields: [tournamentId], references: [id])
+  participations   Participation[]
 }
 
 model Participation {

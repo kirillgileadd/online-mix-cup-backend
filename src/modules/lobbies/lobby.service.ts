@@ -1,8 +1,14 @@
 import { prisma } from "../../config/prisma";
+import { DiscordService, TeamMember } from "../discord/discord.service";
 
 const LOBBY_SIZE = 10;
 
 export class LobbyService {
+  private discordService: DiscordService;
+
+  constructor(discordService?: DiscordService) {
+    this.discordService = discordService || new DiscordService();
+  }
   /**
    * Генерация лобби по алгоритму:
    * 1. Берём всех игроков с active=true и lives >= 0
@@ -445,7 +451,7 @@ export class LobbyService {
       }
 
       // Переводим лобби в статус PLAYING
-      return tx.lobby.update({
+      const updatedLobby = await tx.lobby.update({
         where: { id: lobbyId },
         data: { status: "PLAYING" },
         include: {
@@ -460,7 +466,75 @@ export class LobbyService {
           },
         },
       });
+
+      // Создаем голосовые каналы в Discord и перемещаем игроков (асинхронно, не блокируем ответ)
+      this.setupDiscordVoiceChannels(updatedLobby).catch((error) => {
+        // Логируем ошибку, но не блокируем основной процесс
+        console.error("Ошибка при настройке Discord каналов:", error);
+      });
+
+      return updatedLobby;
     });
+  }
+
+  /**
+   * Настройка голосовых каналов в Discord для команд
+   */
+  private async setupDiscordVoiceChannels(lobby: {
+    id: number;
+    participations: Array<{
+      team: number | null;
+      isCaptain: boolean;
+      player: {
+        id: number;
+        nickname: string;
+        user: {
+          id: number;
+          discordUsername: string | null;
+        };
+      };
+    }>;
+  }): Promise<void> {
+    // Разделяем игроков по командам
+    const team1Members: TeamMember[] = [];
+    const team2Members: TeamMember[] = [];
+
+    for (const participation of lobby.participations) {
+      if (participation.team === 1) {
+        team1Members.push({
+          discordUsername: participation.player.user.discordUsername,
+          userId: participation.player.user.id,
+          isCaptain: participation.isCaptain,
+          nickname: participation.player.nickname,
+        });
+      } else if (participation.team === 2) {
+        team2Members.push({
+          discordUsername: participation.player.user.discordUsername,
+          userId: participation.player.user.id,
+          isCaptain: participation.isCaptain,
+          nickname: participation.player.nickname,
+        });
+      }
+    }
+
+    // Создаем каналы и перемещаем игроков
+    const { team1ChannelId, team2ChannelId } =
+      await this.discordService.createVoiceChannelsAndMovePlayers(
+        team1Members,
+        team2Members,
+        lobby.id
+      );
+
+    // Сохраняем ID каналов в базу данных
+    if (team1ChannelId || team2ChannelId) {
+      await prisma.lobby.update({
+        where: { id: lobby.id },
+        data: {
+          team1ChannelId: team1ChannelId || null,
+          team2ChannelId: team2ChannelId || null,
+        },
+      });
+    }
   }
 
   /**
@@ -538,6 +612,20 @@ export class LobbyService {
           },
         },
       });
+
+      // Перемещаем игроков в общий канал и удаляем созданные каналы (асинхронно)
+      if (finishedLobby.team1ChannelId || finishedLobby.team2ChannelId) {
+        this.discordService
+          .movePlayersToGeneralAndDeleteChannels(
+            finishedLobby.team1ChannelId,
+            finishedLobby.team2ChannelId,
+            finishedLobby.id
+          )
+          .catch((error) => {
+            // Логируем ошибку, но не блокируем основной процесс
+            console.error("Ошибка при очистке Discord каналов:", error);
+          });
+      }
 
       return finishedLobby;
     });

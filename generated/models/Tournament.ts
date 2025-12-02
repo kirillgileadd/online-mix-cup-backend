@@ -45,6 +45,7 @@ export type TournamentMinAggregateOutputType = {
   eventDate: Date | null
   price: number | null
   prizePool: number | null
+  previewUrl: string | null
   id: number | null
 }
 
@@ -55,6 +56,7 @@ export type TournamentMaxAggregateOutputType = {
   eventDate: Date | null
   price: number | null
   prizePool: number | null
+  previewUrl: string | null
   id: number | null
 }
 
@@ -65,6 +67,7 @@ export type TournamentCountAggregateOutputType = {
   eventDate: number
   price: number
   prizePool: number
+  previewUrl: number
   id: number
   _all: number
 }
@@ -89,6 +92,7 @@ export type TournamentMinAggregateInputType = {
   eventDate?: true
   price?: true
   prizePool?: true
+  previewUrl?: true
   id?: true
 }
 
@@ -99,6 +103,7 @@ export type TournamentMaxAggregateInputType = {
   eventDate?: true
   price?: true
   prizePool?: true
+  previewUrl?: true
   id?: true
 }
 
@@ -109,6 +114,7 @@ export type TournamentCountAggregateInputType = {
   eventDate?: true
   price?: true
   prizePool?: true
+  previewUrl?: true
   id?: true
   _all?: true
 }
@@ -206,6 +212,7 @@ export type TournamentGroupByOutputType = {
   eventDate: Date | null
   price: number
   prizePool: number | null
+  previewUrl: string | null
   id: number
   _count: TournamentCountAggregateOutputType | null
   _avg: TournamentAvgAggregateOutputType | null
@@ -239,6 +246,7 @@ export type TournamentWhereInput = {
   eventDate?: Prisma.DateTimeNullableFilter<"Tournament"> | Date | string | null
   price?: Prisma.IntFilter<"Tournament"> | number
   prizePool?: Prisma.IntNullableFilter<"Tournament"> | number | null
+  previewUrl?: Prisma.StringNullableFilter<"Tournament"> | string | null
   id?: Prisma.IntFilter<"Tournament"> | number
   applications?: Prisma.ApplicationListRelationFilter
   lobbies?: Prisma.LobbyListRelationFilter
@@ -252,6 +260,7 @@ export type TournamentOrderByWithRelationInput = {
   eventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   prizePool?: Prisma.SortOrderInput | Prisma.SortOrder
+  previewUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
   lobbies?: Prisma.LobbyOrderByRelationAggregateInput
@@ -269,6 +278,7 @@ export type TournamentWhereUniqueInput = Prisma.AtLeast<{
   eventDate?: Prisma.DateTimeNullableFilter<"Tournament"> | Date | string | null
   price?: Prisma.IntFilter<"Tournament"> | number
   prizePool?: Prisma.IntNullableFilter<"Tournament"> | number | null
+  previewUrl?: Prisma.StringNullableFilter<"Tournament"> | string | null
   applications?: Prisma.ApplicationListRelationFilter
   lobbies?: Prisma.LobbyListRelationFilter
   players?: Prisma.PlayerListRelationFilter
@@ -281,6 +291,7 @@ export type TournamentOrderByWithAggregationInput = {
   eventDate?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   prizePool?: Prisma.SortOrderInput | Prisma.SortOrder
+  previewUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   _count?: Prisma.TournamentCountOrderByAggregateInput
   _avg?: Prisma.TournamentAvgOrderByAggregateInput
@@ -299,6 +310,7 @@ export type TournamentScalarWhereWithAggregatesInput = {
   eventDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Tournament"> | Date | string | null
   price?: Prisma.IntWithAggregatesFilter<"Tournament"> | number
   prizePool?: Prisma.IntNullableWithAggregatesFilter<"Tournament"> | number | null
+  previewUrl?: Prisma.StringNullableWithAggregatesFilter<"Tournament"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"Tournament"> | number
 }
 
@@ -309,6 +321,7 @@ export type TournamentCreateInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutTournamentInput
   lobbies?: Prisma.LobbyCreateNestedManyWithoutTournamentInput
   players?: Prisma.PlayerCreateNestedManyWithoutTournamentInput
@@ -321,6 +334,7 @@ export type TournamentUncheckedCreateInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutTournamentInput
   lobbies?: Prisma.LobbyUncheckedCreateNestedManyWithoutTournamentInput
@@ -334,6 +348,7 @@ export type TournamentUpdateInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutTournamentNestedInput
   lobbies?: Prisma.LobbyUpdateManyWithoutTournamentNestedInput
   players?: Prisma.PlayerUpdateManyWithoutTournamentNestedInput
@@ -346,6 +361,7 @@ export type TournamentUncheckedUpdateInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutTournamentNestedInput
   lobbies?: Prisma.LobbyUncheckedUpdateManyWithoutTournamentNestedInput
@@ -359,6 +375,7 @@ export type TournamentCreateManyInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   id?: number
 }
 
@@ -369,6 +386,7 @@ export type TournamentUpdateManyMutationInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TournamentUncheckedUpdateManyInput = {
@@ -378,6 +396,7 @@ export type TournamentUncheckedUpdateManyInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -388,6 +407,7 @@ export type TournamentCountOrderByAggregateInput = {
   eventDate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   prizePool?: Prisma.SortOrder
+  previewUrl?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -404,6 +424,7 @@ export type TournamentMaxOrderByAggregateInput = {
   eventDate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   prizePool?: Prisma.SortOrder
+  previewUrl?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -414,6 +435,7 @@ export type TournamentMinOrderByAggregateInput = {
   eventDate?: Prisma.SortOrder
   price?: Prisma.SortOrder
   prizePool?: Prisma.SortOrder
+  previewUrl?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -500,6 +522,7 @@ export type TournamentCreateWithoutApplicationsInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   lobbies?: Prisma.LobbyCreateNestedManyWithoutTournamentInput
   players?: Prisma.PlayerCreateNestedManyWithoutTournamentInput
 }
@@ -511,6 +534,7 @@ export type TournamentUncheckedCreateWithoutApplicationsInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   id?: number
   lobbies?: Prisma.LobbyUncheckedCreateNestedManyWithoutTournamentInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutTournamentInput
@@ -539,6 +563,7 @@ export type TournamentUpdateWithoutApplicationsInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   lobbies?: Prisma.LobbyUpdateManyWithoutTournamentNestedInput
   players?: Prisma.PlayerUpdateManyWithoutTournamentNestedInput
 }
@@ -550,6 +575,7 @@ export type TournamentUncheckedUpdateWithoutApplicationsInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lobbies?: Prisma.LobbyUncheckedUpdateManyWithoutTournamentNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutTournamentNestedInput
@@ -562,6 +588,7 @@ export type TournamentCreateWithoutPlayersInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutTournamentInput
   lobbies?: Prisma.LobbyCreateNestedManyWithoutTournamentInput
 }
@@ -573,6 +600,7 @@ export type TournamentUncheckedCreateWithoutPlayersInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutTournamentInput
   lobbies?: Prisma.LobbyUncheckedCreateNestedManyWithoutTournamentInput
@@ -601,6 +629,7 @@ export type TournamentUpdateWithoutPlayersInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutTournamentNestedInput
   lobbies?: Prisma.LobbyUpdateManyWithoutTournamentNestedInput
 }
@@ -612,6 +641,7 @@ export type TournamentUncheckedUpdateWithoutPlayersInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutTournamentNestedInput
   lobbies?: Prisma.LobbyUncheckedUpdateManyWithoutTournamentNestedInput
@@ -624,6 +654,7 @@ export type TournamentCreateWithoutLobbiesInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutTournamentInput
   players?: Prisma.PlayerCreateNestedManyWithoutTournamentInput
 }
@@ -635,6 +666,7 @@ export type TournamentUncheckedCreateWithoutLobbiesInput = {
   eventDate?: Date | string | null
   price: number
   prizePool?: number | null
+  previewUrl?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutTournamentInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutTournamentInput
@@ -663,6 +695,7 @@ export type TournamentUpdateWithoutLobbiesInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutTournamentNestedInput
   players?: Prisma.PlayerUpdateManyWithoutTournamentNestedInput
 }
@@ -674,6 +707,7 @@ export type TournamentUncheckedUpdateWithoutLobbiesInput = {
   eventDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   prizePool?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  previewUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutTournamentNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutTournamentNestedInput
@@ -735,6 +769,7 @@ export type TournamentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   eventDate?: boolean
   price?: boolean
   prizePool?: boolean
+  previewUrl?: boolean
   id?: boolean
   applications?: boolean | Prisma.Tournament$applicationsArgs<ExtArgs>
   lobbies?: boolean | Prisma.Tournament$lobbiesArgs<ExtArgs>
@@ -749,6 +784,7 @@ export type TournamentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   eventDate?: boolean
   price?: boolean
   prizePool?: boolean
+  previewUrl?: boolean
   id?: boolean
 }, ExtArgs["result"]["tournament"]>
 
@@ -759,6 +795,7 @@ export type TournamentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   eventDate?: boolean
   price?: boolean
   prizePool?: boolean
+  previewUrl?: boolean
   id?: boolean
 }, ExtArgs["result"]["tournament"]>
 
@@ -769,10 +806,11 @@ export type TournamentSelectScalar = {
   eventDate?: boolean
   price?: boolean
   prizePool?: boolean
+  previewUrl?: boolean
   id?: boolean
 }
 
-export type TournamentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"name" | "status" | "createdAt" | "eventDate" | "price" | "prizePool" | "id", ExtArgs["result"]["tournament"]>
+export type TournamentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"name" | "status" | "createdAt" | "eventDate" | "price" | "prizePool" | "previewUrl" | "id", ExtArgs["result"]["tournament"]>
 export type TournamentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applications?: boolean | Prisma.Tournament$applicationsArgs<ExtArgs>
   lobbies?: boolean | Prisma.Tournament$lobbiesArgs<ExtArgs>
@@ -796,6 +834,7 @@ export type $TournamentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     eventDate: Date | null
     price: number
     prizePool: number | null
+    previewUrl: string | null
     id: number
   }, ExtArgs["result"]["tournament"]>
   composites: {}
@@ -1229,6 +1268,7 @@ export interface TournamentFieldRefs {
   readonly eventDate: Prisma.FieldRef<"Tournament", 'DateTime'>
   readonly price: Prisma.FieldRef<"Tournament", 'Int'>
   readonly prizePool: Prisma.FieldRef<"Tournament", 'Int'>
+  readonly previewUrl: Prisma.FieldRef<"Tournament", 'String'>
   readonly id: Prisma.FieldRef<"Tournament", 'Int'>
 }
     

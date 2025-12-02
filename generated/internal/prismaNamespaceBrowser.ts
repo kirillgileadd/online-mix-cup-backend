@@ -97,6 +97,7 @@ export const TournamentScalarFieldEnum = {
   eventDate: 'eventDate',
   price: 'price',
   prizePool: 'prizePool',
+  previewUrl: 'previewUrl',
   id: 'id'
 } as const
 
@@ -173,6 +174,8 @@ export const LobbyScalarFieldEnum = {
   round: 'round',
   status: 'status',
   tournamentId: 'tournamentId',
+  team1ChannelId: 'team1ChannelId',
+  team2ChannelId: 'team2ChannelId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 import { env } from "./config/env";
 import { buildServer } from "./app";
+import { DiscordService } from "./modules/discord/discord.service";
 
 async function applyMigrations() {
   if (env.NODE_ENV === "development") {
@@ -25,7 +26,29 @@ async function applyMigrations() {
 async function bootstrap() {
   await applyMigrations();
 
-  const app = buildServer();
+  // Инициализация Discord сервиса
+  const discordService = new DiscordService();
+  try {
+    await discordService.initialize();
+  } catch (error) {
+    console.error("Ошибка инициализации Discord сервиса:", error);
+    // Продолжаем работу даже если Discord не инициализирован
+  }
+
+  const app = buildServer(discordService);
+
+  // Обработка завершения работы
+  const shutdown = async () => {
+    app.log.info("Завершение работы сервера...");
+    await discordService.destroy().catch((err) => {
+      app.log.error(err, "Ошибка при закрытии Discord соединения");
+    });
+    await app.close();
+    process.exit(0);
+  };
+
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 
   try {
     await app.listen({
@@ -35,6 +58,7 @@ async function bootstrap() {
     app.log.info(`Server listening on port ${env.PORT}`);
   } catch (error) {
     app.log.error(error, "Failed to start server");
+    await discordService.destroy().catch(() => {});
     process.exit(1);
   }
 }

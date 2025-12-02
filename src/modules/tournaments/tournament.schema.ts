@@ -5,6 +5,7 @@ export const createTournamentSchema = z.object({
   eventDate: z.string().datetime().optional().nullable(),
   price: z.number().int().nonnegative(),
   prizePool: z.number().int().nonnegative().optional().nullable(),
+  previewUrl: z.string().url().optional().nullable(),
 });
 
 export const updateTournamentStatusSchema = z.object({
@@ -16,6 +17,7 @@ export const updateTournamentSchema = z.object({
   eventDate: z.string().datetime().optional().nullable(),
   price: z.number().int().nonnegative().optional(),
   prizePool: z.number().int().nonnegative().optional().nullable(),
+  previewUrl: z.string().url().optional().nullable(),
 });
 
 export type CreateTournamentInput = z.infer<typeof createTournamentSchema>;

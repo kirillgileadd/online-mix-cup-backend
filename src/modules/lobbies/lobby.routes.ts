@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify";
+import type { FastifyInstance, FastifyPluginOptions } from "fastify";
 
 import { errorResponseSchema, lobbySchema } from "../../docs/schemas";
 import { parseWithValidation } from "../../utils/validation";
@@ -10,6 +10,7 @@ import {
   replacePlayerSchema,
 } from "./lobby.schema";
 import { LobbyService } from "./lobby.service";
+import { DiscordService } from "../discord/discord.service";
 
 const lobbyIdParamsSchema = {
   type: "object",
@@ -44,8 +45,11 @@ const sleep = (ms: number) =>
     setTimeout(resolve, ms);
   });
 
-export async function lobbyRoutes(app: FastifyInstance) {
-  const service = new LobbyService();
+export async function lobbyRoutes(
+  app: FastifyInstance,
+  options: FastifyPluginOptions & { discordService?: DiscordService }
+) {
+  const service = new LobbyService(options.discordService);
   const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.post(

@@ -8,7 +8,8 @@ export class TournamentService {
     name: string,
     price: number,
     eventDate?: string | null,
-    prizePool?: number | null
+    prizePool?: number | null,
+    previewUrl?: string | null
   ): Promise<Tournament> {
     return prisma.tournament.create({
       data: {
@@ -17,6 +18,7 @@ export class TournamentService {
         price,
         eventDate: eventDate ? new Date(eventDate) : null,
         prizePool: prizePool ?? null,
+        previewUrl: previewUrl ?? null,
       },
     });
   }
@@ -49,6 +51,7 @@ export class TournamentService {
       eventDate?: Date | null;
       price?: number;
       prizePool?: number | null;
+      previewUrl?: string | null;
     } = {};
 
     if (data.name !== undefined) {
@@ -62,6 +65,9 @@ export class TournamentService {
     }
     if (data.prizePool !== undefined) {
       updateData.prizePool = data.prizePool;
+    }
+    if (data.previewUrl !== undefined) {
+      updateData.previewUrl = data.previewUrl;
     }
 
     return prisma.tournament.update({

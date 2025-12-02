@@ -107,6 +107,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
             eventDate: { type: ["string", "null"], format: "date-time" },
             price: { type: "integer", minimum: 0 },
             prizePool: { type: ["integer", "null"], minimum: 0 },
+            previewUrl: { type: ["string", "null"] },
           },
         },
         response: {
@@ -120,7 +121,8 @@ export async function tournamentRoutes(app: FastifyInstance) {
         payload.name,
         payload.price,
         payload.eventDate,
-        payload.prizePool
+        payload.prizePool,
+        payload.previewUrl
       );
       reply.code(201).send(tournament);
     }
@@ -142,6 +144,7 @@ export async function tournamentRoutes(app: FastifyInstance) {
             eventDate: { type: ["string", "null"], format: "date-time" },
             price: { type: "integer", minimum: 0 },
             prizePool: { type: ["integer", "null"], minimum: 0 },
+            previewUrl: { type: ["string", "null"] },
           },
         },
         response: {

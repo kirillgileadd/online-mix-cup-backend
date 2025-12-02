@@ -17,8 +17,9 @@ import { playerRoutes } from "./modules/players/player.routes";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { roleRoutes } from "./modules/roles/role.routes";
 import { lobbyRoutes } from "./modules/lobbies/lobby.routes";
+import { DiscordService } from "./modules/discord/discord.service";
 
-export const buildServer = () => {
+export const buildServer = (discordService?: DiscordService) => {
   const app = Fastify({
     logger: loggerConfig,
   });
@@ -123,7 +124,10 @@ export const buildServer = () => {
   app.register(tournamentRoutes, { prefix: "/tournaments" });
   app.register(playerRoutes, { prefix: "/players" });
   app.register(roleRoutes, { prefix: "/roles" });
-  app.register(lobbyRoutes, { prefix: "/lobbies" });
+  app.register(lobbyRoutes, { 
+    prefix: "/lobbies", 
+    ...(discordService ? { discordService } : {}) 
+  });
 
   return app;
 };
