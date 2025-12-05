@@ -229,11 +229,34 @@ export function errorHandler(
 
   // Обработка других ошибок
   const statusCode = error.statusCode || 500;
-  const message = error.message || "Internal server error";
+  
+  // В продакшене не раскрываем детали внутренних ошибок
+  const isProduction = process.env.NODE_ENV === "production";
+  let message = "Internal server error";
+  
+  if (!isProduction) {
+    // В разработке показываем детали ошибки
+    message = error.message || "Internal server error";
+  } else {
+    // В продакшене логируем детали, но не отправляем клиенту
+    request.log.error(
+      {
+        errorName: error.name,
+        errorCode: error.code,
+        errorMessage: error.message,
+        errorStack: error.stack,
+        statusCode,
+      },
+      "Internal server error"
+    );
+  }
 
   request.log.debug({ error, statusCode, message }, "Handling generic error");
 
   reply.status(statusCode).send({
     message,
+    ...(statusCode === 500 && !isProduction
+      ? { error: error.message, stack: error.stack }
+      : {}),
   });
 }

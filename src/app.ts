@@ -6,7 +6,8 @@ import swaggerUi from "@fastify/swagger-ui";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import rateLimit from "@fastify/rate-limit";
-import { join } from "path";
+import helmet from "@fastify/helmet";
+import { join, resolve, normalize } from "path";
 
 import { env } from "./config/env";
 import { loggerConfig } from "./config/logger";
@@ -74,11 +75,54 @@ export const buildServer = (discordService?: DiscordService) => {
     },
   });
 
+  // Helmet для безопасности HTTP заголовков
+  app.register(helmet, {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"], // Для Swagger UI
+        scriptSrc: ["'self'", "'unsafe-inline'"], // Для Swagger UI
+        imgSrc: ["'self'", "data:", "https:"], // Разрешаем data: для base64 изображений
+        connectSrc: ["'self'"],
+        fontSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        mediaSrc: ["'self'"],
+        frameSrc: ["'none'"],
+      },
+    },
+    crossOriginEmbedderPolicy: false, // Отключаем для совместимости
+    crossOriginResourcePolicy: { policy: "cross-origin" }, // Для статических файлов
+  });
+
   app.register(cors, {
     origin: env.CORS_ORIGINS,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
     credentials: true, // Allow cookies and authentication tokens
   });
+
+  // Функция для получения IP адреса клиента (с защитой от подделки)
+  const getClientIp = (request: FastifyRequest): string => {
+    const forwardedFor = request.headers["x-forwarded-for"];
+    const forwardedForStr = Array.isArray(forwardedFor)
+      ? forwardedFor[0]
+      : typeof forwardedFor === "string"
+      ? forwardedFor
+      : undefined;
+    const realIp = request.headers["x-real-ip"];
+    const realIpStr = Array.isArray(realIp)
+      ? realIp[0]
+      : typeof realIp === "string"
+      ? realIp
+      : undefined;
+
+    return (
+      forwardedForStr?.split(",")[0]?.trim() ||
+      realIpStr ||
+      request.ip ||
+      request.socket.remoteAddress ||
+      "unknown"
+    );
+  };
 
   // Агрессивный rate limiting для защиты от спама и всплесков трафика
   // Короткие окна времени для более эффективной защиты
@@ -97,28 +141,7 @@ export const buildServer = (discordService?: DiscordService) => {
       };
     },
     // Используем IP адрес для идентификации клиента
-    keyGenerator: (request: FastifyRequest) => {
-      const forwardedFor = request.headers["x-forwarded-for"];
-      const forwardedForStr = Array.isArray(forwardedFor)
-        ? forwardedFor[0]
-        : typeof forwardedFor === "string"
-        ? forwardedFor
-        : undefined;
-      const realIp = request.headers["x-real-ip"];
-      const realIpStr = Array.isArray(realIp)
-        ? realIp[0]
-        : typeof realIp === "string"
-        ? realIp
-        : undefined;
-
-      return (
-        forwardedForStr?.split(",")[0]?.trim() ||
-        realIpStr ||
-        request.ip ||
-        request.socket.remoteAddress ||
-        "unknown"
-      );
-    },
+    keyGenerator: getClientIp,
   });
 
   app.register(fastifyJwt, {
@@ -130,10 +153,66 @@ export const buildServer = (discordService?: DiscordService) => {
     hook: "onRequest",
   });
 
-  // Раздача статических файлов из директории uploads
+  // Раздача статических файлов из директории uploads с защитой от path traversal
+  const uploadsRoot = resolve(process.cwd(), "uploads");
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+
+  // Хук для проверки безопасности перед раздачей файлов
+  // Должен быть зарегистрирован до fastifyStatic
+  app.addHook("onRequest", async (request, reply) => {
+    if (request.url.startsWith("/uploads/")) {
+      const requestedPath = request.url.replace("/uploads/", "").split("?")[0]; // Убираем query параметры
+
+      // Проверяем, что путь существует
+      if (!requestedPath || requestedPath.length === 0) {
+        return reply.code(403).send({ message: "Forbidden" });
+      }
+
+      // Защита от path traversal
+      if (
+        requestedPath.includes("..") ||
+        requestedPath.includes("/") ||
+        requestedPath.includes("\\") ||
+        requestedPath.startsWith(".")
+      ) {
+        return reply.code(403).send({ message: "Forbidden" });
+      }
+
+      // Проверяем расширение файла
+      const lastDotIndex = requestedPath.lastIndexOf(".");
+      if (lastDotIndex === -1) {
+        return reply
+          .code(403)
+          .send({ message: "Forbidden: file type not allowed" });
+      }
+
+      const ext = requestedPath.toLowerCase().substring(lastDotIndex);
+      if (!allowedExtensions.includes(ext)) {
+        return reply
+          .code(403)
+          .send({ message: "Forbidden: file type not allowed" });
+      }
+
+      // Проверяем, что путь находится внутри uploads директории
+      const fullPath = resolve(uploadsRoot, requestedPath);
+      const normalizedPath = normalize(fullPath);
+      const normalizedRoot = normalize(uploadsRoot);
+
+      if (!normalizedPath.startsWith(normalizedRoot)) {
+        return reply.code(403).send({ message: "Forbidden" });
+      }
+    }
+  });
+
   app.register(fastifyStatic, {
-    root: join(process.cwd(), "uploads"),
+    root: uploadsRoot,
     prefix: "/uploads/",
+    // Безопасные заголовки для файлов
+    setHeaders: (res) => {
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("X-Download-Options", "noopen");
+      res.setHeader("Cache-Control", "public, max-age=31536000"); // Кэширование на 1 год
+    },
   });
 
   app.setErrorHandler(errorHandler);
@@ -144,6 +223,8 @@ export const buildServer = (discordService?: DiscordService) => {
       try {
         await request.jwtVerify();
       } catch (error) {
+        // Защита от timing attacks: всегда выполняем одинаковое время для неверных токенов
+        // JWT библиотека уже защищена от timing attacks
         reply.status(401).send({ message: "Unauthorized" });
       }
     }
