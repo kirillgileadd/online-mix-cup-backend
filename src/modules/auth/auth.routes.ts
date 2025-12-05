@@ -1,6 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { User } from "@prisma/client";
 import { z } from "zod";
+import rateLimit from "@fastify/rate-limit";
 
 import { env } from "../../config/env";
 import { errorResponseSchema, tokenPairSchema } from "../../docs/schemas";
@@ -27,6 +28,46 @@ export async function authRoutes(app: FastifyInstance) {
   const telegramAuthService = new TelegramAuthService(userService);
   const tokenService = new TokenService();
   const roleService = new RoleService();
+
+  // Более строгий rate limiting для эндпоинтов аутентификации
+  await app.register(rateLimit, {
+    max: 5, // Максимум 5 попыток
+    timeWindow: "15 minutes", // За 15 минут
+    errorResponseBuilder: (request, context) => {
+      return {
+        code: 429,
+        error: "Too Many Requests",
+        message: `Слишком много попыток входа. Попробуйте снова через ${Math.ceil(
+          context.ttl / 1000
+        )} секунд.`,
+        retryAfter: Math.ceil(context.ttl / 1000),
+      };
+    },
+    keyGenerator: (request) => {
+      const forwardedFor = request.headers["x-forwarded-for"];
+      const forwardedForStr = Array.isArray(forwardedFor)
+        ? forwardedFor[0]
+        : typeof forwardedFor === "string"
+        ? forwardedFor
+        : undefined;
+      const realIp = request.headers["x-real-ip"];
+      const realIpStr = Array.isArray(realIp)
+        ? realIp[0]
+        : typeof realIp === "string"
+        ? realIp
+        : undefined;
+
+      return (
+        forwardedForStr?.split(",")[0]?.trim() ||
+        realIpStr ||
+        request.ip ||
+        request.socket.remoteAddress ||
+        "unknown"
+      );
+    },
+    // Отключаем глобальный rate limit для этого плагина
+    global: false,
+  });
 
   const refreshCookieOptions = {
     httpOnly: true,
