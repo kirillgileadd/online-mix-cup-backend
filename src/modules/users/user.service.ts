@@ -32,19 +32,42 @@ export class UserService {
     });
 
     if (existingUser) {
-      const needsUpdate =
-        (payload.username ?? null) !== existingUser.username ||
-        (payload.photoUrl ?? null) !== existingUser.photoUrl ||
-        (payload.discordUsername ?? null) !== existingUser.discordUsername;
+      // Собираем только те поля, которые нужно обновить (переданы и отличаются)
+      const updateData: {
+        username?: string | null;
+        photoUrl?: string | null;
+        discordUsername?: string | null;
+      } = {};
 
-      if (needsUpdate) {
+      // Обновляем username только если он передан и отличается
+      if (
+        payload.username !== undefined &&
+        payload.username !== existingUser.username
+      ) {
+        updateData.username = payload.username;
+      }
+
+      // Обновляем photoUrl только если он передан и отличается
+      if (
+        payload.photoUrl !== undefined &&
+        payload.photoUrl !== existingUser.photoUrl
+      ) {
+        updateData.photoUrl = payload.photoUrl;
+      }
+
+      // Обновляем discordUsername только если он передан и отличается
+      if (
+        payload.discordUsername !== undefined &&
+        payload.discordUsername !== existingUser.discordUsername
+      ) {
+        updateData.discordUsername = payload.discordUsername;
+      }
+
+      // Обновляем только если есть изменения
+      if (Object.keys(updateData).length > 0) {
         return prisma.user.update({
           where: { id: existingUser.id },
-          data: {
-            username: payload.username ?? null,
-            photoUrl: payload.photoUrl ?? null,
-            discordUsername: payload.discordUsername ?? null,
-          },
+          data: updateData,
         });
       }
       return existingUser;
