@@ -1,4 +1,4 @@
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import { join, resolve, normalize } from "path";
 import { existsSync } from "fs";
 
@@ -212,5 +212,35 @@ export class FileService {
   getFileUrl(filePath: string): string {
     // Убираем обратные слеши и возвращаем путь для URL
     return `/${filePath.replace(/\\/g, "/")}`;
+  }
+
+  /**
+   * Удаляет файл по URL
+   * @param fileUrl - URL файла (например, /uploads/receipts/receipt_1_41_1764624140789.jpg)
+   * @returns true если файл был удален, false если файл не существовал
+   */
+  async deleteFile(fileUrl: string): Promise<boolean> {
+    if (!fileUrl || fileUrl.trim().length === 0) {
+      return false;
+    }
+
+    // Убираем ведущий слеш и преобразуем URL в путь к файлу
+    const filePath = fileUrl.startsWith("/") ? fileUrl.substring(1) : fileUrl;
+    const fullPath = resolve(process.cwd(), filePath);
+
+    // Проверяем, что путь находится внутри uploads директории (защита от path traversal)
+    const normalizedPath = normalize(fullPath);
+    const normalizedUploadsDir = normalize(resolve(process.cwd(), this.uploadsDir));
+    if (!normalizedPath.startsWith(normalizedUploadsDir)) {
+      throw new Error("Invalid file path: path traversal detected");
+    }
+
+    // Проверяем существование файла и удаляем
+    if (existsSync(fullPath)) {
+      await unlink(fullPath);
+      return true;
+    }
+
+    return false;
   }
 }

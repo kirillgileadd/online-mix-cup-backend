@@ -168,11 +168,14 @@ export const buildServer = (discordService?: DiscordService) => {
         return reply.code(403).send({ message: "Forbidden" });
       }
 
+      console.log(requestedPath, "requestedPath");
+
       // Защита от path traversal
+      // Блокируем: .. (path traversal), абсолютные пути, скрытые файлы
       if (
         requestedPath.includes("..") ||
-        requestedPath.includes("/") ||
-        requestedPath.includes("\\") ||
+        requestedPath.startsWith("/") ||
+        requestedPath.startsWith("\\") ||
         requestedPath.startsWith(".")
       ) {
         return reply.code(403).send({ message: "Forbidden" });

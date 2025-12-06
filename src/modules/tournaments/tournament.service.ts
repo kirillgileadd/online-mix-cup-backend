@@ -1,9 +1,12 @@
 import type { Tournament, TournamentStatus } from "@prisma/client";
 
 import { prisma } from "../../config/prisma";
+import { FileService } from "../files/file.service";
 import type { UpdateTournamentInput } from "./tournament.schema";
 
 export class TournamentService {
+  private readonly fileService = new FileService();
+
   createTournament(
     name: string,
     price: number,
@@ -124,6 +127,37 @@ export class TournamentService {
         where: { id },
         data: { status: "running" },
       });
+    });
+  }
+
+  async deleteTournament(id: number) {
+    // Получаем все заявки турнира с receiptImageUrl перед удалением
+    const applications = await prisma.application.findMany({
+      where: { tournamentId: id },
+      select: {
+        id: true,
+        receiptImageUrl: true,
+      },
+    });
+
+    // Удаляем все файлы чеков
+    for (const application of applications) {
+      if (application.receiptImageUrl) {
+        try {
+          await this.fileService.deleteFile(application.receiptImageUrl);
+        } catch (error) {
+          // Логируем ошибку, но не прерываем удаление турнира
+          console.error(
+            `Failed to delete receipt file for application ${application.id}:`,
+            error
+          );
+        }
+      }
+    }
+
+    // Удаляем турнир (каскадно удалятся все заявки, игроки и лобби)
+    return prisma.tournament.delete({
+      where: { id },
     });
   }
 }

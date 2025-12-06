@@ -229,4 +229,31 @@ export async function tournamentRoutes(app: FastifyInstance) {
       }
     }
   );
+
+  app.delete(
+    "/:id",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["tournaments"],
+        summary: "Удалить турнир",
+        security: [{ bearerAuth: [] }],
+        params: tournamentParamsSchema,
+        response: {
+          200: tournamentSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: number | string };
+      const tournamentId = Number(id);
+      try {
+        const tournament = await service.deleteTournament(tournamentId);
+        return tournament;
+      } catch {
+        return reply.code(404).send({ message: "Tournament not found" });
+      }
+    }
+  );
 }

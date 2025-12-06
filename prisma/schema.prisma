@@ -46,7 +46,7 @@ model Application {
   dotabuff         String?
   isPaid           Boolean           @default(false)
   receiptImageUrl  String?
-  tournament       Tournament        @relation(fields: [tournamentId], references: [id])
+  tournament       Tournament        @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -64,7 +64,7 @@ model Player {
   mmr            Int             @default(1000)
   gameRoles      String
   participations Participation[]
-  tournament     Tournament      @relation(fields: [tournamentId], references: [id])
+  tournament     Tournament      @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -104,7 +104,7 @@ model Lobby {
   team2ChannelId   String?
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  tournament       Tournament?     @relation(fields: [tournamentId], references: [id])
+  tournament       Tournament?     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   participations   Participation[]
 }
 
@@ -117,8 +117,8 @@ model Participation {
   pickedAt  DateTime?
   result    ParticipationResult?
   updatedAt DateTime             @updatedAt
-  lobby     Lobby                @relation(fields: [lobbyId], references: [id])
-  player    Player               @relation(fields: [playerId], references: [id])
+  lobby     Lobby                @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  player    Player               @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@unique([playerId, lobbyId])
 }

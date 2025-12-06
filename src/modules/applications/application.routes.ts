@@ -138,4 +138,31 @@ export async function applicationRoutes(app: FastifyInstance) {
       }
     }
   );
+
+  app.delete(
+    "/:id",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["applications"],
+        summary: "Удалить заявку",
+        security: [{ bearerAuth: [] }],
+        params: idParamSchema,
+        response: {
+          200: applicationSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: number | string };
+      const applicationId = Number(id);
+      try {
+        const application = await service.deleteApplication(applicationId);
+        return application;
+      } catch {
+        return reply.code(404).send({ message: "Application not found" });
+      }
+    }
+  );
 }
