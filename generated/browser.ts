@@ -58,6 +58,11 @@ export type UserRole = Prisma.UserRoleModel
  */
 export type Lobby = Prisma.LobbyModel
 /**
+ * Model Team
+ * 
+ */
+export type Team = Prisma.TeamModel
+/**
  * Model Participation
  * 
  */

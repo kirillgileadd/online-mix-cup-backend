@@ -171,6 +171,12 @@ export class LobbyService {
                 playerId,
               })),
             },
+            teams: {
+              create: [
+                {}, // Команда 1
+                {}, // Команда 2
+              ],
+            },
           },
           include: {
             participations: {
@@ -182,6 +188,7 @@ export class LobbyService {
                 },
               },
             },
+            teams: true,
           },
         });
         createdLobbies.push(createdLobby);
@@ -251,25 +258,54 @@ export class LobbyService {
         throw new Error("Недостаточно игроков для определения капитанов");
       }
 
-      // Определяем случайно, кто будет выбирать первым
-      const [firstCaptain, secondCaptain] =
-        Math.random() < 0.5 ? [captain1, captain2] : [captain2, captain1];
+      // Получаем существующие команды лобби (они создаются при generateLobbies)
+      const existingTeams = await tx.team.findMany({
+        where: { lobbyId },
+        orderBy: { id: "asc" },
+      });
 
-      // Назначаем капитанов и закрепляем за ними первый слот в своих командах
+      if (existingTeams.length !== 2) {
+        throw new Error(
+          `В лобби должно быть ровно 2 команды, найдено: ${existingTeams.length}`
+        );
+      }
+
+      const team1 = existingTeams[0];
+      const team2 = existingTeams[1];
+
+      if (!team1 || !team2) {
+        throw new Error("Не удалось получить команды лобби");
+      }
+
+      // Бросаем жребий: случайно выбираем победителя жребия
+      const random = Math.random() < 0.5;
+      const lotteryWinner = random ? captain1 : captain2;
+      const lotteryLoser = random ? captain2 : captain1;
+
+      // Победитель жребия выбирает первым
+      const firstPicker = lotteryWinner;
+      const secondPicker = lotteryLoser;
+
+      // Назначаем капитанов и закрепляем за ними первый слот (0) в своих командах
       await tx.participation.update({
-        where: { id: firstCaptain.id },
-        data: { isCaptain: true, team: 1 },
+        where: { id: firstPicker.id },
+        data: { isCaptain: true, teamId: team1.id, slot: 0 },
       });
 
       await tx.participation.update({
-        where: { id: secondCaptain.id },
-        data: { isCaptain: true, team: 2 },
+        where: { id: secondPicker.id },
+        data: { isCaptain: true, teamId: team2.id, slot: 0 },
       });
 
-      // Обновляем статус лобби
+      // Обновляем статус лобби и сохраняем результаты жребия
+      // firstPickerId будет установлен игроками с фронта через отдельный запрос
       const updatedLobby = await tx.lobby.update({
         where: { id: lobbyId },
-        data: { status: "DRAFTING" },
+        data: {
+          status: "DRAFTING",
+          lotteryWinnerId: lotteryWinner.playerId,
+          firstPickerId: null, // По умолчанию null, будет установлен игроками
+        },
         include: {
           participations: {
             include: {
@@ -278,8 +314,10 @@ export class LobbyService {
                   user: true,
                 },
               },
+              team: true,
             },
           },
+          teams: true,
         },
       });
 
@@ -289,14 +327,26 @@ export class LobbyService {
 
   /**
    * Выбор игрока в драфте
-   * Если playerId === null, отменяет последний пик в указанной команде
+   * type: "add" - добавляет игрока в команду, "remove" - удаляет игрока из команды
+   * slot - позиция игрока в команде (0-4). Если не указан при добавлении, выбирается автоматически
    */
-  async draftPick(lobbyId: number, playerId: number | null, team: number) {
+  async draftPick(
+    lobbyId: number,
+    playerId: number,
+    teamId: number,
+    type: "add" | "remove",
+    slot?: number | null
+  ) {
     return prisma.$transaction(async (tx) => {
       const lobby = await tx.lobby.findUnique({
         where: { id: lobbyId },
         include: {
-          participations: true,
+          participations: {
+            include: {
+              team: true,
+            },
+          },
+          teams: true,
         },
       });
 
@@ -308,38 +358,40 @@ export class LobbyService {
         throw new Error("Лобби должно быть в стадии драфта или игры");
       }
 
-      // Проверяем, что команда валидна (1 или 2)
-      if (team !== 1 && team !== 2) {
-        throw new Error("Команда должна быть 1 или 2");
+      // Находим команду по ID
+      const targetTeam = lobby.teams.find((t) => t.id === teamId);
+
+      if (!targetTeam) {
+        throw new Error(`Команда с ID ${teamId} не найдена в этом лобби`);
       }
 
-      // Если playerId === null, отменяем последний пик в команде
-      if (playerId === null) {
-        // Находим последний пик в указанной команде (не капитана)
-        const teamPicks = lobby.participations
-          .filter(
-            (p) =>
-              p.team === team && p.isCaptain === false && p.pickedAt !== null
-          )
-          .sort((a, b) => {
-            if (!a.pickedAt || !b.pickedAt) return 0;
-            return b.pickedAt.getTime() - a.pickedAt.getTime();
-          });
+      // Находим участие игрока
+      const participation = lobby.participations.find(
+        (p) => p.playerId === playerId
+      );
 
-        if (teamPicks.length === 0) {
-          throw new Error("Нет пиков для отмены в этой команде");
+      if (!participation) {
+        throw new Error("Игрок не найден в этом лобби");
+      }
+
+      // Если type === "remove", удаляем игрока из команды
+      if (type === "remove") {
+        // Проверяем, что игрок действительно в команде
+        if (participation.teamId !== targetTeam.id) {
+          throw new Error("Игрок не находится в указанной команде");
         }
 
-        const lastPick = teamPicks[0];
-        if (!lastPick) {
-          throw new Error("Нет пиков для отмены в этой команде");
+        // Нельзя удалить капитана
+        if (participation.isCaptain) {
+          throw new Error("Нельзя удалить капитана из команды");
         }
 
-        // Отменяем пик
+        // Удаляем игрока из команды
         await tx.participation.update({
-          where: { id: lastPick.id },
+          where: { id: participation.id },
           data: {
-            team: null,
+            teamId: null,
+            slot: null,
             pickedAt: null,
           },
         });
@@ -365,30 +417,64 @@ export class LobbyService {
                     user: true,
                   },
                 },
+                team: true,
               },
             },
+            teams: true,
           },
         });
       }
 
-      // Обычный пик игрока
-      const participation = lobby.participations.find(
-        (p) => p.playerId === playerId
-      );
-
-      if (!participation) {
-        throw new Error("Игрок не найден в этом лобби");
+      // Если type === "add", добавляем игрока в команду
+      // Проверяем, что игрок еще не в команде
+      if (participation.teamId !== null) {
+        throw new Error("Игрок уже выбран в команду");
       }
 
-      if (participation.team !== null) {
-        throw new Error("Игрок уже выбран");
+      // Проверяем, что в команде меньше 5 игроков
+      const teamParticipations = lobby.participations.filter(
+        (p) => p.teamId === targetTeam.id
+      );
+
+      if (teamParticipations.length >= 5) {
+        throw new Error("Команда уже заполнена (максимум 5 игроков)");
+      }
+
+      // Определяем слот для игрока
+      let targetSlot: number;
+      if (slot !== null && slot !== undefined) {
+        // Если слот указан явно, проверяем его валидность
+        if (slot < 0 || slot > 4) {
+          throw new Error("Слот должен быть от 0 до 4");
+        }
+
+        // Проверяем, что слот не занят
+        const slotOccupied = teamParticipations.some((p) => p.slot === slot);
+        if (slotOccupied) {
+          throw new Error(`Слот ${slot} уже занят в этой команде`);
+        }
+
+        targetSlot = slot;
+      } else {
+        // Если слот не указан, определяем следующий свободный слот
+        const usedSlots = teamParticipations
+          .map((p) => p.slot)
+          .filter((s): s is number => s !== null);
+        const nextSlot = usedSlots.length > 0 ? Math.max(...usedSlots) + 1 : 1; // Слот 0 уже занят капитаном
+
+        if (nextSlot > 4) {
+          throw new Error("Все слоты в команде заняты");
+        }
+
+        targetSlot = nextSlot;
       }
 
       // Обновляем участие
       await tx.participation.update({
         where: { id: participation.id },
         data: {
-          team,
+          teamId: targetTeam.id,
+          slot: targetSlot,
           pickedAt: new Date(),
         },
       });
@@ -403,8 +489,10 @@ export class LobbyService {
                   user: true,
                 },
               },
+              team: true,
             },
           },
+          teams: true,
         },
       });
     });
@@ -419,7 +507,12 @@ export class LobbyService {
       const lobby = await tx.lobby.findUnique({
         where: { id: lobbyId },
         include: {
-          participations: true,
+          participations: {
+            include: {
+              team: true,
+            },
+          },
+          teams: true,
         },
       });
 
@@ -432,22 +525,28 @@ export class LobbyService {
       }
 
       // Проверяем, что все игроки выбраны
-      const allPicked = lobby.participations.every((p) => p.team !== null);
+      const allPicked = lobby.participations.every((p) => p.teamId !== null);
 
       if (!allPicked) {
         throw new Error("Не все игроки выбраны в команды");
       }
 
       // Проверяем, что в каждой команде по 5 игроков
-      const team1Count = lobby.participations.filter(
-        (p) => p.team === 1
-      ).length;
-      const team2Count = lobby.participations.filter(
-        (p) => p.team === 2
-      ).length;
+      const teams = lobby.teams;
+      if (teams.length !== 2) {
+        throw new Error("В лобби должно быть ровно 2 команды");
+      }
 
-      if (team1Count !== 5 || team2Count !== 5) {
-        throw new Error("В каждой команде должно быть ровно 5 игроков");
+      for (const team of teams) {
+        const teamCount = lobby.participations.filter(
+          (p) => p.teamId === team.id
+        ).length;
+
+        if (teamCount !== 5) {
+          throw new Error(
+            `В команде ${team.id} должно быть ровно 5 игроков, сейчас ${teamCount}`
+          );
+        }
       }
 
       // Переводим лобби в статус PLAYING
@@ -462,8 +561,10 @@ export class LobbyService {
                   user: true,
                 },
               },
+              team: true,
             },
           },
+          teams: true,
         },
       });
 
@@ -482,8 +583,10 @@ export class LobbyService {
    */
   private async setupDiscordVoiceChannels(lobby: {
     id: number;
+    teams: Array<{ id: number }>;
     participations: Array<{
-      team: number | null;
+      teamId: number | null;
+      slot: number | null;
       isCaptain: boolean;
       player: {
         id: number;
@@ -495,19 +598,35 @@ export class LobbyService {
       };
     }>;
   }): Promise<void> {
+    // Сортируем команды по ID для определения порядка
+    const teams = lobby.teams.sort((a, b) => a.id - b.id);
+
+    if (teams.length !== 2) {
+      console.error("Ожидается 2 команды, найдено:", teams.length);
+      return;
+    }
+
     // Разделяем игроков по командам
     const team1Members: TeamMember[] = [];
     const team2Members: TeamMember[] = [];
 
+    const team1Id = teams[0]?.id;
+    const team2Id = teams[1]?.id;
+
+    if (!team1Id || !team2Id) {
+      console.error("Не найдены команды для лобби");
+      return;
+    }
+
     for (const participation of lobby.participations) {
-      if (participation.team === 1) {
+      if (participation.teamId === team1Id) {
         team1Members.push({
           discordUsername: participation.player.user.discordUsername,
           userId: participation.player.user.id,
           isCaptain: participation.isCaptain,
           nickname: participation.player.nickname,
         });
-      } else if (participation.team === 2) {
+      } else if (participation.teamId === team2Id) {
         team2Members.push({
           discordUsername: participation.player.user.discordUsername,
           userId: participation.player.user.id,
@@ -517,6 +636,31 @@ export class LobbyService {
       }
     }
 
+    // Сортируем игроков по слотам для правильного порядка
+    team1Members.sort((a, b) => {
+      const aParticipation = lobby.participations.find(
+        (p) => p.player.user.id === a.userId && p.teamId === team1Id
+      );
+      const bParticipation = lobby.participations.find(
+        (p) => p.player.user.id === b.userId && p.teamId === team1Id
+      );
+      const aSlot = aParticipation?.slot ?? 999;
+      const bSlot = bParticipation?.slot ?? 999;
+      return aSlot - bSlot;
+    });
+
+    team2Members.sort((a, b) => {
+      const aParticipation = lobby.participations.find(
+        (p) => p.player.user.id === a.userId && p.teamId === team2Id
+      );
+      const bParticipation = lobby.participations.find(
+        (p) => p.player.user.id === b.userId && p.teamId === team2Id
+      );
+      const aSlot = aParticipation?.slot ?? 999;
+      const bSlot = bParticipation?.slot ?? 999;
+      return aSlot - bSlot;
+    });
+
     // Создаем каналы и перемещаем игроков
     const { team1ChannelId, team2ChannelId } =
       await this.discordService.createVoiceChannelsAndMovePlayers(
@@ -525,14 +669,18 @@ export class LobbyService {
         lobby.id
       );
 
-    // Сохраняем ID каналов в базу данных
-    if (team1ChannelId || team2ChannelId) {
-      await prisma.lobby.update({
-        where: { id: lobby.id },
-        data: {
-          team1ChannelId: team1ChannelId || null,
-          team2ChannelId: team2ChannelId || null,
-        },
+    // Сохраняем ID каналов в базу данных в соответствующие Team
+    if (team1ChannelId && team1Id) {
+      await prisma.team.update({
+        where: { id: team1Id },
+        data: { discordChannelId: team1ChannelId },
+      });
+    }
+
+    if (team2ChannelId && team2Id) {
+      await prisma.team.update({
+        where: { id: team2Id },
+        data: { discordChannelId: team2ChannelId },
       });
     }
   }
@@ -541,7 +689,7 @@ export class LobbyService {
    * Завершение лобби и проставление результатов
    * Идемпотентная операция
    */
-  async finishLobby(lobbyId: number, winningTeam: number) {
+  async finishLobby(lobbyId: number, winningTeamId: number) {
     return prisma.$transaction(async (tx) => {
       const lobby = await tx.lobby.findUnique({
         where: { id: lobbyId },
@@ -549,8 +697,10 @@ export class LobbyService {
           participations: {
             include: {
               player: true,
+              team: true,
             },
           },
+          teams: true,
         },
       });
 
@@ -567,13 +717,20 @@ export class LobbyService {
         throw new Error("Лобби должно быть в статусе PLAYING");
       }
 
-      if (winningTeam !== 1 && winningTeam !== 2) {
-        throw new Error("Победившая команда должна быть 1 или 2");
+      // Находим команду-победителя по ID
+      const winningTeamEntity = lobby.teams.find(
+        (team) => team.id === winningTeamId
+      );
+
+      if (!winningTeamEntity) {
+        throw new Error(
+          `Команда с ID ${winningTeamId} не найдена в этом лобби`
+        );
       }
 
       // Проставляем результаты
       for (const participation of lobby.participations) {
-        const isWinner = participation.team === winningTeam;
+        const isWinner = participation.teamId === winningTeamEntity.id;
         const currentLives = participation.player.lives ?? 0;
         const updatedLives = isWinner
           ? currentLives
@@ -608,17 +765,23 @@ export class LobbyService {
                   user: true,
                 },
               },
+              team: true,
             },
           },
+          teams: true,
         },
       });
 
       // Перемещаем игроков в общий канал и удаляем созданные каналы (асинхронно)
-      if (finishedLobby.team1ChannelId || finishedLobby.team2ChannelId) {
+      const teamChannelIds = finishedLobby.teams
+        .map((t) => t.discordChannelId)
+        .filter((id): id is string => id !== null);
+
+      if (teamChannelIds.length > 0) {
         this.discordService
           .movePlayersToGeneralAndDeleteChannels(
-            finishedLobby.team1ChannelId,
-            finishedLobby.team2ChannelId,
+            teamChannelIds[0] || null,
+            teamChannelIds[1] || null,
             finishedLobby.id
           )
           .catch((error) => {
@@ -645,6 +808,27 @@ export class LobbyService {
                 user: true,
               },
             },
+            team: true,
+          },
+          orderBy: [{ teamId: "asc" }, { slot: "asc" }],
+        },
+        teams: {
+          include: {
+            participations: {
+              include: {
+                player: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+              orderBy: {
+                slot: "asc",
+              },
+            },
+          },
+          orderBy: {
+            id: "asc",
           },
         },
         tournament: true,
@@ -666,6 +850,27 @@ export class LobbyService {
                 user: true,
               },
             },
+            team: true,
+          },
+          orderBy: [{ teamId: "asc" }, { slot: "asc" }],
+        },
+        teams: {
+          include: {
+            participations: {
+              include: {
+                player: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+              orderBy: {
+                slot: "asc",
+              },
+            },
+          },
+          orderBy: {
+            id: "asc",
           },
         },
       },
@@ -835,20 +1040,39 @@ export class LobbyService {
         },
       });
 
-      // Сбрасываем все isCaptain = false и team = null для всех participations в лобби
+      // Сбрасываем все isCaptain = false и teamId = null для всех participations в лобби
       await tx.participation.updateMany({
         where: { lobbyId: lobbyId },
         data: {
           isCaptain: false,
-          team: null,
+          teamId: null,
+          slot: null,
           pickedAt: null,
         },
       });
 
-      // Изменяем статус лобби на PENDING
+      // Удаляем команды лобби
+      await tx.team.deleteMany({
+        where: { lobbyId: lobbyId },
+      });
+
+      // Сбрасываем результаты жребия
+      await tx.lobby.update({
+        where: { id: lobbyId },
+        data: {
+          lotteryWinnerId: null,
+          firstPickerId: null,
+        },
+      });
+
+      // Изменяем статус лобби на PENDING и сбрасываем результаты жребия
       const updatedLobby = await tx.lobby.update({
         where: { id: lobbyId },
-        data: { status: "PENDING" },
+        data: {
+          status: "PENDING",
+          lotteryWinnerId: null,
+          firstPickerId: null,
+        },
         include: {
           participations: {
             include: {
@@ -860,6 +1084,132 @@ export class LobbyService {
             },
           },
           tournament: true,
+        },
+      });
+
+      return updatedLobby;
+    });
+  }
+
+  /**
+   * Определяет текущего пикера в драфте
+   * Возвращает ID капитана, который должен выбирать сейчас
+   */
+  async getCurrentPicker(lobbyId: number): Promise<number | null> {
+    const lobby = await prisma.lobby.findUnique({
+      where: { id: lobbyId },
+      include: {
+        participations: {
+          include: {
+            player: true,
+          },
+        },
+      },
+    });
+
+    if (!lobby) {
+      throw new Error("Лобби не найдено");
+    }
+
+    if (lobby.status !== "DRAFTING") {
+      return null;
+    }
+
+    if (!lobby.firstPickerId) {
+      return null;
+    }
+
+    // Находим капитанов
+    const captains = lobby.participations.filter((p) => p.isCaptain);
+    if (captains.length !== 2) {
+      return null;
+    }
+
+    const captain1 = captains[0];
+    const captain2 = captains[1];
+
+    if (!captain1 || !captain2) {
+      return null;
+    }
+
+    // Определяем первого и второго пикера
+    const firstPicker =
+      lobby.firstPickerId === captain1.playerId ? captain1 : captain2;
+    const secondPicker =
+      lobby.firstPickerId === captain1.playerId ? captain2 : captain1;
+
+    // Подсчитываем количество сделанных пиков (не капитанов)
+    const pickedCount = lobby.participations.filter(
+      (p) => p.pickedAt && !p.isCaptain
+    ).length;
+
+    // Если еще не было пиков, выбирает первый пикер
+    if (pickedCount === 0) {
+      return firstPicker.playerId;
+    }
+
+    // Паттерн выбора: [0, 1, 1, 0, 0, 1, 1, 0, 0, 1]
+    // 0 = первый пикер, 1 = второй пикер
+    const pattern = [0, 1, 1, 0, 0, 1, 1, 0, 0, 1];
+    const turn = pattern[pickedCount % pattern.length];
+
+    return turn === 0 ? firstPicker.playerId : secondPicker.playerId;
+  }
+
+  /**
+   * Устанавливает первого пикера в лобби
+   * Используется игроками для выбора, кто будет выбирать первым после жребия
+   */
+  async setFirstPicker(lobbyId: number, firstPickerId: number) {
+    return prisma.$transaction(async (tx) => {
+      const lobby = await tx.lobby.findUnique({
+        where: { id: lobbyId },
+        include: {
+          participations: {
+            include: {
+              player: true,
+            },
+          },
+        },
+      });
+
+      if (!lobby) {
+        throw new Error("Лобби не найдено");
+      }
+
+      if (lobby.status !== "DRAFTING") {
+        throw new Error("Лобби должно быть в стадии драфта");
+      }
+
+      // Проверяем, что указанный игрок является капитаном
+      const participation = lobby.participations.find(
+        (p) => p.playerId === firstPickerId
+      );
+
+      if (!participation) {
+        throw new Error("Игрок не найден в этом лобби");
+      }
+
+      if (!participation.isCaptain) {
+        throw new Error("Первый пикер должен быть капитаном");
+      }
+
+      // Обновляем firstPickerId
+      const updatedLobby = await tx.lobby.update({
+        where: { id: lobbyId },
+        data: { firstPickerId },
+        include: {
+          participations: {
+            include: {
+              player: {
+                include: {
+                  user: true,
+                },
+              },
+              team: true,
+            },
+          },
+          teams: true,
         },
       });
 

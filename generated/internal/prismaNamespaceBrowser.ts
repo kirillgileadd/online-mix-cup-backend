@@ -59,6 +59,7 @@ export const ModelName = {
   Role: 'Role',
   UserRole: 'UserRole',
   Lobby: 'Lobby',
+  Team: 'Team',
   Participation: 'Participation'
 } as const
 
@@ -174,8 +175,8 @@ export const LobbyScalarFieldEnum = {
   round: 'round',
   status: 'status',
   tournamentId: 'tournamentId',
-  team1ChannelId: 'team1ChannelId',
-  team2ChannelId: 'team2ChannelId',
+  lotteryWinnerId: 'lotteryWinnerId',
+  firstPickerId: 'firstPickerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -183,11 +184,22 @@ export const LobbyScalarFieldEnum = {
 export type LobbyScalarFieldEnum = (typeof LobbyScalarFieldEnum)[keyof typeof LobbyScalarFieldEnum]
 
 
+export const TeamScalarFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  discordChannelId: 'discordChannelId',
+  createdAt: 'createdAt'
+} as const
+
+export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
 export const ParticipationScalarFieldEnum = {
   id: 'id',
   lobbyId: 'lobbyId',
+  teamId: 'teamId',
   playerId: 'playerId',
-  team: 'team',
+  slot: 'slot',
   isCaptain: 'isCaptain',
   pickedAt: 'pickedAt',
   result: 'result',

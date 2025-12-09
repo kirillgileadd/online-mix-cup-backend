@@ -29,22 +29,25 @@ export type AggregateParticipation = {
 export type ParticipationAvgAggregateOutputType = {
   id: number | null
   lobbyId: number | null
+  teamId: number | null
   playerId: number | null
-  team: number | null
+  slot: number | null
 }
 
 export type ParticipationSumAggregateOutputType = {
   id: number | null
   lobbyId: number | null
+  teamId: number | null
   playerId: number | null
-  team: number | null
+  slot: number | null
 }
 
 export type ParticipationMinAggregateOutputType = {
   id: number | null
   lobbyId: number | null
+  teamId: number | null
   playerId: number | null
-  team: number | null
+  slot: number | null
   isCaptain: boolean | null
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
@@ -54,8 +57,9 @@ export type ParticipationMinAggregateOutputType = {
 export type ParticipationMaxAggregateOutputType = {
   id: number | null
   lobbyId: number | null
+  teamId: number | null
   playerId: number | null
-  team: number | null
+  slot: number | null
   isCaptain: boolean | null
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
@@ -65,8 +69,9 @@ export type ParticipationMaxAggregateOutputType = {
 export type ParticipationCountAggregateOutputType = {
   id: number
   lobbyId: number
+  teamId: number
   playerId: number
-  team: number
+  slot: number
   isCaptain: number
   pickedAt: number
   result: number
@@ -78,22 +83,25 @@ export type ParticipationCountAggregateOutputType = {
 export type ParticipationAvgAggregateInputType = {
   id?: true
   lobbyId?: true
+  teamId?: true
   playerId?: true
-  team?: true
+  slot?: true
 }
 
 export type ParticipationSumAggregateInputType = {
   id?: true
   lobbyId?: true
+  teamId?: true
   playerId?: true
-  team?: true
+  slot?: true
 }
 
 export type ParticipationMinAggregateInputType = {
   id?: true
   lobbyId?: true
+  teamId?: true
   playerId?: true
-  team?: true
+  slot?: true
   isCaptain?: true
   pickedAt?: true
   result?: true
@@ -103,8 +111,9 @@ export type ParticipationMinAggregateInputType = {
 export type ParticipationMaxAggregateInputType = {
   id?: true
   lobbyId?: true
+  teamId?: true
   playerId?: true
-  team?: true
+  slot?: true
   isCaptain?: true
   pickedAt?: true
   result?: true
@@ -114,8 +123,9 @@ export type ParticipationMaxAggregateInputType = {
 export type ParticipationCountAggregateInputType = {
   id?: true
   lobbyId?: true
+  teamId?: true
   playerId?: true
-  team?: true
+  slot?: true
   isCaptain?: true
   pickedAt?: true
   result?: true
@@ -212,8 +222,9 @@ export type ParticipationGroupByArgs<ExtArgs extends runtime.Types.Extensions.In
 export type ParticipationGroupByOutputType = {
   id: number
   lobbyId: number
+  teamId: number | null
   playerId: number
-  team: number | null
+  slot: number | null
   isCaptain: boolean
   pickedAt: Date | null
   result: $Enums.ParticipationResult | null
@@ -246,51 +257,59 @@ export type ParticipationWhereInput = {
   NOT?: Prisma.ParticipationWhereInput | Prisma.ParticipationWhereInput[]
   id?: Prisma.IntFilter<"Participation"> | number
   lobbyId?: Prisma.IntFilter<"Participation"> | number
+  teamId?: Prisma.IntNullableFilter<"Participation"> | number | null
   playerId?: Prisma.IntFilter<"Participation"> | number
-  team?: Prisma.IntNullableFilter<"Participation"> | number | null
+  slot?: Prisma.IntNullableFilter<"Participation"> | number | null
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   lobby?: Prisma.XOR<Prisma.LobbyScalarRelationFilter, Prisma.LobbyWhereInput>
+  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
 }
 
 export type ParticipationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrderInput | Prisma.SortOrder
+  slot?: Prisma.SortOrderInput | Prisma.SortOrder
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   lobby?: Prisma.LobbyOrderByWithRelationInput
+  team?: Prisma.TeamOrderByWithRelationInput
   player?: Prisma.PlayerOrderByWithRelationInput
 }
 
 export type ParticipationWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   playerId_lobbyId?: Prisma.ParticipationPlayerIdLobbyIdCompoundUniqueInput
+  teamId_slot?: Prisma.ParticipationTeamIdSlotCompoundUniqueInput
   AND?: Prisma.ParticipationWhereInput | Prisma.ParticipationWhereInput[]
   OR?: Prisma.ParticipationWhereInput[]
   NOT?: Prisma.ParticipationWhereInput | Prisma.ParticipationWhereInput[]
   lobbyId?: Prisma.IntFilter<"Participation"> | number
+  teamId?: Prisma.IntNullableFilter<"Participation"> | number | null
   playerId?: Prisma.IntFilter<"Participation"> | number
-  team?: Prisma.IntNullableFilter<"Participation"> | number | null
+  slot?: Prisma.IntNullableFilter<"Participation"> | number | null
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
   updatedAt?: Prisma.DateTimeFilter<"Participation"> | Date | string
   lobby?: Prisma.XOR<Prisma.LobbyScalarRelationFilter, Prisma.LobbyWhereInput>
+  team?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   player?: Prisma.XOR<Prisma.PlayerScalarRelationFilter, Prisma.PlayerWhereInput>
-}, "id" | "playerId_lobbyId">
+}, "id" | "playerId_lobbyId" | "teamId_slot">
 
 export type ParticipationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrderInput | Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrderInput | Prisma.SortOrder
+  slot?: Prisma.SortOrderInput | Prisma.SortOrder
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   result?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -308,8 +327,9 @@ export type ParticipationScalarWhereWithAggregatesInput = {
   NOT?: Prisma.ParticipationScalarWhereWithAggregatesInput | Prisma.ParticipationScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Participation"> | number
   lobbyId?: Prisma.IntWithAggregatesFilter<"Participation"> | number
+  teamId?: Prisma.IntNullableWithAggregatesFilter<"Participation"> | number | null
   playerId?: Prisma.IntWithAggregatesFilter<"Participation"> | number
-  team?: Prisma.IntNullableWithAggregatesFilter<"Participation"> | number | null
+  slot?: Prisma.IntNullableWithAggregatesFilter<"Participation"> | number | null
   isCaptain?: Prisma.BoolWithAggregatesFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableWithAggregatesFilter<"Participation"> | $Enums.ParticipationResult | null
@@ -317,20 +337,22 @@ export type ParticipationScalarWhereWithAggregatesInput = {
 }
 
 export type ParticipationCreateInput = {
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
   updatedAt?: Date | string
   lobby: Prisma.LobbyCreateNestedOneWithoutParticipationsInput
+  team?: Prisma.TeamCreateNestedOneWithoutParticipationsInput
   player: Prisma.PlayerCreateNestedOneWithoutParticipationsInput
 }
 
 export type ParticipationUncheckedCreateInput = {
   id?: number
   lobbyId: number
+  teamId?: number | null
   playerId: number
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -338,20 +360,22 @@ export type ParticipationUncheckedCreateInput = {
 }
 
 export type ParticipationUpdateInput = {
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lobby?: Prisma.LobbyUpdateOneRequiredWithoutParticipationsNestedInput
+  team?: Prisma.TeamUpdateOneWithoutParticipationsNestedInput
   player?: Prisma.PlayerUpdateOneRequiredWithoutParticipationsNestedInput
 }
 
 export type ParticipationUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -361,8 +385,9 @@ export type ParticipationUncheckedUpdateInput = {
 export type ParticipationCreateManyInput = {
   id?: number
   lobbyId: number
+  teamId?: number | null
   playerId: number
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -370,7 +395,7 @@ export type ParticipationCreateManyInput = {
 }
 
 export type ParticipationUpdateManyMutationInput = {
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -380,8 +405,9 @@ export type ParticipationUpdateManyMutationInput = {
 export type ParticipationUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -403,11 +429,17 @@ export type ParticipationPlayerIdLobbyIdCompoundUniqueInput = {
   lobbyId: number
 }
 
+export type ParticipationTeamIdSlotCompoundUniqueInput = {
+  teamId: number
+  slot: number
+}
+
 export type ParticipationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
@@ -417,15 +449,17 @@ export type ParticipationCountOrderByAggregateInput = {
 export type ParticipationAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
 }
 
 export type ParticipationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
@@ -435,8 +469,9 @@ export type ParticipationMaxOrderByAggregateInput = {
 export type ParticipationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
   isCaptain?: Prisma.SortOrder
   pickedAt?: Prisma.SortOrder
   result?: Prisma.SortOrder
@@ -446,8 +481,9 @@ export type ParticipationMinOrderByAggregateInput = {
 export type ParticipationSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lobbyId?: Prisma.SortOrder
+  teamId?: Prisma.SortOrder
   playerId?: Prisma.SortOrder
-  team?: Prisma.SortOrder
+  slot?: Prisma.SortOrder
 }
 
 export type ParticipationCreateNestedManyWithoutPlayerInput = {
@@ -534,23 +570,67 @@ export type ParticipationUncheckedUpdateManyWithoutLobbyNestedInput = {
   deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
 }
 
+export type ParticipationCreateNestedManyWithoutTeamInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput> | Prisma.ParticipationCreateWithoutTeamInput[] | Prisma.ParticipationUncheckedCreateWithoutTeamInput[]
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutTeamInput | Prisma.ParticipationCreateOrConnectWithoutTeamInput[]
+  createMany?: Prisma.ParticipationCreateManyTeamInputEnvelope
+  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+}
+
+export type ParticipationUncheckedCreateNestedManyWithoutTeamInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput> | Prisma.ParticipationCreateWithoutTeamInput[] | Prisma.ParticipationUncheckedCreateWithoutTeamInput[]
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutTeamInput | Prisma.ParticipationCreateOrConnectWithoutTeamInput[]
+  createMany?: Prisma.ParticipationCreateManyTeamInputEnvelope
+  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+}
+
+export type ParticipationUpdateManyWithoutTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput> | Prisma.ParticipationCreateWithoutTeamInput[] | Prisma.ParticipationUncheckedCreateWithoutTeamInput[]
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutTeamInput | Prisma.ParticipationCreateOrConnectWithoutTeamInput[]
+  upsert?: Prisma.ParticipationUpsertWithWhereUniqueWithoutTeamInput | Prisma.ParticipationUpsertWithWhereUniqueWithoutTeamInput[]
+  createMany?: Prisma.ParticipationCreateManyTeamInputEnvelope
+  set?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  disconnect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  delete?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  update?: Prisma.ParticipationUpdateWithWhereUniqueWithoutTeamInput | Prisma.ParticipationUpdateWithWhereUniqueWithoutTeamInput[]
+  updateMany?: Prisma.ParticipationUpdateManyWithWhereWithoutTeamInput | Prisma.ParticipationUpdateManyWithWhereWithoutTeamInput[]
+  deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
+}
+
+export type ParticipationUncheckedUpdateManyWithoutTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput> | Prisma.ParticipationCreateWithoutTeamInput[] | Prisma.ParticipationUncheckedCreateWithoutTeamInput[]
+  connectOrCreate?: Prisma.ParticipationCreateOrConnectWithoutTeamInput | Prisma.ParticipationCreateOrConnectWithoutTeamInput[]
+  upsert?: Prisma.ParticipationUpsertWithWhereUniqueWithoutTeamInput | Prisma.ParticipationUpsertWithWhereUniqueWithoutTeamInput[]
+  createMany?: Prisma.ParticipationCreateManyTeamInputEnvelope
+  set?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  disconnect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  delete?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  connect?: Prisma.ParticipationWhereUniqueInput | Prisma.ParticipationWhereUniqueInput[]
+  update?: Prisma.ParticipationUpdateWithWhereUniqueWithoutTeamInput | Prisma.ParticipationUpdateWithWhereUniqueWithoutTeamInput[]
+  updateMany?: Prisma.ParticipationUpdateManyWithWhereWithoutTeamInput | Prisma.ParticipationUpdateManyWithWhereWithoutTeamInput[]
+  deleteMany?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
+}
+
 export type NullableEnumParticipationResultFieldUpdateOperationsInput = {
   set?: $Enums.ParticipationResult | null
 }
 
 export type ParticipationCreateWithoutPlayerInput = {
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
   updatedAt?: Date | string
   lobby: Prisma.LobbyCreateNestedOneWithoutParticipationsInput
+  team?: Prisma.TeamCreateNestedOneWithoutParticipationsInput
 }
 
 export type ParticipationUncheckedCreateWithoutPlayerInput = {
   id?: number
   lobbyId: number
-  team?: number | null
+  teamId?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -589,8 +669,9 @@ export type ParticipationScalarWhereInput = {
   NOT?: Prisma.ParticipationScalarWhereInput | Prisma.ParticipationScalarWhereInput[]
   id?: Prisma.IntFilter<"Participation"> | number
   lobbyId?: Prisma.IntFilter<"Participation"> | number
+  teamId?: Prisma.IntNullableFilter<"Participation"> | number | null
   playerId?: Prisma.IntFilter<"Participation"> | number
-  team?: Prisma.IntNullableFilter<"Participation"> | number | null
+  slot?: Prisma.IntNullableFilter<"Participation"> | number | null
   isCaptain?: Prisma.BoolFilter<"Participation"> | boolean
   pickedAt?: Prisma.DateTimeNullableFilter<"Participation"> | Date | string | null
   result?: Prisma.EnumParticipationResultNullableFilter<"Participation"> | $Enums.ParticipationResult | null
@@ -598,18 +679,20 @@ export type ParticipationScalarWhereInput = {
 }
 
 export type ParticipationCreateWithoutLobbyInput = {
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
   updatedAt?: Date | string
+  team?: Prisma.TeamCreateNestedOneWithoutParticipationsInput
   player: Prisma.PlayerCreateNestedOneWithoutParticipationsInput
 }
 
 export type ParticipationUncheckedCreateWithoutLobbyInput = {
   id?: number
+  teamId?: number | null
   playerId: number
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -642,10 +725,58 @@ export type ParticipationUpdateManyWithWhereWithoutLobbyInput = {
   data: Prisma.XOR<Prisma.ParticipationUpdateManyMutationInput, Prisma.ParticipationUncheckedUpdateManyWithoutLobbyInput>
 }
 
+export type ParticipationCreateWithoutTeamInput = {
+  slot?: number | null
+  isCaptain?: boolean
+  pickedAt?: Date | string | null
+  result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
+  lobby: Prisma.LobbyCreateNestedOneWithoutParticipationsInput
+  player: Prisma.PlayerCreateNestedOneWithoutParticipationsInput
+}
+
+export type ParticipationUncheckedCreateWithoutTeamInput = {
+  id?: number
+  lobbyId: number
+  playerId: number
+  slot?: number | null
+  isCaptain?: boolean
+  pickedAt?: Date | string | null
+  result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
+}
+
+export type ParticipationCreateOrConnectWithoutTeamInput = {
+  where: Prisma.ParticipationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput>
+}
+
+export type ParticipationCreateManyTeamInputEnvelope = {
+  data: Prisma.ParticipationCreateManyTeamInput | Prisma.ParticipationCreateManyTeamInput[]
+  skipDuplicates?: boolean
+}
+
+export type ParticipationUpsertWithWhereUniqueWithoutTeamInput = {
+  where: Prisma.ParticipationWhereUniqueInput
+  update: Prisma.XOR<Prisma.ParticipationUpdateWithoutTeamInput, Prisma.ParticipationUncheckedUpdateWithoutTeamInput>
+  create: Prisma.XOR<Prisma.ParticipationCreateWithoutTeamInput, Prisma.ParticipationUncheckedCreateWithoutTeamInput>
+}
+
+export type ParticipationUpdateWithWhereUniqueWithoutTeamInput = {
+  where: Prisma.ParticipationWhereUniqueInput
+  data: Prisma.XOR<Prisma.ParticipationUpdateWithoutTeamInput, Prisma.ParticipationUncheckedUpdateWithoutTeamInput>
+}
+
+export type ParticipationUpdateManyWithWhereWithoutTeamInput = {
+  where: Prisma.ParticipationScalarWhereInput
+  data: Prisma.XOR<Prisma.ParticipationUpdateManyMutationInput, Prisma.ParticipationUncheckedUpdateManyWithoutTeamInput>
+}
+
 export type ParticipationCreateManyPlayerInput = {
   id?: number
   lobbyId: number
-  team?: number | null
+  teamId?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -653,18 +784,20 @@ export type ParticipationCreateManyPlayerInput = {
 }
 
 export type ParticipationUpdateWithoutPlayerInput = {
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lobby?: Prisma.LobbyUpdateOneRequiredWithoutParticipationsNestedInput
+  team?: Prisma.TeamUpdateOneWithoutParticipationsNestedInput
 }
 
 export type ParticipationUncheckedUpdateWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -674,7 +807,8 @@ export type ParticipationUncheckedUpdateWithoutPlayerInput = {
 export type ParticipationUncheckedUpdateManyWithoutPlayerInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -683,8 +817,9 @@ export type ParticipationUncheckedUpdateManyWithoutPlayerInput = {
 
 export type ParticipationCreateManyLobbyInput = {
   id?: number
+  teamId?: number | null
   playerId: number
-  team?: number | null
+  slot?: number | null
   isCaptain?: boolean
   pickedAt?: Date | string | null
   result?: $Enums.ParticipationResult | null
@@ -692,18 +827,20 @@ export type ParticipationCreateManyLobbyInput = {
 }
 
 export type ParticipationUpdateWithoutLobbyInput = {
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  team?: Prisma.TeamUpdateOneWithoutParticipationsNestedInput
   player?: Prisma.PlayerUpdateOneRequiredWithoutParticipationsNestedInput
 }
 
 export type ParticipationUncheckedUpdateWithoutLobbyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -712,8 +849,52 @@ export type ParticipationUncheckedUpdateWithoutLobbyInput = {
 
 export type ParticipationUncheckedUpdateManyWithoutLobbyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
+  teamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   playerId?: Prisma.IntFieldUpdateOperationsInput | number
-  team?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ParticipationCreateManyTeamInput = {
+  id?: number
+  lobbyId: number
+  playerId: number
+  slot?: number | null
+  isCaptain?: boolean
+  pickedAt?: Date | string | null
+  result?: $Enums.ParticipationResult | null
+  updatedAt?: Date | string
+}
+
+export type ParticipationUpdateWithoutTeamInput = {
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  lobby?: Prisma.LobbyUpdateOneRequiredWithoutParticipationsNestedInput
+  player?: Prisma.PlayerUpdateOneRequiredWithoutParticipationsNestedInput
+}
+
+export type ParticipationUncheckedUpdateWithoutTeamInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
+  playerId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type ParticipationUncheckedUpdateManyWithoutTeamInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lobbyId?: Prisma.IntFieldUpdateOperationsInput | number
+  playerId?: Prisma.IntFieldUpdateOperationsInput | number
+  slot?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   isCaptain?: Prisma.BoolFieldUpdateOperationsInput | boolean
   pickedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   result?: Prisma.NullableEnumParticipationResultFieldUpdateOperationsInput | $Enums.ParticipationResult | null
@@ -725,64 +906,74 @@ export type ParticipationUncheckedUpdateManyWithoutLobbyInput = {
 export type ParticipationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lobbyId?: boolean
+  teamId?: boolean
   playerId?: boolean
-  team?: boolean
+  slot?: boolean
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
   updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lobbyId?: boolean
+  teamId?: boolean
   playerId?: boolean
-  team?: boolean
+  slot?: boolean
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
   updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lobbyId?: boolean
+  teamId?: boolean
   playerId?: boolean
-  team?: boolean
+  slot?: boolean
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
   updatedAt?: boolean
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["participation"]>
 
 export type ParticipationSelectScalar = {
   id?: boolean
   lobbyId?: boolean
+  teamId?: boolean
   playerId?: boolean
-  team?: boolean
+  slot?: boolean
   isCaptain?: boolean
   pickedAt?: boolean
   result?: boolean
   updatedAt?: boolean
 }
 
-export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lobbyId" | "playerId" | "team" | "isCaptain" | "pickedAt" | "result" | "updatedAt", ExtArgs["result"]["participation"]>
+export type ParticipationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lobbyId" | "teamId" | "playerId" | "slot" | "isCaptain" | "pickedAt" | "result" | "updatedAt", ExtArgs["result"]["participation"]>
 export type ParticipationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }
 export type ParticipationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }
 export type ParticipationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   lobby?: boolean | Prisma.LobbyDefaultArgs<ExtArgs>
+  team?: boolean | Prisma.Participation$teamArgs<ExtArgs>
   player?: boolean | Prisma.PlayerDefaultArgs<ExtArgs>
 }
 
@@ -790,13 +981,15 @@ export type $ParticipationPayload<ExtArgs extends runtime.Types.Extensions.Inter
   name: "Participation"
   objects: {
     lobby: Prisma.$LobbyPayload<ExtArgs>
+    team: Prisma.$TeamPayload<ExtArgs> | null
     player: Prisma.$PlayerPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     lobbyId: number
+    teamId: number | null
     playerId: number
-    team: number | null
+    slot: number | null
     isCaptain: boolean
     pickedAt: Date | null
     result: $Enums.ParticipationResult | null
@@ -1196,6 +1389,7 @@ readonly fields: ParticipationFieldRefs;
 export interface Prisma__ParticipationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   lobby<T extends Prisma.LobbyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LobbyDefaultArgs<ExtArgs>>): Prisma.Prisma__LobbyClient<runtime.Types.Result.GetResult<Prisma.$LobbyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  team<T extends Prisma.Participation$teamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Participation$teamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   player<T extends Prisma.PlayerDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PlayerDefaultArgs<ExtArgs>>): Prisma.Prisma__PlayerClient<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1228,8 +1422,9 @@ export interface Prisma__ParticipationClient<T, Null = never, ExtArgs extends ru
 export interface ParticipationFieldRefs {
   readonly id: Prisma.FieldRef<"Participation", 'Int'>
   readonly lobbyId: Prisma.FieldRef<"Participation", 'Int'>
+  readonly teamId: Prisma.FieldRef<"Participation", 'Int'>
   readonly playerId: Prisma.FieldRef<"Participation", 'Int'>
-  readonly team: Prisma.FieldRef<"Participation", 'Int'>
+  readonly slot: Prisma.FieldRef<"Participation", 'Int'>
   readonly isCaptain: Prisma.FieldRef<"Participation", 'Boolean'>
   readonly pickedAt: Prisma.FieldRef<"Participation", 'DateTime'>
   readonly result: Prisma.FieldRef<"Participation", 'ParticipationResult'>
@@ -1627,6 +1822,25 @@ export type ParticipationDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Participations to delete.
    */
   limit?: number
+}
+
+/**
+ * Participation.team
+ */
+export type Participation$teamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
 }
 
 /**

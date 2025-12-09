@@ -30,12 +30,16 @@ export type LobbyAvgAggregateOutputType = {
   id: number | null
   round: number | null
   tournamentId: number | null
+  lotteryWinnerId: number | null
+  firstPickerId: number | null
 }
 
 export type LobbySumAggregateOutputType = {
   id: number | null
   round: number | null
   tournamentId: number | null
+  lotteryWinnerId: number | null
+  firstPickerId: number | null
 }
 
 export type LobbyMinAggregateOutputType = {
@@ -43,8 +47,8 @@ export type LobbyMinAggregateOutputType = {
   round: number | null
   status: $Enums.LobbyStatus | null
   tournamentId: number | null
-  team1ChannelId: string | null
-  team2ChannelId: string | null
+  lotteryWinnerId: number | null
+  firstPickerId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -54,8 +58,8 @@ export type LobbyMaxAggregateOutputType = {
   round: number | null
   status: $Enums.LobbyStatus | null
   tournamentId: number | null
-  team1ChannelId: string | null
-  team2ChannelId: string | null
+  lotteryWinnerId: number | null
+  firstPickerId: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,8 +69,8 @@ export type LobbyCountAggregateOutputType = {
   round: number
   status: number
   tournamentId: number
-  team1ChannelId: number
-  team2ChannelId: number
+  lotteryWinnerId: number
+  firstPickerId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -77,12 +81,16 @@ export type LobbyAvgAggregateInputType = {
   id?: true
   round?: true
   tournamentId?: true
+  lotteryWinnerId?: true
+  firstPickerId?: true
 }
 
 export type LobbySumAggregateInputType = {
   id?: true
   round?: true
   tournamentId?: true
+  lotteryWinnerId?: true
+  firstPickerId?: true
 }
 
 export type LobbyMinAggregateInputType = {
@@ -90,8 +98,8 @@ export type LobbyMinAggregateInputType = {
   round?: true
   status?: true
   tournamentId?: true
-  team1ChannelId?: true
-  team2ChannelId?: true
+  lotteryWinnerId?: true
+  firstPickerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -101,8 +109,8 @@ export type LobbyMaxAggregateInputType = {
   round?: true
   status?: true
   tournamentId?: true
-  team1ChannelId?: true
-  team2ChannelId?: true
+  lotteryWinnerId?: true
+  firstPickerId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,8 +120,8 @@ export type LobbyCountAggregateInputType = {
   round?: true
   status?: true
   tournamentId?: true
-  team1ChannelId?: true
-  team2ChannelId?: true
+  lotteryWinnerId?: true
+  firstPickerId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -210,8 +218,8 @@ export type LobbyGroupByOutputType = {
   round: number
   status: $Enums.LobbyStatus
   tournamentId: number | null
-  team1ChannelId: string | null
-  team2ChannelId: string | null
+  lotteryWinnerId: number | null
+  firstPickerId: number | null
   createdAt: Date
   updatedAt: Date
   _count: LobbyCountAggregateOutputType | null
@@ -244,11 +252,12 @@ export type LobbyWhereInput = {
   round?: Prisma.IntFilter<"Lobby"> | number
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
-  team1ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
-  team2ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
+  lotteryWinnerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
+  firstPickerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   tournament?: Prisma.XOR<Prisma.TournamentNullableScalarRelationFilter, Prisma.TournamentWhereInput> | null
+  teams?: Prisma.TeamListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
 }
 
@@ -257,11 +266,12 @@ export type LobbyOrderByWithRelationInput = {
   round?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  team1ChannelId?: Prisma.SortOrderInput | Prisma.SortOrder
-  team2ChannelId?: Prisma.SortOrderInput | Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tournament?: Prisma.TournamentOrderByWithRelationInput
+  teams?: Prisma.TeamOrderByRelationAggregateInput
   participations?: Prisma.ParticipationOrderByRelationAggregateInput
 }
 
@@ -273,11 +283,12 @@ export type LobbyWhereUniqueInput = Prisma.AtLeast<{
   round?: Prisma.IntFilter<"Lobby"> | number
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
-  team1ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
-  team2ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
+  lotteryWinnerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
+  firstPickerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   tournament?: Prisma.XOR<Prisma.TournamentNullableScalarRelationFilter, Prisma.TournamentWhereInput> | null
+  teams?: Prisma.TeamListRelationFilter
   participations?: Prisma.ParticipationListRelationFilter
 }, "id">
 
@@ -286,8 +297,8 @@ export type LobbyOrderByWithAggregationInput = {
   round?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  team1ChannelId?: Prisma.SortOrderInput | Prisma.SortOrder
-  team2ChannelId?: Prisma.SortOrderInput | Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.LobbyCountOrderByAggregateInput
@@ -305,8 +316,8 @@ export type LobbyScalarWhereWithAggregatesInput = {
   round?: Prisma.IntWithAggregatesFilter<"Lobby"> | number
   status?: Prisma.EnumLobbyStatusWithAggregatesFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableWithAggregatesFilter<"Lobby"> | number | null
-  team1ChannelId?: Prisma.StringNullableWithAggregatesFilter<"Lobby"> | string | null
-  team2ChannelId?: Prisma.StringNullableWithAggregatesFilter<"Lobby"> | string | null
+  lotteryWinnerId?: Prisma.IntNullableWithAggregatesFilter<"Lobby"> | number | null
+  firstPickerId?: Prisma.IntNullableWithAggregatesFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Lobby"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Lobby"> | Date | string
 }
@@ -314,11 +325,12 @@ export type LobbyScalarWhereWithAggregatesInput = {
 export type LobbyCreateInput = {
   round: number
   status?: $Enums.LobbyStatus
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tournament?: Prisma.TournamentCreateNestedOneWithoutLobbiesInput
+  teams?: Prisma.TeamCreateNestedManyWithoutLobbyInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutLobbyInput
 }
 
@@ -327,21 +339,23 @@ export type LobbyUncheckedCreateInput = {
   round: number
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutLobbyInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutLobbyInput
 }
 
 export type LobbyUpdateInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tournament?: Prisma.TournamentUpdateOneWithoutLobbiesNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutLobbyNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutLobbyNestedInput
 }
 
@@ -350,10 +364,11 @@ export type LobbyUncheckedUpdateInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutLobbyNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
@@ -362,8 +377,8 @@ export type LobbyCreateManyInput = {
   round: number
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -371,8 +386,8 @@ export type LobbyCreateManyInput = {
 export type LobbyUpdateManyMutationInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -382,8 +397,8 @@ export type LobbyUncheckedUpdateManyInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -403,8 +418,8 @@ export type LobbyCountOrderByAggregateInput = {
   round?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  team1ChannelId?: Prisma.SortOrder
-  team2ChannelId?: Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -413,6 +428,8 @@ export type LobbyAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   round?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrder
 }
 
 export type LobbyMaxOrderByAggregateInput = {
@@ -420,8 +437,8 @@ export type LobbyMaxOrderByAggregateInput = {
   round?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  team1ChannelId?: Prisma.SortOrder
-  team2ChannelId?: Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -431,8 +448,8 @@ export type LobbyMinOrderByAggregateInput = {
   round?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
-  team1ChannelId?: Prisma.SortOrder
-  team2ChannelId?: Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -441,6 +458,8 @@ export type LobbySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   round?: Prisma.SortOrder
   tournamentId?: Prisma.SortOrder
+  lotteryWinnerId?: Prisma.SortOrder
+  firstPickerId?: Prisma.SortOrder
 }
 
 export type LobbyScalarRelationFilter = {
@@ -494,6 +513,20 @@ export type EnumLobbyStatusFieldUpdateOperationsInput = {
   set?: $Enums.LobbyStatus
 }
 
+export type LobbyCreateNestedOneWithoutTeamsInput = {
+  create?: Prisma.XOR<Prisma.LobbyCreateWithoutTeamsInput, Prisma.LobbyUncheckedCreateWithoutTeamsInput>
+  connectOrCreate?: Prisma.LobbyCreateOrConnectWithoutTeamsInput
+  connect?: Prisma.LobbyWhereUniqueInput
+}
+
+export type LobbyUpdateOneRequiredWithoutTeamsNestedInput = {
+  create?: Prisma.XOR<Prisma.LobbyCreateWithoutTeamsInput, Prisma.LobbyUncheckedCreateWithoutTeamsInput>
+  connectOrCreate?: Prisma.LobbyCreateOrConnectWithoutTeamsInput
+  upsert?: Prisma.LobbyUpsertWithoutTeamsInput
+  connect?: Prisma.LobbyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LobbyUpdateToOneWithWhereWithoutTeamsInput, Prisma.LobbyUpdateWithoutTeamsInput>, Prisma.LobbyUncheckedUpdateWithoutTeamsInput>
+}
+
 export type LobbyCreateNestedOneWithoutParticipationsInput = {
   create?: Prisma.XOR<Prisma.LobbyCreateWithoutParticipationsInput, Prisma.LobbyUncheckedCreateWithoutParticipationsInput>
   connectOrCreate?: Prisma.LobbyCreateOrConnectWithoutParticipationsInput
@@ -511,10 +544,11 @@ export type LobbyUpdateOneRequiredWithoutParticipationsNestedInput = {
 export type LobbyCreateWithoutTournamentInput = {
   round: number
   status?: $Enums.LobbyStatus
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamCreateNestedManyWithoutLobbyInput
   participations?: Prisma.ParticipationCreateNestedManyWithoutLobbyInput
 }
 
@@ -522,10 +556,11 @@ export type LobbyUncheckedCreateWithoutTournamentInput = {
   id?: number
   round: number
   status?: $Enums.LobbyStatus
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutLobbyInput
   participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutLobbyInput
 }
 
@@ -563,20 +598,83 @@ export type LobbyScalarWhereInput = {
   round?: Prisma.IntFilter<"Lobby"> | number
   status?: Prisma.EnumLobbyStatusFilter<"Lobby"> | $Enums.LobbyStatus
   tournamentId?: Prisma.IntNullableFilter<"Lobby"> | number | null
-  team1ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
-  team2ChannelId?: Prisma.StringNullableFilter<"Lobby"> | string | null
+  lotteryWinnerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
+  firstPickerId?: Prisma.IntNullableFilter<"Lobby"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Lobby"> | Date | string
+}
+
+export type LobbyCreateWithoutTeamsInput = {
+  round: number
+  status?: $Enums.LobbyStatus
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  tournament?: Prisma.TournamentCreateNestedOneWithoutLobbiesInput
+  participations?: Prisma.ParticipationCreateNestedManyWithoutLobbyInput
+}
+
+export type LobbyUncheckedCreateWithoutTeamsInput = {
+  id?: number
+  round: number
+  status?: $Enums.LobbyStatus
+  tournamentId?: number | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  participations?: Prisma.ParticipationUncheckedCreateNestedManyWithoutLobbyInput
+}
+
+export type LobbyCreateOrConnectWithoutTeamsInput = {
+  where: Prisma.LobbyWhereUniqueInput
+  create: Prisma.XOR<Prisma.LobbyCreateWithoutTeamsInput, Prisma.LobbyUncheckedCreateWithoutTeamsInput>
+}
+
+export type LobbyUpsertWithoutTeamsInput = {
+  update: Prisma.XOR<Prisma.LobbyUpdateWithoutTeamsInput, Prisma.LobbyUncheckedUpdateWithoutTeamsInput>
+  create: Prisma.XOR<Prisma.LobbyCreateWithoutTeamsInput, Prisma.LobbyUncheckedCreateWithoutTeamsInput>
+  where?: Prisma.LobbyWhereInput
+}
+
+export type LobbyUpdateToOneWithWhereWithoutTeamsInput = {
+  where?: Prisma.LobbyWhereInput
+  data: Prisma.XOR<Prisma.LobbyUpdateWithoutTeamsInput, Prisma.LobbyUncheckedUpdateWithoutTeamsInput>
+}
+
+export type LobbyUpdateWithoutTeamsInput = {
+  round?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  tournament?: Prisma.TournamentUpdateOneWithoutLobbiesNestedInput
+  participations?: Prisma.ParticipationUpdateManyWithoutLobbyNestedInput
+}
+
+export type LobbyUncheckedUpdateWithoutTeamsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  round?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
+  tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  participations?: Prisma.ParticipationUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
 export type LobbyCreateWithoutParticipationsInput = {
   round: number
   status?: $Enums.LobbyStatus
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   tournament?: Prisma.TournamentCreateNestedOneWithoutLobbiesInput
+  teams?: Prisma.TeamCreateNestedManyWithoutLobbyInput
 }
 
 export type LobbyUncheckedCreateWithoutParticipationsInput = {
@@ -584,10 +682,11 @@ export type LobbyUncheckedCreateWithoutParticipationsInput = {
   round: number
   status?: $Enums.LobbyStatus
   tournamentId?: number | null
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutLobbyInput
 }
 
 export type LobbyCreateOrConnectWithoutParticipationsInput = {
@@ -609,11 +708,12 @@ export type LobbyUpdateToOneWithWhereWithoutParticipationsInput = {
 export type LobbyUpdateWithoutParticipationsInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tournament?: Prisma.TournamentUpdateOneWithoutLobbiesNestedInput
+  teams?: Prisma.TeamUpdateManyWithoutLobbyNestedInput
 }
 
 export type LobbyUncheckedUpdateWithoutParticipationsInput = {
@@ -621,18 +721,19 @@ export type LobbyUncheckedUpdateWithoutParticipationsInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
   tournamentId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
 export type LobbyCreateManyTournamentInput = {
   id?: number
   round: number
   status?: $Enums.LobbyStatus
-  team1ChannelId?: string | null
-  team2ChannelId?: string | null
+  lotteryWinnerId?: number | null
+  firstPickerId?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -640,10 +741,11 @@ export type LobbyCreateManyTournamentInput = {
 export type LobbyUpdateWithoutTournamentInput = {
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUpdateManyWithoutLobbyNestedInput
   participations?: Prisma.ParticipationUpdateManyWithoutLobbyNestedInput
 }
 
@@ -651,10 +753,11 @@ export type LobbyUncheckedUpdateWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutLobbyNestedInput
   participations?: Prisma.ParticipationUncheckedUpdateManyWithoutLobbyNestedInput
 }
 
@@ -662,8 +765,8 @@ export type LobbyUncheckedUpdateManyWithoutTournamentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   round?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumLobbyStatusFieldUpdateOperationsInput | $Enums.LobbyStatus
-  team1ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  team2ChannelId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lotteryWinnerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  firstPickerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -674,10 +777,12 @@ export type LobbyUncheckedUpdateManyWithoutTournamentInput = {
  */
 
 export type LobbyCountOutputType = {
+  teams: number
   participations: number
 }
 
 export type LobbyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  teams?: boolean | LobbyCountOutputTypeCountTeamsArgs
   participations?: boolean | LobbyCountOutputTypeCountParticipationsArgs
 }
 
@@ -694,6 +799,13 @@ export type LobbyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
 /**
  * LobbyCountOutputType without action
  */
+export type LobbyCountOutputTypeCountTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeamWhereInput
+}
+
+/**
+ * LobbyCountOutputType without action
+ */
 export type LobbyCountOutputTypeCountParticipationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ParticipationWhereInput
 }
@@ -704,11 +816,12 @@ export type LobbySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   round?: boolean
   status?: boolean
   tournamentId?: boolean
-  team1ChannelId?: boolean
-  team2ChannelId?: boolean
+  lotteryWinnerId?: boolean
+  firstPickerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
+  teams?: boolean | Prisma.Lobby$teamsArgs<ExtArgs>
   participations?: boolean | Prisma.Lobby$participationsArgs<ExtArgs>
   _count?: boolean | Prisma.LobbyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lobby"]>
@@ -718,8 +831,8 @@ export type LobbySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   round?: boolean
   status?: boolean
   tournamentId?: boolean
-  team1ChannelId?: boolean
-  team2ChannelId?: boolean
+  lotteryWinnerId?: boolean
+  firstPickerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
@@ -730,8 +843,8 @@ export type LobbySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   round?: boolean
   status?: boolean
   tournamentId?: boolean
-  team1ChannelId?: boolean
-  team2ChannelId?: boolean
+  lotteryWinnerId?: boolean
+  firstPickerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
@@ -742,15 +855,16 @@ export type LobbySelectScalar = {
   round?: boolean
   status?: boolean
   tournamentId?: boolean
-  team1ChannelId?: boolean
-  team2ChannelId?: boolean
+  lotteryWinnerId?: boolean
+  firstPickerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type LobbyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "round" | "status" | "tournamentId" | "team1ChannelId" | "team2ChannelId" | "createdAt" | "updatedAt", ExtArgs["result"]["lobby"]>
+export type LobbyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "round" | "status" | "tournamentId" | "lotteryWinnerId" | "firstPickerId" | "createdAt" | "updatedAt", ExtArgs["result"]["lobby"]>
 export type LobbyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   tournament?: boolean | Prisma.Lobby$tournamentArgs<ExtArgs>
+  teams?: boolean | Prisma.Lobby$teamsArgs<ExtArgs>
   participations?: boolean | Prisma.Lobby$participationsArgs<ExtArgs>
   _count?: boolean | Prisma.LobbyCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -765,6 +879,7 @@ export type $LobbyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Lobby"
   objects: {
     tournament: Prisma.$TournamentPayload<ExtArgs> | null
+    teams: Prisma.$TeamPayload<ExtArgs>[]
     participations: Prisma.$ParticipationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -772,8 +887,8 @@ export type $LobbyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     round: number
     status: $Enums.LobbyStatus
     tournamentId: number | null
-    team1ChannelId: string | null
-    team2ChannelId: string | null
+    lotteryWinnerId: number | null
+    firstPickerId: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["lobby"]>
@@ -1171,6 +1286,7 @@ readonly fields: LobbyFieldRefs;
 export interface Prisma__LobbyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   tournament<T extends Prisma.Lobby$tournamentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lobby$tournamentArgs<ExtArgs>>): Prisma.Prisma__TournamentClient<runtime.Types.Result.GetResult<Prisma.$TournamentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  teams<T extends Prisma.Lobby$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lobby$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   participations<T extends Prisma.Lobby$participationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lobby$participationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ParticipationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1205,8 +1321,8 @@ export interface LobbyFieldRefs {
   readonly round: Prisma.FieldRef<"Lobby", 'Int'>
   readonly status: Prisma.FieldRef<"Lobby", 'LobbyStatus'>
   readonly tournamentId: Prisma.FieldRef<"Lobby", 'Int'>
-  readonly team1ChannelId: Prisma.FieldRef<"Lobby", 'String'>
-  readonly team2ChannelId: Prisma.FieldRef<"Lobby", 'String'>
+  readonly lotteryWinnerId: Prisma.FieldRef<"Lobby", 'Int'>
+  readonly firstPickerId: Prisma.FieldRef<"Lobby", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Lobby", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Lobby", 'DateTime'>
 }
@@ -1621,6 +1737,30 @@ export type Lobby$tournamentArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.TournamentInclude<ExtArgs> | null
   where?: Prisma.TournamentWhereInput
+}
+
+/**
+ * Lobby.teams
+ */
+export type Lobby$teamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
+  orderBy?: Prisma.TeamOrderByWithRelationInput | Prisma.TeamOrderByWithRelationInput[]
+  cursor?: Prisma.TeamWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeamScalarFieldEnum | Prisma.TeamScalarFieldEnum[]
 }
 
 /**

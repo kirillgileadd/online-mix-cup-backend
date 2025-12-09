@@ -7,38 +7,102 @@ import type { UpdateTournamentInput } from "./tournament.schema";
 export class TournamentService {
   private readonly fileService = new FileService();
 
-  createTournament(
+  async createTournament(
     name: string,
     price: number,
     eventDate?: string | null,
     prizePool?: number | null,
-    previewUrl?: string | null
-  ): Promise<Tournament> {
-    return prisma.tournament.create({
+    previewImageBase64?: string | null
+  ) {
+    let previewUrl: string | null = null;
+
+    // Обрабатываем preview изображение, если оно передано
+    if (previewImageBase64) {
+      const filePath = await this.fileService.saveTournamentPreviewImage(
+        previewImageBase64,
+        `tournament_preview_${name}`
+      );
+      previewUrl = this.fileService.getFileUrl(filePath);
+    }
+
+    const tournament = await prisma.tournament.create({
       data: {
         name,
         status: "draft",
         price,
         eventDate: eventDate ? new Date(eventDate) : null,
         prizePool: prizePool ?? null,
-        previewUrl: previewUrl ?? null,
+        previewUrl,
       },
     });
+
+    // Возвращаем с дополнительными полями
+    return {
+      ...tournament,
+      approvedApplicationsCount: 0, // Новый турнир не имеет одобренных заявок
+      calculatedPrizePool: prizePool ?? 0, // Если prizePool не указан, то 0 (нет заявок)
+    };
   }
 
-  listTournaments(status?: TournamentStatus) {
-    return prisma.tournament.findMany({
+  async listTournaments(status?: TournamentStatus) {
+    const tournaments = await prisma.tournament.findMany({
       ...(status ? { where: { status } } : {}),
       orderBy: {
         createdAt: "desc",
       },
     });
+
+    // Получаем количество одобренных заявок для каждого турнира
+    const tournamentsWithStats = await Promise.all(
+      tournaments.map(async (tournament) => {
+        const approvedApplicationsCount = await prisma.application.count({
+          where: {
+            tournamentId: tournament.id,
+            status: "approved",
+          },
+        });
+
+        // Рассчитываем призовой фонд: если не указан явно, то количество одобренных заявок * цена
+        const calculatedPrizePool =
+          tournament.prizePool ?? approvedApplicationsCount * tournament.price;
+
+        return {
+          ...tournament,
+          approvedApplicationsCount,
+          calculatedPrizePool,
+        };
+      })
+    );
+
+    return tournamentsWithStats;
   }
 
-  getById(id: number) {
-    return prisma.tournament.findUnique({
+  async getById(id: number) {
+    const tournament = await prisma.tournament.findUnique({
       where: { id },
     });
+
+    if (!tournament) {
+      return null;
+    }
+
+    // Получаем количество одобренных заявок
+    const approvedApplicationsCount = await prisma.application.count({
+      where: {
+        tournamentId: tournament.id,
+        status: "approved",
+      },
+    });
+
+    // Рассчитываем призовой фонд: если не указан явно, то количество одобренных заявок * цена
+    const calculatedPrizePool =
+      tournament.prizePool ?? approvedApplicationsCount * tournament.price;
+
+    return {
+      ...tournament,
+      approvedApplicationsCount,
+      calculatedPrizePool,
+    };
   }
 
   updateStatus(id: number, status: TournamentStatus) {
@@ -48,7 +112,17 @@ export class TournamentService {
     });
   }
 
-  updateTournament(id: number, data: UpdateTournamentInput) {
+  async updateTournament(id: number, data: UpdateTournamentInput) {
+    // Получаем текущий турнир, чтобы узнать старый previewUrl
+    const currentTournament = await prisma.tournament.findUnique({
+      where: { id },
+      select: { previewUrl: true, name: true },
+    });
+
+    if (!currentTournament) {
+      throw new Error("Tournament not found");
+    }
+
     const updateData: {
       name?: string;
       eventDate?: Date | null;
@@ -69,14 +143,58 @@ export class TournamentService {
     if (data.prizePool !== undefined) {
       updateData.prizePool = data.prizePool;
     }
-    if (data.previewUrl !== undefined) {
-      updateData.previewUrl = data.previewUrl;
+
+    // Обрабатываем preview изображение, если оно передано
+    if (data.previewImageBase64 !== undefined) {
+      // Удаляем старое изображение, если оно было
+      if (currentTournament.previewUrl) {
+        try {
+          await this.fileService.deleteFile(currentTournament.previewUrl);
+        } catch (error) {
+          // Логируем ошибку, но не прерываем обновление
+          console.error(
+            `Failed to delete old preview file for tournament ${id}:`,
+            error
+          );
+        }
+      }
+
+      if (data.previewImageBase64) {
+        // Сохраняем новое изображение
+        const filePath = await this.fileService.saveTournamentPreviewImage(
+          data.previewImageBase64,
+          `tournament_preview_${data.name || currentTournament.name || id}`
+        );
+        updateData.previewUrl = this.fileService.getFileUrl(filePath);
+      } else {
+        // Если передано null, удаляем изображение
+        updateData.previewUrl = null;
+      }
     }
 
-    return prisma.tournament.update({
+    const updatedTournament = await prisma.tournament.update({
       where: { id },
       data: updateData,
     });
+
+    // Получаем количество одобренных заявок
+    const approvedApplicationsCount = await prisma.application.count({
+      where: {
+        tournamentId: updatedTournament.id,
+        status: "approved",
+      },
+    });
+
+    // Рассчитываем призовой фонд
+    const calculatedPrizePool =
+      updatedTournament.prizePool ??
+      approvedApplicationsCount * updatedTournament.price;
+
+    return {
+      ...updatedTournament,
+      approvedApplicationsCount,
+      calculatedPrizePool,
+    };
   }
 
   async startTournament(id: number) {
@@ -131,6 +249,15 @@ export class TournamentService {
   }
 
   async deleteTournament(id: number) {
+    // Получаем турнир для удаления preview изображения
+    const tournament = await prisma.tournament.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        previewUrl: true,
+      },
+    });
+
     // Получаем все заявки турнира с receiptImageUrl перед удалением
     const applications = await prisma.application.findMany({
       where: { tournamentId: id },
@@ -139,6 +266,19 @@ export class TournamentService {
         receiptImageUrl: true,
       },
     });
+
+    // Удаляем preview изображение турнира
+    if (tournament?.previewUrl) {
+      try {
+        await this.fileService.deleteFile(tournament.previewUrl);
+      } catch (error) {
+        // Логируем ошибку, но не прерываем удаление турнира
+        console.error(
+          `Failed to delete preview file for tournament ${id}:`,
+          error
+        );
+      }
+    }
 
     // Удаляем все файлы чеков
     for (const application of applications) {

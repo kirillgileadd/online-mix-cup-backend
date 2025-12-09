@@ -22,7 +22,15 @@ export const userSchema = {
 
 export const tournamentSchema = {
   type: "object",
-  required: ["id", "name", "status", "price", "createdAt"],
+  required: [
+    "id",
+    "name",
+    "status",
+    "price",
+    "createdAt",
+    "approvedApplicationsCount",
+    "calculatedPrizePool",
+  ],
   properties: {
     id: integerSchema,
     name: { type: "string" },
@@ -35,6 +43,15 @@ export const tournamentSchema = {
     prizePool: { type: ["integer", "null"] },
     previewUrl: { type: ["string", "null"] },
     createdAt: { type: "string", format: "date-time" },
+    approvedApplicationsCount: {
+      type: "integer",
+      description: "Количество одобренных заявок на турнир",
+    },
+    calculatedPrizePool: {
+      type: "integer",
+      description:
+        "Рассчитанный призовой фонд. Если prizePool указан явно, возвращает его значение, иначе - количество одобренных заявок умноженное на цену турнира",
+    },
   },
 };
 
@@ -175,6 +192,44 @@ export const tokenPairSchema = {
   },
 };
 
+export const teamSchema = {
+  type: "object",
+  required: ["id", "lobbyId", "createdAt"],
+  properties: {
+    id: integerSchema,
+    lobbyId: integerSchema,
+    discordChannelId: { type: ["string", "null"] },
+    createdAt: { type: "string", format: "date-time" },
+    participations: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          id: integerSchema,
+          slot: { type: ["integer", "null"] },
+          isCaptain: { type: "boolean" },
+          player: {
+            type: ["object", "null"],
+            properties: {
+              id: integerSchema,
+              nickname: { type: "string" },
+              user: {
+                type: ["object", "null"],
+                properties: {
+                  id: integerSchema,
+                  telegramId: { type: "string" },
+                  username: { type: ["string", "null"] },
+                  discordUsername: { type: ["string", "null"] },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const participationSchema = {
   type: "object",
   required: ["id", "lobbyId", "playerId", "isCaptain"],
@@ -182,7 +237,8 @@ export const participationSchema = {
     id: integerSchema,
     lobbyId: integerSchema,
     playerId: integerSchema,
-    team: { type: ["integer", "null"] },
+    teamId: { type: ["integer", "null"] },
+    slot: { type: ["integer", "null"] },
     isCaptain: { type: "boolean" },
     pickedAt: { type: ["string", "null"], format: "date-time" },
     result: {
@@ -217,6 +273,13 @@ export const participationSchema = {
         },
       },
     },
+    team: {
+      type: ["object", "null"],
+      properties: {
+        id: integerSchema,
+        discordChannelId: { type: ["string", "null"] },
+      },
+    },
   },
 };
 
@@ -231,10 +294,17 @@ export const lobbySchema = {
       enum: ["PENDING", "DRAFTING", "PLAYING", "FINISHED"],
     },
     tournamentId: { type: ["integer", "null"] },
+    lotteryWinnerId: { type: ["integer", "null"] },
+    firstPickerId: { type: ["integer", "null"] },
     createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
     participations: {
       type: "array",
       items: participationSchema,
+    },
+    teams: {
+      type: "array",
+      items: teamSchema,
     },
   },
 };

@@ -20,6 +20,7 @@ const ALLOWED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
 export class FileService {
   private readonly uploadsDir = "uploads";
   private readonly receiptsDir = join(this.uploadsDir, "receipts");
+  private readonly tournamentsDir = join(this.uploadsDir, "tournaments");
 
   constructor() {
     this.ensureDirectoriesExist();
@@ -31,6 +32,9 @@ export class FileService {
     }
     if (!existsSync(this.receiptsDir)) {
       await mkdir(this.receiptsDir, { recursive: true });
+    }
+    if (!existsSync(this.tournamentsDir)) {
+      await mkdir(this.tournamentsDir, { recursive: true });
     }
   }
 
@@ -176,6 +180,42 @@ export class FileService {
    * @returns путь к сохраненному файлу относительно корня проекта
    */
   async saveBase64Image(base64Data: string, filename: string): Promise<string> {
+    return this.saveBase64ImageToDirectory(
+      base64Data,
+      filename,
+      this.receiptsDir
+    );
+  }
+
+  /**
+   * Сохраняет base64 изображение preview турнира в файл
+   * @param base64Data - строка base64 (может быть с префиксом data:image/...;base64,)
+   * @param filename - имя файла (без расширения, будет добавлено автоматически)
+   * @returns путь к сохраненному файлу относительно корня проекта
+   */
+  async saveTournamentPreviewImage(
+    base64Data: string,
+    filename: string
+  ): Promise<string> {
+    return this.saveBase64ImageToDirectory(
+      base64Data,
+      filename,
+      this.tournamentsDir
+    );
+  }
+
+  /**
+   * Сохраняет base64 изображение в указанную директорию
+   * @param base64Data - строка base64 (может быть с префиксом data:image/...;base64,)
+   * @param filename - имя файла (без расширения, будет добавлено автоматически)
+   * @param targetDir - целевая директория для сохранения
+   * @returns путь к сохраненному файлу относительно корня проекта
+   */
+  private async saveBase64ImageToDirectory(
+    base64Data: string,
+    filename: string,
+    targetDir: string
+  ): Promise<string> {
     await this.ensureDirectoriesExist();
 
     // Валидируем и получаем данные
@@ -187,12 +227,12 @@ export class FileService {
     // Генерируем уникальное имя файла с timestamp
     const timestamp = Date.now();
     const uniqueFilename = `${sanitizedFilename}_${timestamp}.${extension}`;
-    const filePath = join(this.receiptsDir, uniqueFilename);
+    const filePath = join(targetDir, uniqueFilename);
 
-    // Проверяем, что путь находится внутри receiptsDir (защита от path traversal)
+    // Проверяем, что путь находится внутри targetDir (защита от path traversal)
     const normalizedPath = normalize(resolve(filePath));
-    const normalizedReceiptsDir = normalize(resolve(this.receiptsDir));
-    if (!normalizedPath.startsWith(normalizedReceiptsDir)) {
+    const normalizedTargetDir = normalize(resolve(targetDir));
+    if (!normalizedPath.startsWith(normalizedTargetDir)) {
       throw new Error("Invalid file path: path traversal detected");
     }
 

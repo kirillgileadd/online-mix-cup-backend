@@ -107,7 +107,11 @@ export async function tournamentRoutes(app: FastifyInstance) {
             eventDate: { type: ["string", "null"], format: "date-time" },
             price: { type: "integer", minimum: 0 },
             prizePool: { type: ["integer", "null"], minimum: 0 },
-            previewUrl: { type: ["string", "null"] },
+            previewImageBase64: {
+              type: ["string", "null"],
+              description:
+                "Изображение preview турнира в формате base64 (может быть с префиксом data:image/...;base64,)",
+            },
           },
         },
         response: {
@@ -122,19 +126,21 @@ export async function tournamentRoutes(app: FastifyInstance) {
         payload.price,
         payload.eventDate,
         payload.prizePool,
-        payload.previewUrl
+        payload.previewImageBase64
       );
       reply.code(201).send(tournament);
     }
   );
 
-  app.put(
+  app.patch(
     "/:id",
     {
       preHandler: adminPreHandler,
       schema: {
         tags: ["tournaments"],
-        summary: "Обновить турнир",
+        summary: "Обновить турнир (частичное обновление)",
+        description:
+          "Обновляет только переданные поля турнира. Можно обновить только название, или только изображение, или любую комбинацию полей.",
         security: [{ bearerAuth: [] }],
         params: tournamentParamsSchema,
         body: {
@@ -144,7 +150,11 @@ export async function tournamentRoutes(app: FastifyInstance) {
             eventDate: { type: ["string", "null"], format: "date-time" },
             price: { type: "integer", minimum: 0 },
             prizePool: { type: ["integer", "null"], minimum: 0 },
-            previewUrl: { type: ["string", "null"] },
+            previewImageBase64: {
+              type: ["string", "null"],
+              description:
+                "Изображение preview турнира в формате base64 (может быть с префиксом data:image/...;base64,). Передача null удаляет существующее изображение. Если поле не передано, изображение не изменяется.",
+            },
           },
         },
         response: {

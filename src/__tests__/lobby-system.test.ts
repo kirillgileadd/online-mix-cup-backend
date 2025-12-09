@@ -31,6 +31,9 @@ describe("Lobby System - Полный сценарий", () => {
       await prisma.participation.deleteMany({
         where: { lobbyId },
       });
+      await prisma.team.deleteMany({
+        where: { lobbyId },
+      });
       await prisma.lobby.delete({
         where: { id: lobbyId },
       });
@@ -43,6 +46,9 @@ describe("Lobby System - Полный сценарий", () => {
       });
       for (const lobby of allLobbies) {
         await prisma.participation.deleteMany({
+          where: { lobbyId: lobby.id },
+        });
+        await prisma.team.deleteMany({
           where: { lobbyId: lobby.id },
         });
         await prisma.lobby.delete({
@@ -193,9 +199,18 @@ describe("Lobby System - Полный сценарий", () => {
 
     expect(captainMmr).toEqual(mmrSorted.slice(0, 2));
 
-    // И у каждой команды есть капитан
-    expect(captains.some((c) => c.team === 1)).toBe(true);
-    expect(captains.some((c) => c.team === 2)).toBe(true);
+    // Получаем полное лобби с командами для проверки
+    const fullLobby = await lobbyService.getLobbyById(lobbyId);
+    if (!fullLobby) {
+      throw new Error("Лобби не найдено");
+    }
+
+    // Проверяем, что у каждой команды есть капитан
+    // Команды создаются при startDraft
+    expect(fullLobby.teams).toHaveLength(2);
+    const teamIds = fullLobby.teams.map((t) => t.id);
+    expect(captains.some((c) => c.teamId === teamIds[0])).toBe(true);
+    expect(captains.some((c) => c.teamId === teamIds[1])).toBe(true);
   });
 
   it("6. Драфт - распределение игроков по командам", async () => {
@@ -203,38 +218,42 @@ describe("Lobby System - Полный сценарий", () => {
     let lobby = await lobbyService.getLobbyById(lobbyId);
     if (!lobby) throw new Error("Лобби не найдено");
 
+    // Проверяем, что команды созданы
+    expect(lobby.teams).toHaveLength(2);
+    const teams = lobby.teams.sort((a, b) => a.id - b.id);
+    const team1Id = teams[0].id;
+    const team2Id = teams[1].id;
+
     // Находим капитанов
     const captains = lobby.participations.filter((p) => p.isCaptain);
     expect(captains).toHaveLength(2);
 
     // Определяем команды капитанов (при старте драфта им автоматически назначены команды)
-    const team1 = 1;
-    const team2 = 2;
-    const captainTeam1 = captains.find((p) => p.team === team1);
-    const captainTeam2 = captains.find((p) => p.team === team2);
+    const captainTeam1 = captains.find((p) => p.teamId === team1Id);
+    const captainTeam2 = captains.find((p) => p.teamId === team2Id);
     if (!captainTeam1 || !captainTeam2) {
       throw new Error("Не определены капитаны для обеих команд");
     }
 
     // Получаем список игроков без команды (капитаны уже занимают первые слоты)
     const unassignedPlayers = lobby.participations.filter(
-      (p) => p.team === null
+      (p) => p.teamId === null
     );
 
     // Распределяем оставшихся игроков по очереди (snake draft)
-    // Капитан 1 (team1) выбирает первым, затем капитан 2 (team2), и так далее
-    const draftOrder: Array<{ playerId: number; team: number }> = [];
-    let currentTeam = team1; // Капитан 1 начинает
+    // Капитан 1 (team1Id) выбирает первым, затем капитан 2 (team2Id), и так далее
+    const draftOrder: Array<{ playerId: number; teamId: number }> = [];
+    let currentTeamId = team1Id; // Капитан 1 начинает
 
     for (const player of unassignedPlayers) {
-      draftOrder.push({ playerId: player.playerId, team: currentTeam });
+      draftOrder.push({ playerId: player.playerId, teamId: currentTeamId });
       // Переключаем команду для следующего выбора
-      currentTeam = currentTeam === team1 ? team2 : team1;
+      currentTeamId = currentTeamId === team1Id ? team2Id : team1Id;
     }
 
     // Выполняем все выборы
     for (const pick of draftOrder) {
-      await lobbyService.draftPick(lobbyId, pick.playerId, pick.team);
+      await lobbyService.draftPick(lobbyId, pick.playerId, pick.teamId, "add");
     }
 
     lobby = await lobbyService.getLobbyById(lobbyId);
@@ -244,7 +263,7 @@ describe("Lobby System - Полный сценарий", () => {
 
     // Проверяем, что все игроки распределены (но статус ещё DRAFTING)
     expect(lobby.status).toBe("DRAFTING");
-    const allAssigned = lobby.participations.every((p) => p.team !== null);
+    const allAssigned = lobby.participations.every((p) => p.teamId !== null);
     expect(allAssigned).toBe(true);
 
     // Переводим лобби в статус PLAYING
@@ -255,15 +274,29 @@ describe("Lobby System - Полный сценарий", () => {
     expect(lobby.status).toBe("PLAYING");
 
     // Проверяем, что в каждой команде по 5 игроков
-    const team1Players = lobby.participations.filter((p) => p.team === team1);
-    const team2Players = lobby.participations.filter((p) => p.team === team2);
+    const team1Players = lobby.participations.filter(
+      (p) => p.teamId === team1Id
+    );
+    const team2Players = lobby.participations.filter(
+      (p) => p.teamId === team2Id
+    );
 
     expect(team1Players).toHaveLength(5);
     expect(team2Players).toHaveLength(5);
   });
 
   it("7. Завершение лобби - проигравшие теряют жизни", async () => {
-    const winningTeam = 1;
+    // Получаем лобби для определения команд
+    const lobbyBeforeFinish = await lobbyService.getLobbyById(lobbyId);
+    if (!lobbyBeforeFinish || !lobbyBeforeFinish.teams) {
+      throw new Error("Лобби не найдено");
+    }
+    const teams = lobbyBeforeFinish.teams.sort((a, b) => a.id - b.id);
+    const winningTeamNumber = 1; // Команда 1 (первая по порядку)
+    const winningTeamId = teams[winningTeamNumber - 1]?.id;
+    if (!winningTeamId) {
+      throw new Error("Команда не найдена");
+    }
 
     // Получаем жизни игроков до завершения
     const playersBefore = await prisma.player.findMany({
@@ -274,17 +307,20 @@ describe("Lobby System - Полный сценарий", () => {
 
     const initialLives = new Map(playersBefore.map((p) => [p.id, p.lives]));
 
-    // Завершаем лобби
-    const finishedLobby = await lobbyService.finishLobby(lobbyId, winningTeam);
+    // Завершаем лобби (метод все еще принимает номер команды 1 или 2)
+    const finishedLobby = await lobbyService.finishLobby(
+      lobbyId,
+      winningTeamNumber
+    );
 
     expect(finishedLobby.status).toBe("FINISHED");
 
     // Проверяем результаты
     const winners = finishedLobby.participations.filter(
-      (p) => p.team === winningTeam
+      (p) => p.teamId === winningTeamId
     );
     const losers = finishedLobby.participations.filter(
-      (p) => p.team !== winningTeam
+      (p) => p.teamId !== winningTeamId && p.teamId !== null
     );
 
     expect(winners.every((p) => p.result === "WIN")).toBe(true);
@@ -390,6 +426,9 @@ describe("Lobby System - Полный сценарий", () => {
     await prisma.participation.deleteMany({
       where: { lobbyId: secondRoundLobby.id },
     });
+    await prisma.team.deleteMany({
+      where: { lobbyId: secondRoundLobby.id },
+    });
     await prisma.lobby.delete({
       where: { id: secondRoundLobby.id },
     });
@@ -421,6 +460,9 @@ describe("Lobby System - Множественные лобби в одном р�
         await prisma.participation.deleteMany({
           where: { lobbyId },
         });
+        await prisma.team.deleteMany({
+          where: { lobbyId },
+        });
         await prisma.lobby.delete({
           where: { id: lobbyId },
         });
@@ -434,6 +476,9 @@ describe("Lobby System - Множественные лобби в одном р�
       });
       for (const lobby of allLobbies) {
         await prisma.participation.deleteMany({
+          where: { lobbyId: lobby.id },
+        });
+        await prisma.team.deleteMany({
           where: { lobbyId: lobby.id },
         });
         await prisma.lobby.delete({

@@ -392,6 +392,7 @@ export const ModelName = {
   Role: 'Role',
   UserRole: 'UserRole',
   Lobby: 'Lobby',
+  Team: 'Team',
   Participation: 'Participation'
 } as const
 
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "tournament" | "application" | "player" | "refreshToken" | "role" | "userRole" | "lobby" | "participation"
+    modelProps: "user" | "tournament" | "application" | "player" | "refreshToken" | "role" | "userRole" | "lobby" | "team" | "participation"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1004,6 +1005,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Team: {
+      payload: Prisma.$TeamPayload<ExtArgs>
+      fields: Prisma.TeamFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TeamFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TeamFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        findFirst: {
+          args: Prisma.TeamFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TeamFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        findMany: {
+          args: Prisma.TeamFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>[]
+        }
+        create: {
+          args: Prisma.TeamCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        createMany: {
+          args: Prisma.TeamCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TeamCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>[]
+        }
+        delete: {
+          args: Prisma.TeamDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        update: {
+          args: Prisma.TeamUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        deleteMany: {
+          args: Prisma.TeamDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TeamUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TeamUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>[]
+        }
+        upsert: {
+          args: Prisma.TeamUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TeamPayload>
+        }
+        aggregate: {
+          args: Prisma.TeamAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTeam>
+        }
+        groupBy: {
+          args: Prisma.TeamGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TeamCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TeamCountAggregateOutputType> | number
+        }
+      }
+    }
     Participation: {
       payload: Prisma.$ParticipationPayload<ExtArgs>
       fields: Prisma.ParticipationFieldRefs
@@ -1213,8 +1288,8 @@ export const LobbyScalarFieldEnum = {
   round: 'round',
   status: 'status',
   tournamentId: 'tournamentId',
-  team1ChannelId: 'team1ChannelId',
-  team2ChannelId: 'team2ChannelId',
+  lotteryWinnerId: 'lotteryWinnerId',
+  firstPickerId: 'firstPickerId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1222,11 +1297,22 @@ export const LobbyScalarFieldEnum = {
 export type LobbyScalarFieldEnum = (typeof LobbyScalarFieldEnum)[keyof typeof LobbyScalarFieldEnum]
 
 
+export const TeamScalarFieldEnum = {
+  id: 'id',
+  lobbyId: 'lobbyId',
+  discordChannelId: 'discordChannelId',
+  createdAt: 'createdAt'
+} as const
+
+export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
 export const ParticipationScalarFieldEnum = {
   id: 'id',
   lobbyId: 'lobbyId',
+  teamId: 'teamId',
   playerId: 'playerId',
-  team: 'team',
+  slot: 'slot',
   isCaptain: 'isCaptain',
   pickedAt: 'pickedAt',
   result: 'result',
@@ -1485,6 +1571,7 @@ export type GlobalOmitConfig = {
   role?: Prisma.RoleOmit
   userRole?: Prisma.UserRoleOmit
   lobby?: Prisma.LobbyOmit
+  team?: Prisma.TeamOmit
   participation?: Prisma.ParticipationOmit
 }
 

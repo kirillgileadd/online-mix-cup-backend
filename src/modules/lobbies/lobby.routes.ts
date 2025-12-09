@@ -8,6 +8,7 @@ import {
   startPlayingSchema,
   finishLobbySchema,
   replacePlayerSchema,
+  setFirstPickerSchema,
 } from "./lobby.schema";
 import { LobbyService } from "./lobby.service";
 import { DiscordService } from "../discord/discord.service";
@@ -144,14 +145,27 @@ export async function lobbyRoutes(
         tags: ["lobbies"],
         summary: "Выбор игрока в драфте",
         description:
-          "Выбирает игрока в команду. Капитан с большим MMR начинает первым. Если playerId === null, отменяет последний пик в указанной команде",
+          "Добавляет или удаляет игрока из команды. type: 'add' - добавляет игрока в команду, 'remove' - удаляет игрока из команды. teamId - это ID команды из массива teams лобби. slot - позиция игрока в команде (0-4), используется только при type='add', если не указан, выбирается автоматически.",
         body: {
           type: "object",
-          required: ["lobbyId", "team"],
+          required: ["lobbyId", "playerId", "teamId", "type"],
           properties: {
             lobbyId: { type: "integer" },
-            playerId: { type: ["integer", "null"] },
-            team: { type: "integer", minimum: 1, maximum: 2 },
+            playerId: { type: "integer" },
+            teamId: { type: "integer" },
+            type: {
+              type: "string",
+              enum: ["add", "remove"],
+              description:
+                "Тип операции: 'add' - добавить игрока в команду, 'remove' - удалить игрока из команды",
+            },
+            slot: {
+              type: ["integer", "null"],
+              minimum: 0,
+              maximum: 4,
+              description:
+                "Позиция игрока в команде (0-4). Используется только при type='add'. Если не указан, выбирается автоматически",
+            },
           },
         },
         response: {
@@ -167,7 +181,9 @@ export async function lobbyRoutes(
         const lobby = await service.draftPick(
           payload.lobbyId,
           payload.playerId,
-          payload.team
+          payload.teamId,
+          payload.type,
+          payload.slot
         );
         return lobby;
       } catch (error) {
@@ -235,10 +251,13 @@ export async function lobbyRoutes(
           "Идемпотентная операция. Проставляет результаты матча и уменьшает жизни у проигравших",
         body: {
           type: "object",
-          required: ["lobbyId", "winningTeam"],
+          required: ["lobbyId", "winningTeamId"],
           properties: {
             lobbyId: { type: "integer" },
-            winningTeam: { type: "integer", minimum: 1, maximum: 2 },
+            winningTeamId: {
+              type: "integer",
+              description: "ID команды-победителя",
+            },
           },
         },
         response: {
@@ -253,7 +272,7 @@ export async function lobbyRoutes(
       try {
         const lobby = await service.finishLobby(
           payload.lobbyId,
-          payload.winningTeam
+          payload.winningTeamId
         );
         return lobby;
       } catch (error) {
@@ -335,6 +354,48 @@ export async function lobbyRoutes(
         return reply.code(404).send({ message: "Лобби не найдено" });
       }
       return lobby;
+    }
+  );
+
+  app.get(
+    "/:id/current-picker",
+    {
+      schema: {
+        tags: ["lobbies"],
+        summary: "Получить ID текущего пикера в драфте",
+        description:
+          "Возвращает ID капитана, который должен выбирать сейчас в драфте. Использует паттерн [0, 1, 1, 0, 0, 1, 1, 0, 0, 1] для определения очереди.",
+        params: lobbyIdParamsSchema,
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              currentPickerId: { type: ["integer", "null"] },
+            },
+          },
+          400: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: string | number };
+      const lobbyId = Number(id);
+      try {
+        const currentPickerId = await service.getCurrentPicker(lobbyId);
+        return { currentPickerId };
+      } catch (error) {
+        const statusCode =
+          error instanceof Error && error.message.includes("не найдено")
+            ? 404
+            : 400;
+        reply.code(statusCode).send({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ошибка получения текущего пикера",
+        });
+      }
     }
   );
 
@@ -440,6 +501,62 @@ export async function lobbyRoutes(
       }
 
       return reply.status(204).send();
+    }
+  );
+
+  app.post(
+    "/:id/set-first-picker",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["lobbies"],
+        summary: "Установить первого пикера в драфте",
+        description:
+          "Устанавливает капитана, который будет выбирать первым в драфте. Используется после жребия для выбора первого пикера игроками.",
+        params: lobbyIdParamsSchema,
+        body: {
+          type: "object",
+          required: ["firstPickerId"],
+          properties: {
+            firstPickerId: {
+              type: "integer",
+              description: "ID капитана, который будет выбирать первым",
+            },
+          },
+        },
+        response: {
+          200: lobbySchema,
+          400: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const { id } = request.params as { id: string | number };
+      const lobbyId = Number(id);
+      const body = request.body as { firstPickerId: number };
+      const payload = parseWithValidation(setFirstPickerSchema, {
+        lobbyId,
+        firstPickerId: body.firstPickerId,
+      });
+      try {
+        const lobby = await service.setFirstPicker(
+          payload.lobbyId,
+          payload.firstPickerId
+        );
+        return lobby;
+      } catch (error) {
+        const statusCode =
+          error instanceof Error && error.message.includes("не найдено")
+            ? 404
+            : 400;
+        reply.code(statusCode).send({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ошибка установки первого пикера",
+        });
+      }
     }
   );
 }

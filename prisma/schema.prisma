@@ -35,19 +35,19 @@ model Tournament {
 }
 
 model Application {
-  mmr              Int
-  gameRoles        String
-  status           ApplicationStatus @default(pending)
-  createdAt        DateTime          @default(now())
-  id               Int               @id @default(autoincrement())
-  userId           Int
-  tournamentId     Int
-  nickname         String?
-  dotabuff         String?
-  isPaid           Boolean           @default(false)
-  receiptImageUrl  String?
-  tournament       Tournament        @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mmr             Int
+  gameRoles       String
+  status          ApplicationStatus @default(pending)
+  createdAt       DateTime          @default(now())
+  id              Int               @id @default(autoincrement())
+  userId          Int
+  tournamentId    Int
+  nickname        String?
+  dotabuff        String?
+  isPaid          Boolean           @default(false)
+  receiptImageUrl String?
+  tournament      Tournament        @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Player {
@@ -100,27 +100,44 @@ model Lobby {
   round            Int
   status           LobbyStatus     @default(PENDING)
   tournamentId     Int?
-  team1ChannelId   String?
-  team2ChannelId   String?
+  lotteryWinnerId  Int?            // ID капитана-победителя жребия
+  firstPickerId    Int?            // ID капитана, который выбирает первым
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
   tournament       Tournament?     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teams            Team[]
   participations   Participation[]
+}
+
+model Team {
+  id               Int      @id @default(autoincrement())
+  lobbyId          Int
+  discordChannelId String?
+  createdAt        DateTime @default(now())
+
+  lobby          Lobby           @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  participations Participation[]
+
+  @@index([lobbyId])
 }
 
 model Participation {
   id        Int                  @id @default(autoincrement())
   lobbyId   Int
+  teamId    Int?
   playerId  Int
-  team      Int?
+  slot      Int?
   isCaptain Boolean              @default(false)
   pickedAt  DateTime?
   result    ParticipationResult?
   updatedAt DateTime             @updatedAt
   lobby     Lobby                @relation(fields: [lobbyId], references: [id], onDelete: Cascade)
+  team      Team?                @relation(fields: [teamId], references: [id], onDelete: SetNull)
   player    Player               @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@unique([playerId, lobbyId])
+  @@unique([teamId, slot])
+  @@index([teamId])
 }
 
 enum TournamentStatus {
