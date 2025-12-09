@@ -22,15 +22,7 @@ export const userSchema = {
 
 export const tournamentSchema = {
   type: "object",
-  required: [
-    "id",
-    "name",
-    "status",
-    "price",
-    "createdAt",
-    "approvedApplicationsCount",
-    "calculatedPrizePool",
-  ],
+  required: ["id", "name", "status", "price", "createdAt"],
   properties: {
     id: integerSchema,
     name: { type: "string" },
@@ -45,12 +37,13 @@ export const tournamentSchema = {
     createdAt: { type: "string", format: "date-time" },
     approvedApplicationsCount: {
       type: "integer",
-      description: "Количество одобренных заявок на турнир",
+      description:
+        "Количество одобренных заявок на турнир. Присутствует при получении списка турниров или отдельного турнира.",
     },
     calculatedPrizePool: {
       type: "integer",
       description:
-        "Рассчитанный призовой фонд. Если prizePool указан явно, возвращает его значение, иначе - количество одобренных заявок умноженное на цену турнира",
+        "Рассчитанный призовой фонд. Если prizePool указан явно, возвращает его значение, иначе - количество одобренных заявок умноженное на цену турнира. Присутствует при получении списка турниров или отдельного турнира.",
     },
   },
 };
