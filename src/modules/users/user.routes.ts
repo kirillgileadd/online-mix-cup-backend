@@ -23,6 +23,7 @@ const createOrUpdateBodySchema = {
     username: { type: ["string", "null"] },
     photoUrl: { type: ["string", "null"] },
     discordUsername: { type: ["string", "null"] },
+    steamProfileLink: { type: ["string", "null"] },
     roles: {
       type: "array",
       items: { type: "string" },
@@ -52,6 +53,7 @@ type BasicUserShape = {
   username: string | null;
   photoUrl: string | null;
   discordUsername: string | null;
+  steamId64: string | null;
   createdAt: Date;
 };
 
@@ -61,6 +63,7 @@ const serializeBasicUser = (user: BasicUserShape, roles: string[] = []) => ({
   username: user.username,
   photoUrl: user.photoUrl,
   discordUsername: user.discordUsername,
+  steamId64: user.steamId64,
   createdAt: user.createdAt,
   roles,
 });
@@ -180,6 +183,7 @@ export async function userRoutes(app: FastifyInstance) {
             username: { type: ["string", "null"] },
             photoUrl: { type: ["string", "null"] },
             discordUsername: { type: ["string", "null"] },
+            steamProfileLink: { type: ["string", "null"] },
             roles: {
               type: "array",
               items: { type: "string" },

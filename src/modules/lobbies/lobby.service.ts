@@ -1,13 +1,20 @@
 import { prisma } from "../../config/prisma";
 import { DiscordService, TeamMember } from "../discord/discord.service";
+import { SteamBotService } from "../steam-bot/steam-bot.service";
+import pino from "pino";
+
+const logger = pino();
 
 const LOBBY_SIZE = 10;
 
 export class LobbyService {
   private discordService: DiscordService;
+  private steamBotService: SteamBotService;
+  private lobbyTimers: Map<number, NodeJS.Timeout> = new Map();
 
   constructor(discordService?: DiscordService) {
     this.discordService = discordService || new DiscordService();
+    this.steamBotService = new SteamBotService();
   }
   /**
    * Генерация лобби по алгоритму:
@@ -502,43 +509,60 @@ export class LobbyService {
    * Начать игру (перевести лобби в статус PLAYING)
    * Проверяет, что все игроки выбраны
    */
-  async startPlaying(lobbyId: number) {
-    return prisma.$transaction(async (tx) => {
-      const lobby = await tx.lobby.findUnique({
+  async startPlaying(
+    lobbyId: number,
+    options?: {
+      gameName?: string;
+      gameMode?: number;
+      passKey?: string;
+      serverRegion?: number;
+    }
+  ) {
+    // Сначала выполняем все проверки в транзакции
+    const lobby = await prisma.$transaction(async (tx) => {
+      const lobbyData = await tx.lobby.findUnique({
         where: { id: lobbyId },
         include: {
           participations: {
             include: {
               team: true,
+              player: {
+                include: {
+                  user: true,
+                },
+              },
             },
           },
           teams: true,
+          tournament: true,
         },
       });
 
-      if (!lobby) {
+      if (!lobbyData) {
         throw new Error("Лобби не найдено");
       }
 
-      if (lobby.status === "FINISHED") {
+      if (lobbyData.status === "FINISHED") {
         throw new Error("Нельзя начать игру в завершённом лобби");
       }
 
       // Проверяем, что все игроки выбраны
-      const allPicked = lobby.participations.every((p) => p.teamId !== null);
+      const allPicked = lobbyData.participations.every(
+        (p) => p.teamId !== null
+      );
 
       if (!allPicked) {
         throw new Error("Не все игроки выбраны в команды");
       }
 
       // Проверяем, что в каждой команде по 5 игроков
-      const teams = lobby.teams;
+      const teams = lobbyData.teams;
       if (teams.length !== 2) {
         throw new Error("В лобби должно быть ровно 2 команды");
       }
 
       for (const team of teams) {
-        const teamCount = lobby.participations.filter(
+        const teamCount = lobbyData.participations.filter(
           (p) => p.teamId === team.id
         ).length;
 
@@ -549,55 +573,531 @@ export class LobbyService {
         }
       }
 
-      // Переводим лобби в статус PLAYING
-      const updatedLobby = await tx.lobby.update({
-        where: { id: lobbyId },
-        data: { status: "PLAYING" },
-        include: {
-          participations: {
-            include: {
-              player: {
-                include: {
-                  user: true,
-                },
+      return lobbyData;
+    });
+
+    // Собираем steamId64 всех игроков (вне транзакции)
+    // Используем строки, так как Steam ID64 слишком большой для точного представления в JavaScript Number
+    const steamIds: string[] = [];
+    for (const participation of lobby.participations) {
+      const steamId64 = participation.player.user.steamId64;
+      if (steamId64) {
+        // Проверяем, что это валидное число (даже если хранится как строка)
+        if (/^\d+$/.test(steamId64)) {
+          steamIds.push(steamId64);
+        } else {
+          logger.warn(
+            { steamId64, userId: participation.player.user.id },
+            "Неверный формат steamId64"
+          );
+        }
+      } else {
+        logger.warn(
+          { userId: participation.player.user.id },
+          "У игрока отсутствует steamId64"
+        );
+      }
+    }
+
+    // Создаем лобби через Steam бота (вне транзакции, может занять до 30 секунд)
+    // Если нет игроков с валидным steamId64, создаем лобби без приглашений
+    const gameName =
+      options?.gameName ||
+      `Tournament Lobby #${lobbyId}${
+        lobby.tournament ? ` - ${lobby.tournament.name}` : ""
+      }`;
+    const gameMode = options?.gameMode ?? 1; // 1 = All Pick
+    const passKey = options?.passKey ?? "";
+    const serverRegion = options?.serverRegion ?? 8; // 8 = Europe West
+
+    let steamLobby: {
+      lobbyId: number;
+      gameName: string;
+      gameMode: number;
+      passKey: string;
+      serverRegion: number;
+      allowCheats: boolean;
+      fillWithBots: boolean;
+      allowSpectating: boolean;
+      visibility: number;
+      allchat: boolean;
+    } | null = null;
+    let lobbyCreated = false;
+
+    // Пытаемся создать лобби через Steam бота
+    try {
+      logger.info(
+        {
+          lobbyId,
+          gameName,
+          gameMode,
+          serverRegion,
+          steamIdsCount: steamIds.length,
+        },
+        "Создание лобби через Steam бота"
+      );
+
+      const createLobbyResponse = await this.steamBotService.createLobby({
+        gameName,
+        gameMode,
+        passKey,
+        serverRegion,
+      });
+
+      if (createLobbyResponse.success && createLobbyResponse.lobby) {
+        steamLobby = createLobbyResponse.lobby;
+        lobbyCreated = true;
+
+        // Приглашаем всех игроков в лобби по их steamId64, если есть валидные steamId64
+        if (steamIds.length > 0) {
+          logger.info(
+            {
+              lobbyId,
+              steamLobbyId: steamLobby.lobbyId,
+              playersCount: steamIds.length,
+              steamIds,
+            },
+            "Отправка приглашений игрокам в лобби"
+          );
+
+          try {
+            const inviteResult = await this.steamBotService.invitePlayers(
+              steamIds
+            );
+            logger.info(
+              {
+                lobbyId,
+                steamLobbyId: steamLobby.lobbyId,
+                result: inviteResult,
+                invitedCount: steamIds.length,
               },
-              team: true,
+              "Приглашения успешно отправлены всем игрокам"
+            );
+          } catch (error) {
+            logger.error(
+              {
+                error,
+                lobbyId,
+                steamLobbyId: steamLobby.lobbyId,
+                steamIds,
+                playersCount: steamIds.length,
+              },
+              "Ошибка при отправке приглашений игрокам"
+            );
+            // Не прерываем процесс, если приглашение не удалось
+          }
+        } else {
+          logger.warn(
+            {
+              lobbyId,
+              steamLobbyId: steamLobby.lobbyId,
+            },
+            "Нет игроков с валидным steamId64, приглашения не отправляются"
+          );
+        }
+
+        // Устанавливаем таймер на 3 минуты для проверки и покидания лобби
+        this.scheduleLobbyCleanup(lobbyId, steamLobby.lobbyId);
+      } else {
+        throw new Error(
+          createLobbyResponse.message || "Не удалось создать лобби через бота"
+        );
+      }
+    } catch (error) {
+      logger.error(
+        {
+          error,
+          lobbyId,
+          gameName,
+          gameMode,
+          serverRegion,
+        },
+        "Ошибка при создании лобби через Steam бота. Игра будет начата без автоматического создания лобби."
+      );
+      // Продолжаем выполнение - игра будет начата, но лобби не создано автоматически
+    }
+
+    // Обновляем статус лобби в отдельной транзакции
+    const updatedLobby = await prisma.lobby.update({
+      where: { id: lobbyId },
+      data: { status: "PLAYING" },
+      include: {
+        participations: {
+          include: {
+            player: {
+              include: {
+                user: true,
+              },
+            },
+            team: true,
+          },
+        },
+        teams: true,
+        tournament: true,
+      },
+    });
+
+    // Добавляем информацию о Steam лобби к ответу (если лобби было создано)
+    const lobbyWithSteam = {
+      ...updatedLobby,
+      steamLobby: steamLobby
+        ? {
+            lobbyId: steamLobby.lobbyId,
+            gameName: steamLobby.gameName,
+            gameMode: steamLobby.gameMode,
+            passKey: steamLobby.passKey,
+            serverRegion: steamLobby.serverRegion,
+            allowCheats: steamLobby.allowCheats,
+            fillWithBots: steamLobby.fillWithBots,
+            allowSpectating: steamLobby.allowSpectating,
+            visibility: steamLobby.visibility,
+            allchat: steamLobby.allchat,
+          }
+        : null,
+    };
+
+    // Создаем голосовые каналы в Discord и перемещаем игроков (асинхронно, не блокируем ответ)
+    // Если лобби не создано, передаем undefined, чтобы Discord использовал стандартные данные
+    // Используем название и пароль из запроса, а не из ответа бота (бот может вернуть другие значения)
+    this.setupDiscordVoiceChannels(
+      updatedLobby,
+      steamLobby
+        ? {
+            gameName: gameName, // Используем название из запроса
+            gameMode: steamLobby.gameMode,
+            passKey: passKey, // Используем пароль из запроса
+            serverRegion: steamLobby.serverRegion,
+          }
+        : undefined
+    ).catch((error) => {
+      // Логируем ошибку, но не блокируем основной процесс
+      logger.error({ error, lobbyId }, "Ошибка при настройке Discord каналов");
+    });
+
+    return lobbyWithSteam;
+  }
+
+  /**
+   * Создает лобби через Steam бота, отправляет приглашения и сообщение в Discord
+   * Не изменяет статус лобби
+   */
+  async createSteamLobbyAndInvite(
+    lobbyId: number,
+    options?: {
+      gameName?: string;
+      gameMode?: number;
+      passKey?: string;
+      serverRegion?: number;
+    }
+  ) {
+    // Получаем данные лобби
+    const lobby = await prisma.lobby.findUnique({
+      where: { id: lobbyId },
+      include: {
+        participations: {
+          include: {
+            player: {
+              include: {
+                user: true,
+              },
             },
           },
-          teams: true,
         },
-      });
-
-      // Создаем голосовые каналы в Discord и перемещаем игроков (асинхронно, не блокируем ответ)
-      this.setupDiscordVoiceChannels(updatedLobby).catch((error) => {
-        // Логируем ошибку, но не блокируем основной процесс
-        console.error("Ошибка при настройке Discord каналов:", error);
-      });
-
-      return updatedLobby;
+        teams: true,
+        tournament: true,
+      },
     });
+
+    if (!lobby) {
+      throw new Error("Лобби не найдено");
+    }
+
+    // Собираем steamId64 всех игроков
+    const steamIds: string[] = [];
+    for (const participation of lobby.participations) {
+      const steamId64 = participation.player.user.steamId64;
+      if (steamId64) {
+        if (/^\d+$/.test(steamId64)) {
+          steamIds.push(steamId64);
+        } else {
+          logger.warn(
+            { steamId64, userId: participation.player.user.id },
+            "Неверный формат steamId64"
+          );
+        }
+      } else {
+        logger.warn(
+          { userId: participation.player.user.id },
+          "У игрока отсутствует steamId64"
+        );
+      }
+    }
+
+    // Параметры лобби
+    // Если нет игроков с валидным steamId64, создаем лобби без приглашений
+    const gameName =
+      options?.gameName ||
+      `Tournament Lobby #${lobbyId}${
+        lobby.tournament ? ` - ${lobby.tournament.name}` : ""
+      }`;
+    const gameMode = options?.gameMode ?? 1;
+    const passKey = options?.passKey ?? "";
+    const serverRegion = options?.serverRegion ?? 8;
+
+    let steamLobby: {
+      lobbyId: number;
+      gameName: string;
+      gameMode: number;
+      passKey: string;
+      serverRegion: number;
+      allowCheats: boolean;
+      fillWithBots: boolean;
+      allowSpectating: boolean;
+      visibility: number;
+      allchat: boolean;
+    } | null = null;
+
+    // Пытаемся создать лобби через Steam бота
+    try {
+      logger.info(
+        {
+          lobbyId,
+          gameName,
+          gameMode,
+          serverRegion,
+          steamIdsCount: steamIds.length,
+        },
+        "Создание лобби через Steam бота"
+      );
+
+      const createLobbyResponse = await this.steamBotService.createLobby({
+        gameName,
+        gameMode,
+        passKey,
+        serverRegion,
+      });
+
+      if (createLobbyResponse.success && createLobbyResponse.lobby) {
+        steamLobby = createLobbyResponse.lobby;
+
+        // Приглашаем всех игроков, если есть валидные steamId64
+        if (steamIds.length > 0) {
+          logger.info(
+            {
+              lobbyId,
+              steamLobbyId: steamLobby.lobbyId,
+              playersCount: steamIds.length,
+              steamIds,
+            },
+            "Отправка приглашений игрокам в лобби"
+          );
+
+          try {
+            const inviteResult = await this.steamBotService.invitePlayers(
+              steamIds
+            );
+            logger.info(
+              {
+                lobbyId,
+                steamLobbyId: steamLobby.lobbyId,
+                result: inviteResult,
+                invitedCount: steamIds.length,
+              },
+              "Приглашения успешно отправлены всем игрокам"
+            );
+          } catch (error) {
+            logger.error(
+              {
+                error,
+                lobbyId,
+                steamLobbyId: steamLobby.lobbyId,
+                steamIds,
+                playersCount: steamIds.length,
+              },
+              "Ошибка при отправке приглашений игрокам"
+            );
+          }
+        } else {
+          logger.warn(
+            {
+              lobbyId,
+              steamLobbyId: steamLobby.lobbyId,
+            },
+            "Нет игроков с валидным steamId64, приглашения не отправляются"
+          );
+        }
+
+        // Устанавливаем таймер на 3 минуты
+        this.scheduleLobbyCleanup(lobbyId, steamLobby.lobbyId);
+      } else {
+        throw new Error(
+          createLobbyResponse.message || "Не удалось создать лобби через бота"
+        );
+      }
+    } catch (error) {
+      logger.error(
+        {
+          error,
+          lobbyId,
+          gameName,
+          gameMode,
+          serverRegion,
+        },
+        "Ошибка при создании лобби через Steam бота"
+      );
+      // Продолжаем выполнение для отправки сообщения в Discord
+    }
+
+    // Отправляем сообщение в Discord (асинхронно)
+    const lobbyForDiscord = {
+      id: lobby.id,
+      teams: lobby.teams,
+      participations: lobby.participations,
+    };
+
+    // Используем название и пароль из запроса, а не из ответа бота (бот может вернуть другие значения)
+    this.setupDiscordVoiceChannels(
+      lobbyForDiscord,
+      steamLobby
+        ? {
+            gameName: gameName, // Используем название из запроса
+            gameMode: steamLobby.gameMode,
+            passKey: passKey, // Используем пароль из запроса
+            serverRegion: steamLobby.serverRegion,
+          }
+        : undefined
+    ).catch((error) => {
+      logger.error({ error, lobbyId }, "Ошибка при настройке Discord каналов");
+    });
+
+    return {
+      success: steamLobby !== null,
+      steamLobby: steamLobby
+        ? {
+            lobbyId: steamLobby.lobbyId,
+            gameName: steamLobby.gameName,
+            gameMode: steamLobby.gameMode,
+            passKey: steamLobby.passKey,
+            serverRegion: steamLobby.serverRegion,
+            allowCheats: steamLobby.allowCheats,
+            fillWithBots: steamLobby.fillWithBots,
+            allowSpectating: steamLobby.allowSpectating,
+            visibility: steamLobby.visibility,
+            allchat: steamLobby.allchat,
+          }
+        : null,
+      message: steamLobby
+        ? "Лобби успешно создано и приглашения отправлены"
+        : "Не удалось создать лобби через бота, но сообщение в Discord отправлено",
+    };
+  }
+
+  /**
+   * Покидает текущее лобби через Steam бота
+   */
+  async leaveSteamLobby() {
+    try {
+      logger.info("Попытка покинуть лобби через Steam бота");
+      const result = await this.steamBotService.leaveLobby();
+      logger.info({ result }, "Успешно покинули лобби");
+      return {
+        success: result.success,
+        message: result.message,
+      };
+    } catch (error) {
+      logger.error({ error }, "Ошибка при покидании лобби");
+      return {
+        success: false,
+        message:
+          error instanceof Error ? error.message : "Ошибка при покидании лобби",
+      };
+    }
+  }
+
+  /**
+   * Устанавливает таймер на 3 минуты для проверки и покидания лобби
+   * Таймер сохраняется в Map экземпляра класса и будет работать даже после завершения функции
+   */
+  private scheduleLobbyCleanup(lobbyId: number, steamLobbyId: number) {
+    // Очищаем предыдущий таймер, если он существует
+    const existingTimer = this.lobbyTimers.get(lobbyId);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+      logger.info({ lobbyId }, "Предыдущий таймер очищен");
+    }
+
+    // Сохраняем ссылки на сервисы для использования в callback
+    const steamBotService = this.steamBotService;
+
+    const timer = setTimeout(async () => {
+      try {
+        logger.info(
+          { lobbyId, steamLobbyId },
+          "Проверка статуса лобби через 3 минуты"
+        );
+        const status = await steamBotService.getLobbyStatus();
+
+        if (status.inLobby && status.lobbyId === steamLobbyId) {
+          logger.info(
+            { lobbyId, steamLobbyId },
+            "Бот все еще в лобби, покидаем лобби"
+          );
+          await steamBotService.leaveLobby();
+          logger.info({ lobbyId, steamLobbyId }, "Лобби успешно покинуто");
+        } else {
+          logger.info(
+            { lobbyId, steamLobbyId, status },
+            "Бот уже не в лобби, ничего не делаем"
+          );
+        }
+      } catch (error) {
+        logger.error(
+          { error, lobbyId, steamLobbyId },
+          "Ошибка при проверке/покидании лобби"
+        );
+      } finally {
+        // Удаляем таймер из Map после выполнения
+        this.lobbyTimers.delete(lobbyId);
+        logger.info({ lobbyId }, "Таймер удален из Map");
+      }
+    }, 3 * 60 * 1000); // 3 минуты
+
+    // Сохраняем таймер в Map экземпляра класса
+    this.lobbyTimers.set(lobbyId, timer);
+    logger.info(
+      { lobbyId, steamLobbyId, timeoutMs: 3 * 60 * 1000 },
+      "Таймер на 3 минуты установлен и сохранен"
+    );
   }
 
   /**
    * Настройка голосовых каналов в Discord для команд
    */
-  private async setupDiscordVoiceChannels(lobby: {
-    id: number;
-    teams: Array<{ id: number }>;
-    participations: Array<{
-      teamId: number | null;
-      slot: number | null;
-      isCaptain: boolean;
-      player: {
-        id: number;
-        nickname: string;
-        user: {
+  private async setupDiscordVoiceChannels(
+    lobby: {
+      id: number;
+      teams: Array<{ id: number }>;
+      participations: Array<{
+        teamId: number | null;
+        slot: number | null;
+        isCaptain: boolean;
+        player: {
           id: number;
-          discordUsername: string | null;
+          nickname: string;
+          user: {
+            id: number;
+            discordUsername: string | null;
+          };
         };
-      };
-    }>;
-  }): Promise<void> {
+      }>;
+    },
+    steamLobby?: {
+      gameName: string;
+      gameMode: number;
+      passKey: string;
+      serverRegion: number;
+    }
+  ): Promise<void> {
     // Сортируем команды по ID для определения порядка
     const teams = lobby.teams.sort((a, b) => a.id - b.id);
 
@@ -666,7 +1166,8 @@ export class LobbyService {
       await this.discordService.createVoiceChannelsAndMovePlayers(
         team1Members,
         team2Members,
-        lobby.id
+        lobby.id,
+        steamLobby
       );
 
     // Сохраняем ID каналов в базу данных в соответствующие Team
@@ -1056,13 +1557,12 @@ export class LobbyService {
         where: { lobbyId: lobbyId },
       });
 
-      // Сбрасываем результаты жребия
-      await tx.lobby.update({
-        where: { id: lobbyId },
-        data: {
-          lotteryWinnerId: null,
-          firstPickerId: null,
-        },
+      // Создаем новые команды для лобби
+      await tx.team.createMany({
+        data: [
+          { lobbyId: lobbyId }, // Команда 1
+          { lobbyId: lobbyId }, // Команда 2
+        ],
       });
 
       // Изменяем статус лобби на PENDING и сбрасываем результаты жребия
@@ -1083,6 +1583,7 @@ export class LobbyService {
               },
             },
           },
+          teams: true,
           tournament: true,
         },
       });

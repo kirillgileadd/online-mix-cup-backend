@@ -1198,6 +1198,7 @@ export const UserScalarFieldEnum = {
   createdAt: 'createdAt',
   photoUrl: 'photoUrl',
   discordUsername: 'discordUsername',
+  steamId64: 'steamId64',
   id: 'id'
 } as const
 

@@ -40,6 +40,7 @@ export type UserMinAggregateOutputType = {
   createdAt: Date | null
   photoUrl: string | null
   discordUsername: string | null
+  steamId64: string | null
   id: number | null
 }
 
@@ -49,6 +50,7 @@ export type UserMaxAggregateOutputType = {
   createdAt: Date | null
   photoUrl: string | null
   discordUsername: string | null
+  steamId64: string | null
   id: number | null
 }
 
@@ -58,6 +60,7 @@ export type UserCountAggregateOutputType = {
   createdAt: number
   photoUrl: number
   discordUsername: number
+  steamId64: number
   id: number
   _all: number
 }
@@ -77,6 +80,7 @@ export type UserMinAggregateInputType = {
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
+  steamId64?: true
   id?: true
 }
 
@@ -86,6 +90,7 @@ export type UserMaxAggregateInputType = {
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
+  steamId64?: true
   id?: true
 }
 
@@ -95,6 +100,7 @@ export type UserCountAggregateInputType = {
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
+  steamId64?: true
   id?: true
   _all?: true
 }
@@ -191,6 +197,7 @@ export type UserGroupByOutputType = {
   createdAt: Date
   photoUrl: string | null
   discordUsername: string | null
+  steamId64: string | null
   id: number
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -223,6 +230,7 @@ export type UserWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
+  steamId64?: Prisma.StringNullableFilter<"User"> | string | null
   id?: Prisma.IntFilter<"User"> | number
   applications?: Prisma.ApplicationListRelationFilter
   players?: Prisma.PlayerListRelationFilter
@@ -236,6 +244,7 @@ export type UserOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  steamId64?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
   players?: Prisma.PlayerOrderByRelationAggregateInput
@@ -253,6 +262,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
+  steamId64?: Prisma.StringNullableFilter<"User"> | string | null
   applications?: Prisma.ApplicationListRelationFilter
   players?: Prisma.PlayerListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
@@ -265,6 +275,7 @@ export type UserOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  steamId64?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -282,6 +293,7 @@ export type UserScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  steamId64?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
 }
 
@@ -291,6 +303,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
@@ -303,6 +316,7 @@ export type UserUncheckedCreateInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -316,6 +330,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
@@ -328,6 +343,7 @@ export type UserUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -341,6 +357,7 @@ export type UserCreateManyInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
 }
 
@@ -350,6 +367,7 @@ export type UserUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -358,6 +376,7 @@ export type UserUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -367,6 +386,7 @@ export type UserCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
+  steamId64?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -380,6 +400,7 @@ export type UserMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
+  steamId64?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -389,6 +410,7 @@ export type UserMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
+  steamId64?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -483,6 +505,7 @@ export type UserCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -494,6 +517,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
@@ -522,6 +546,7 @@ export type UserUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -533,6 +558,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -545,6 +571,7 @@ export type UserCreateWithoutPlayersInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -556,6 +583,7 @@ export type UserUncheckedCreateWithoutPlayersInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
@@ -584,6 +612,7 @@ export type UserUpdateWithoutPlayersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -595,6 +624,7 @@ export type UserUncheckedUpdateWithoutPlayersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -607,6 +637,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -618,6 +649,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -646,6 +678,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -657,6 +690,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -669,6 +703,7 @@ export type UserCreateWithoutRolesInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
@@ -680,6 +715,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
+  steamId64?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -708,6 +744,7 @@ export type UserUpdateWithoutRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
@@ -719,6 +756,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -789,6 +827,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
+  steamId64?: boolean
   id?: boolean
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
@@ -803,6 +842,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
+  steamId64?: boolean
   id?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -812,6 +852,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
+  steamId64?: boolean
   id?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -821,10 +862,11 @@ export type UserSelectScalar = {
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
+  steamId64?: boolean
   id?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "createdAt" | "photoUrl" | "discordUsername" | "id", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "createdAt" | "photoUrl" | "discordUsername" | "steamId64" | "id", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
@@ -849,6 +891,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     createdAt: Date
     photoUrl: string | null
     discordUsername: string | null
+    steamId64: string | null
     id: number
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1282,6 +1325,7 @@ export interface UserFieldRefs {
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly photoUrl: Prisma.FieldRef<"User", 'String'>
   readonly discordUsername: Prisma.FieldRef<"User", 'String'>
+  readonly steamId64: Prisma.FieldRef<"User", 'String'>
   readonly id: Prisma.FieldRef<"User", 'Int'>
 }
     

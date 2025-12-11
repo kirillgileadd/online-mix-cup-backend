@@ -76,6 +76,15 @@ const envSchema = z
       .string()
       .min(1, "DISCORD_GENERAL_TEXT_CHANNEL_ID is required")
       .optional(),
+    STEAM_API_KEY: z
+      .string()
+      .min(1, "STEAM_API_KEY is required")
+      .optional(),
+    STEAM_BOT_URL: z
+      .string()
+      .url()
+      .optional()
+      .default("http://localhost:8080"),
   })
   .superRefine((data, ctx) => {
     if (isProduction) {
@@ -141,4 +150,6 @@ export const env: Env = envSchema.parse({
   DISCORD_GENERAL_TEXT_CHANNEL_ID: stripQuotes(
     process.env.DISCORD_GENERAL_TEXT_CHANNEL_ID
   ),
+  STEAM_API_KEY: stripQuotes(process.env.STEAM_API_KEY),
+  STEAM_BOT_URL: stripQuotes(process.env.STEAM_BOT_URL),
 });

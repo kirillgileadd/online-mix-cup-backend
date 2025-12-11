@@ -86,7 +86,13 @@ export class DiscordService {
   async createVoiceChannelsAndMovePlayers(
     team1: TeamMember[],
     team2: TeamMember[],
-    lobbyId: number
+    lobbyId: number,
+    steamLobby?: {
+      gameName: string;
+      gameMode: number;
+      passKey: string;
+      serverRegion: number;
+    }
   ): Promise<{ team1ChannelId: string | null; team2ChannelId: string | null }> {
     if (!env.DISCORD_BOT_TOKEN || !env.DISCORD_GUILD_ID) {
       logger.warn(
@@ -179,7 +185,8 @@ export class DiscordService {
         guild,
         team1Channel.id,
         team2Channel.id,
-        lobbyId
+        lobbyId,
+        steamLobby
       );
 
       return {
@@ -296,7 +303,13 @@ export class DiscordService {
     guild: Guild,
     team1VoiceChannelId: string,
     team2VoiceChannelId: string,
-    lobbyId: number
+    lobbyId: number,
+    steamLobby?: {
+      gameName: string;
+      gameMode: number;
+      passKey: string;
+      serverRegion: number;
+    }
   ): Promise<void> {
     if (!env.DISCORD_GENERAL_TEXT_CHANNEL_ID) {
       logger.warn(
@@ -333,12 +346,27 @@ export class DiscordService {
       }
 
       // Формируем сообщение с информацией о лобби
-      const lobbyMessage = `**🎮 Лобби ${lobbyId} началось!**
+      // Если steamLobby null, используем стандартные данные и указываем, что лобби не создано автоматически
+      const isLobbyCreated = steamLobby !== null && steamLobby !== undefined;
+      const gameName = steamLobby?.gameName || `mf${lobbyId}`;
+      const passKey = steamLobby?.passKey || "12345";
+      const region = steamLobby
+        ? this.getRegionName(steamLobby.serverRegion)
+        : "Стокгольм";
+      const gameMode = steamLobby
+        ? this.getGameModeName(steamLobby.gameMode)
+        : "Captains Draft";
 
-**Название лобби:** mf${lobbyId}
-**Пароль:** mf123456
-**Регион:** Стокгольм
-**Режим игры:** Captains Draft
+      let lobbyMessage = `**🎮 Лобби ${lobbyId} началось!**\n\n`;
+
+      if (!isLobbyCreated) {
+        lobbyMessage += `⚠️ **Лобби не было создано автоматически.** Пожалуйста, создайте лобби вручную.\n\n`;
+      }
+
+      lobbyMessage += `**Название лобби:** ${gameName}
+**Пароль:** ${passKey || "Нет пароля"}
+**Регион:** ${region}
+**Режим игры:** ${gameMode}
 
 **Голосовые каналы:**
 🔊 ${team1ChannelName}
@@ -357,6 +385,77 @@ export class DiscordService {
       );
       // Не пробрасываем ошибку, чтобы не блокировать основной процесс
     }
+  }
+
+  /**
+   * Преобразует код региона сервера в читаемое название
+   */
+  private getRegionName(serverRegion?: number): string {
+    if (!serverRegion) {
+      return "Не указан";
+    }
+
+    const regionMap: Record<number, string> = {
+      0: "US West",
+      1: "US East",
+      2: "Europe West",
+      3: "Europe East",
+      4: "Singapore",
+      5: "Dubai",
+      6: "Australia",
+      7: "Austria",
+      8: "Stockholm",
+      9: "Brazil",
+      10: "South Africa",
+      11: "PW Telecom Shanghai",
+      12: "PW Unicom",
+      13: "Chile",
+      14: "Peru",
+      15: "India",
+      16: "PW Telecom Guangdong",
+      17: "PW Telecom Zhejiang",
+      18: "Japan",
+      19: "PW Telecom Wuhan",
+    };
+
+    return regionMap[serverRegion] || `Регион ${serverRegion}`;
+  }
+
+  /**
+   * Преобразует код режима игры в читаемое название
+   */
+  private getGameModeName(gameMode?: number): string {
+    if (!gameMode) {
+      return "Не указан";
+    }
+
+    const gameModeMap: Record<number, string> = {
+      0: "None",
+      1: "All Pick",
+      2: "Captains Mode",
+      3: "Random Draft",
+      4: "Single Draft",
+      5: "All Random",
+      6: "Intro",
+      7: "Diretide",
+      8: "Reverse Captains Mode",
+      9: "Greeviling",
+      10: "Tutorial",
+      11: "Mid Only",
+      12: "Least Played",
+      13: "Limited Heroes",
+      14: "Compendium Matchmaking",
+      15: "Custom",
+      16: "Captains Draft",
+      17: "Balanced Draft",
+      18: "Ability Draft",
+      19: "Event",
+      20: "All Random Deathmatch",
+      21: "1v1 Mid",
+      22: "Ranked Matchmaking",
+    };
+
+    return gameModeMap[gameMode] || `Режим ${gameMode}`;
   }
 
   /**

@@ -2,6 +2,7 @@ import { Prisma, type User } from "@prisma/client";
 
 import { prisma } from "../../config/prisma";
 import { RoleService } from "../roles/role.service";
+import { SteamService } from "../steam/steam.service";
 import type { UpdateUserPayload, UserPayload } from "./user.schema";
 
 const userWithRoles = {
@@ -18,6 +19,7 @@ export type UserWithRoles = Prisma.UserGetPayload<typeof userWithRoles>;
 
 export class UserService {
   private readonly roleService = new RoleService();
+  private readonly steamService = new SteamService();
 
   listUsersWithRoles() {
     return prisma.user.findMany({
@@ -31,12 +33,22 @@ export class UserService {
       where: { telegramId: payload.telegramId },
     });
 
+    // Получаем steamId64 из steamProfileLink, если он передан
+    let steamId64: string | null = null;
+    if (payload.steamProfileLink) {
+      steamId64 = await this.steamService.getSteamId64(
+        payload.steamProfileLink
+      );
+
+    }
+
     if (existingUser) {
       // Собираем только те поля, которые нужно обновить (переданы и отличаются)
       const updateData: {
         username?: string | null;
         photoUrl?: string | null;
         discordUsername?: string | null;
+        steamId64?: string | null;
       } = {};
 
       // Обновляем username только если он передан и отличается
@@ -63,6 +75,11 @@ export class UserService {
         updateData.discordUsername = payload.discordUsername;
       }
 
+      // Обновляем steamId64 если steamProfileLink передан
+      if (payload.steamProfileLink !== undefined) {
+        updateData.steamId64 = steamId64;
+      }
+
       // Обновляем только если есть изменения
       if (Object.keys(updateData).length > 0) {
         return prisma.user.update({
@@ -79,6 +96,7 @@ export class UserService {
         username: payload.username ?? null,
         photoUrl: payload.photoUrl ?? null,
         discordUsername: payload.discordUsername ?? null,
+        steamId64: steamId64,
       },
     });
 
@@ -118,10 +136,36 @@ export class UserService {
     });
   }
 
-  updateUser(id: number, data: Omit<UpdateUserPayload, "roles">) {
+  async updateUser(id: number, data: Omit<UpdateUserPayload, "roles">) {
+    const updateData: Prisma.UserUpdateInput = {};
+
+    // Добавляем только те поля, которые определены (не undefined)
+    if (data.username !== undefined) {
+      updateData.username = data.username;
+    }
+    if (data.photoUrl !== undefined) {
+      updateData.photoUrl = data.photoUrl;
+    }
+    if (data.discordUsername !== undefined) {
+      updateData.discordUsername = data.discordUsername;
+    }
+
+    // Если передан steamProfileLink, получаем steamId64
+    if (data.steamProfileLink !== undefined) {
+      if (data.steamProfileLink) {
+        const steamId64 = await this.steamService.getSteamId64(
+          data.steamProfileLink
+        );
+        updateData.steamId64 = steamId64;
+      } else {
+        // Если steamProfileLink установлен в null, очищаем steamId64
+        updateData.steamId64 = null;
+      }
+    }
+
     return prisma.user.update({
       where: { id },
-      data: data as Prisma.UserUpdateInput,
+      data: updateData,
     });
   }
 

@@ -21,6 +21,10 @@ export const draftPickSchema = z.object({
 
 export const startPlayingSchema = z.object({
   lobbyId: z.number().int().positive(),
+  gameName: z.string().optional(),
+  gameMode: z.number().int().min(1).max(22).optional(),
+  passKey: z.string().optional(),
+  serverRegion: z.number().int().positive().optional(),
 });
 
 export const finishLobbySchema = z.object({
@@ -38,9 +42,18 @@ export const setFirstPickerSchema = z.object({
   firstPickerId: z.number().int().positive(),
 });
 
+export const createSteamLobbySchema = z.object({
+  lobbyId: z.number().int().positive(),
+  gameName: z.string().optional(),
+  gameMode: z.number().int().min(1).max(22).optional(),
+  passKey: z.string().optional(),
+  serverRegion: z.number().int().positive().optional(),
+});
+
 export type GenerateLobbiesInput = z.infer<typeof generateLobbiesSchema>;
 export type DraftPickInput = z.infer<typeof draftPickSchema>;
 export type StartPlayingInput = z.infer<typeof startPlayingSchema>;
 export type FinishLobbyInput = z.infer<typeof finishLobbySchema>;
 export type ReplacePlayerInput = z.infer<typeof replacePlayerSchema>;
 export type SetFirstPickerInput = z.infer<typeof setFirstPickerSchema>;
+export type CreateSteamLobbyInput = z.infer<typeof createSteamLobbySchema>;

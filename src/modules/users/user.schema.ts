@@ -5,6 +5,7 @@ export const userPayloadSchema = z.object({
   username: z.string().optional().nullable(),
   photoUrl: z.string().url().optional().nullable(),
   discordUsername: z.string().optional().nullable(),
+  steamProfileLink: z.string().url().optional().nullable(),
   roles: z.array(z.string().min(1)).optional(),
 });
 
@@ -12,6 +13,7 @@ export const updateUserSchema = z.object({
   username: z.string().min(1).optional().nullable(),
   photoUrl: z.string().url().optional().nullable(),
   discordUsername: z.string().optional().nullable(),
+  steamProfileLink: z.string().url().optional().nullable(),
   roles: z.array(z.string().min(1)).optional(),
 });
 

@@ -9,6 +9,7 @@ import {
   finishLobbySchema,
   replacePlayerSchema,
   setFirstPickerSchema,
+  createSteamLobbySchema,
 } from "./lobby.schema";
 import { LobbyService } from "./lobby.service";
 import { DiscordService } from "../discord/discord.service";
@@ -205,14 +206,19 @@ export async function lobbyRoutes(
       preHandler: adminPreHandler,
       schema: {
         tags: ["lobbies"],
-        summary: "Начать игру (перевести лобби в статус PLAYING)",
+        summary:
+          "Начать игру (создать лобби через Steam бота и перевести в статус PLAYING)",
         description:
-          "Переводит лобби в статус PLAYING. Проверяет, что все игроки выбраны и в каждой команде по 5 игроков",
+          "Создает лобби через Steam бота, приглашает игроков, переводит лобби в статус PLAYING. Проверяет, что все игроки выбраны и в каждой команде по 5 игроков. Устанавливает таймер на 3 минуты для автоматического покидания лобби, если бот все еще в нем.",
         body: {
           type: "object",
           required: ["lobbyId"],
           properties: {
             lobbyId: { type: "integer" },
+            gameName: { type: "string" },
+            gameMode: { type: "integer", minimum: 1, maximum: 22 },
+            passKey: { type: "string" },
+            serverRegion: { type: "integer", minimum: 1 },
           },
         },
         response: {
@@ -225,7 +231,31 @@ export async function lobbyRoutes(
     async (request, reply) => {
       const payload = parseWithValidation(startPlayingSchema, request.body);
       try {
-        const lobby = await service.startPlaying(payload.lobbyId);
+        // Собираем только определенные опции (не undefined)
+        const options: {
+          gameName?: string;
+          gameMode?: number;
+          passKey?: string;
+          serverRegion?: number;
+        } = {};
+
+        if (payload.gameName !== undefined) {
+          options.gameName = payload.gameName;
+        }
+        if (payload.gameMode !== undefined) {
+          options.gameMode = payload.gameMode;
+        }
+        if (payload.passKey !== undefined) {
+          options.passKey = payload.passKey;
+        }
+        if (payload.serverRegion !== undefined) {
+          options.serverRegion = payload.serverRegion;
+        }
+
+        const lobby = await service.startPlaying(
+          payload.lobbyId,
+          Object.keys(options).length > 0 ? options : undefined
+        );
         return lobby;
       } catch (error) {
         const statusCode =
@@ -555,6 +585,133 @@ export async function lobbyRoutes(
             error instanceof Error
               ? error.message
               : "Ошибка установки первого пикера",
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/create-steam-lobby",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["lobbies"],
+        summary:
+          "Создать лобби через Steam бота, отправить приглашения и сообщение в Discord",
+        description:
+          "Создает лобби через Steam бота, отправляет приглашения всем игрокам и сообщение в Discord. Не изменяет статус лобби.",
+        body: {
+          type: "object",
+          required: ["lobbyId"],
+          properties: {
+            lobbyId: { type: "integer" },
+            gameName: { type: "string" },
+            gameMode: { type: "integer", minimum: 1, maximum: 22 },
+            passKey: { type: "string" },
+            serverRegion: { type: "integer", minimum: 1 },
+          },
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              success: { type: "boolean" },
+              message: { type: "string" },
+              steamLobby: {
+                type: ["object", "null"],
+                properties: {
+                  lobbyId: { type: "integer" },
+                  gameName: { type: "string" },
+                  gameMode: { type: "integer" },
+                  passKey: { type: "string" },
+                  serverRegion: { type: "integer" },
+                  allowCheats: { type: "boolean" },
+                  fillWithBots: { type: "boolean" },
+                  allowSpectating: { type: "boolean" },
+                  visibility: { type: "integer" },
+                  allchat: { type: "boolean" },
+                },
+              },
+            },
+          },
+          400: errorResponseSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const payload = parseWithValidation(createSteamLobbySchema, request.body);
+      try {
+        const options: {
+          gameName?: string;
+          gameMode?: number;
+          passKey?: string;
+          serverRegion?: number;
+        } = {};
+
+        if (payload.gameName !== undefined) {
+          options.gameName = payload.gameName;
+        }
+        if (payload.gameMode !== undefined) {
+          options.gameMode = payload.gameMode;
+        }
+        if (payload.passKey !== undefined) {
+          options.passKey = payload.passKey;
+        }
+        if (payload.serverRegion !== undefined) {
+          options.serverRegion = payload.serverRegion;
+        }
+
+        const result = await service.createSteamLobbyAndInvite(
+          payload.lobbyId,
+          Object.keys(options).length > 0 ? options : undefined
+        );
+        return result;
+      } catch (error) {
+        const statusCode =
+          error instanceof Error && error.message.includes("не найдено")
+            ? 404
+            : 400;
+        reply.code(statusCode).send({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ошибка при создании лобби",
+        });
+      }
+    }
+  );
+
+  app.post(
+    "/leave-steam-lobby",
+    {
+      preHandler: adminPreHandler,
+      schema: {
+        tags: ["lobbies"],
+        summary: "Покинуть текущее лобби через Steam бота",
+        description: "Покидает текущее лобби, в котором находится бот",
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              success: { type: "boolean" },
+              message: { type: "string" },
+            },
+          },
+          400: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      try {
+        const result = await service.leaveSteamLobby();
+        return result;
+      } catch (error) {
+        reply.code(400).send({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Ошибка при покидании лобби",
         });
       }
     }

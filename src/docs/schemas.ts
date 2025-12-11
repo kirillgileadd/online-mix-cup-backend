@@ -11,6 +11,7 @@ export const userSchema = {
     username: { type: ["string", "null"] },
     photoUrl: { type: ["string", "null"] },
     discordUsername: { type: ["string", "null"] },
+    steamId64: { type: ["string", "null"] },
     createdAt: { type: "string", format: "date-time" },
     roles: {
       type: "array",
@@ -213,6 +214,7 @@ export const teamSchema = {
                   telegramId: { type: "string" },
                   username: { type: ["string", "null"] },
                   discordUsername: { type: ["string", "null"] },
+                  steamId64: { type: ["string", "null"] },
                 },
               },
             },
@@ -261,6 +263,7 @@ export const participationSchema = {
             username: { type: ["string", "null"] },
             photoUrl: { type: ["string", "null"] },
             discordUsername: { type: ["string", "null"] },
+            steamId64: { type: ["string", "null"] },
             createdAt: { type: "string", format: "date-time" },
           },
         },
@@ -298,6 +301,22 @@ export const lobbySchema = {
     teams: {
       type: "array",
       items: teamSchema,
+    },
+    steamLobby: {
+      type: ["object", "null"],
+      description: "Информация о созданном Steam лобби (присутствует после start-playing)",
+      properties: {
+        lobbyId: { type: "integer" },
+        gameName: { type: "string" },
+        gameMode: { type: "integer" },
+        passKey: { type: "string" },
+        serverRegion: { type: "integer" },
+        allowCheats: { type: "boolean" },
+        fillWithBots: { type: "boolean" },
+        allowSpectating: { type: "boolean" },
+        visibility: { type: "integer" },
+        allchat: { type: "boolean" },
+      },
     },
   },
 };

@@ -13,6 +13,7 @@ model User {
   createdAt       DateTime       @default(now())
   photoUrl        String?
   discordUsername String?
+  steamId64       String?
   id              Int            @id @default(autoincrement())
   applications    Application[]
   players         Player[]
@@ -96,17 +97,17 @@ model UserRole {
 }
 
 model Lobby {
-  id               Int             @id @default(autoincrement())
-  round            Int
-  status           LobbyStatus     @default(PENDING)
-  tournamentId     Int?
-  lotteryWinnerId  Int?            // ID капитана-победителя жребия
-  firstPickerId    Int?            // ID капитана, который выбирает первым
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  tournament       Tournament?     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
-  teams            Team[]
-  participations   Participation[]
+  id              Int             @id @default(autoincrement())
+  round           Int
+  status          LobbyStatus     @default(PENDING)
+  tournamentId    Int?
+  lotteryWinnerId Int? // ID капитана-победителя жребия
+  firstPickerId   Int? // ID капитана, который выбирает первым
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  tournament      Tournament?     @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  teams           Team[]
+  participations  Participation[]
 }
 
 model Team {
