@@ -76,19 +76,9 @@ const envSchema = z
       .string()
       .min(1, "DISCORD_GENERAL_TEXT_CHANNEL_ID is required")
       .optional(),
-    STEAM_API_KEY: z
-      .string()
-      .min(1, "STEAM_API_KEY is required")
-      .optional(),
-    STEAM_BOT_URL: z
-      .string()
-      .url()
-      .optional()
-      .default("http://localhost:8080"),
-    FILE_LOG_LEVEL: z
-      .enum(["info", "warn"])
-      .optional()
-      .default("warn"), // По умолчанию только warn и error
+    STEAM_API_KEY: z.string().min(1, "STEAM_API_KEY is required").optional(),
+    STEAM_BOT_URL: z.string().url().optional().default("http://localhost:8080"),
+    FILE_LOG_LEVEL: z.enum(["info", "warn"]).optional().default("warn"), // По умолчанию только warn и error
     ENABLE_REQUEST_LOGGING: z
       .string()
       .transform((val) => val === "true")
