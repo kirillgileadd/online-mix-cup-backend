@@ -1,8 +1,11 @@
 import type { Tournament, TournamentStatus } from "@prisma/client";
+import pino from "pino";
 
 import { prisma } from "../../config/prisma";
 import { FileService } from "../files/file.service";
 import type { UpdateTournamentInput } from "./tournament.schema";
+
+const logger = pino();
 
 export class TournamentService {
   private readonly fileService = new FileService();
@@ -152,9 +155,9 @@ export class TournamentService {
           await this.fileService.deleteFile(currentTournament.previewUrl);
         } catch (error) {
           // Логируем ошибку, но не прерываем обновление
-          console.error(
-            `Failed to delete old preview file for tournament ${id}:`,
-            error
+          logger.error(
+            { error, tournamentId: id, previewUrl: currentTournament.previewUrl },
+            "Failed to delete old preview file for tournament"
           );
         }
       }
@@ -273,9 +276,9 @@ export class TournamentService {
         await this.fileService.deleteFile(tournament.previewUrl);
       } catch (error) {
         // Логируем ошибку, но не прерываем удаление турнира
-        console.error(
-          `Failed to delete preview file for tournament ${id}:`,
-          error
+        logger.error(
+          { error, tournamentId: id, previewUrl: tournament.previewUrl },
+          "Failed to delete preview file for tournament"
         );
       }
     }
@@ -287,9 +290,9 @@ export class TournamentService {
           await this.fileService.deleteFile(application.receiptImageUrl);
         } catch (error) {
           // Логируем ошибку, но не прерываем удаление турнира
-          console.error(
-            `Failed to delete receipt file for application ${application.id}:`,
-            error
+          logger.error(
+            { error, applicationId: application.id, receiptImageUrl: application.receiptImageUrl },
+            "Failed to delete receipt file for application"
           );
         }
       }

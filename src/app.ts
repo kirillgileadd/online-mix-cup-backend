@@ -123,7 +123,7 @@ export const buildServer = (discordService?: DiscordService) => {
         return reply.code(403).send({ message: "Forbidden" });
       }
 
-      console.log(requestedPath, "requestedPath");
+      // Отладочный лог удален для продакшена
 
       // Защита от path traversal
       // Блокируем: .. (path traversal), абсолютные пути, скрытые файлы

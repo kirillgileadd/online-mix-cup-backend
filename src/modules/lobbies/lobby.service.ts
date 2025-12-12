@@ -1102,7 +1102,10 @@ export class LobbyService {
     const teams = lobby.teams.sort((a, b) => a.id - b.id);
 
     if (teams.length !== 2) {
-      console.error("Ожидается 2 команды, найдено:", teams.length);
+      logger.error(
+        { teamsCount: teams.length, lobbyId: lobby.id },
+        "Ожидается 2 команды, найдено другое количество"
+      );
       return;
     }
 
@@ -1114,7 +1117,10 @@ export class LobbyService {
     const team2Id = teams[1]?.id;
 
     if (!team1Id || !team2Id) {
-      console.error("Не найдены команды для лобби");
+      logger.error(
+        { lobbyId: lobby.id, team1Id, team2Id },
+        "Не найдены команды для лобби"
+      );
       return;
     }
 
@@ -1287,7 +1293,10 @@ export class LobbyService {
           )
           .catch((error) => {
             // Логируем ошибку, но не блокируем основной процесс
-            console.error("Ошибка при очистке Discord каналов:", error);
+            logger.error(
+              { error, lobbyId: finishedLobby.id, teamChannelIds },
+              "Ошибка при очистке Discord каналов"
+            );
           });
       }
 

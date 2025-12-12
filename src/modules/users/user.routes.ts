@@ -235,9 +235,7 @@ export async function userRoutes(app: FastifyInstance) {
     },
     async (request, reply) => {
       const { id } = request.params as { id: number };
-      console.log(id, "userIdof delete");
       const userId = Number(id);
-      console.log(userId, "userId");
       try {
         await service.deleteUser(userId);
         reply.code(204).send();

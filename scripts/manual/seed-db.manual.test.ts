@@ -55,4 +55,3 @@ describe("Manual seed: 22 players", () => {
     expect(playerCount).toBe(22);
   });
 });
-

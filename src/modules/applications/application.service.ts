@@ -1,8 +1,11 @@
 import { ApplicationStatus } from "@prisma/client";
+import pino from "pino";
 
 import { prisma } from "../../config/prisma";
 import { FileService } from "../files/file.service";
 import type { ApplicationPayload } from "./application.schema";
+
+const logger = pino();
 
 export class ApplicationService {
   private readonly fileService = new FileService();
@@ -100,9 +103,9 @@ export class ApplicationService {
         await this.fileService.deleteFile(application.receiptImageUrl);
       } catch (error) {
         // Логируем ошибку, но не прерываем удаление заявки
-        console.error(
-          `Failed to delete receipt file for application ${id}:`,
-          error
+        logger.error(
+          { error, applicationId: id, receiptImageUrl: application.receiptImageUrl },
+          "Failed to delete receipt file for application"
         );
       }
     }

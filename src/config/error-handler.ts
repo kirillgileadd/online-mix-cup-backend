@@ -229,16 +229,14 @@ export function errorHandler(
 
   // Обработка других ошибок
   const statusCode = error.statusCode || 500;
-  
+
   // В продакшене не раскрываем детали внутренних ошибок
   const isProduction = process.env.NODE_ENV === "production";
   let message = "Internal server error";
-  
-  if (!isProduction) {
-    // В разработке показываем детали ошибки
-    message = error.message || "Internal server error";
-  } else {
-    // В продакшене логируем детали, но не отправляем клиенту
+
+  // Логируем ошибки на правильном уровне
+  if (statusCode >= 500) {
+    // Критические ошибки сервера - всегда error
     request.log.error(
       {
         errorName: error.name,
@@ -246,12 +244,30 @@ export function errorHandler(
         errorMessage: error.message,
         errorStack: error.stack,
         statusCode,
+        url: request.url,
+        method: request.method,
       },
       "Internal server error"
     );
+  } else if (statusCode >= 400) {
+    // Ошибки клиента (4xx) - warn для мониторинга подозрительной активности
+    request.log.warn(
+      {
+        errorName: error.name,
+        errorCode: error.code,
+        errorMessage: error.message,
+        statusCode,
+        url: request.url,
+        method: request.method,
+      },
+      "Client error"
+    );
   }
 
-  request.log.debug({ error, statusCode, message }, "Handling generic error");
+  if (!isProduction) {
+    // В разработке показываем детали ошибки
+    message = error.message || "Internal server error";
+  }
 
   reply.status(statusCode).send({
     message,

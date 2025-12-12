@@ -1,7 +1,13 @@
 import { execSync } from "node:child_process";
+import pino from "pino";
 import { env } from "./config/env";
 import { buildServer } from "./app";
 import { DiscordService } from "./modules/discord/discord.service";
+
+// Простой логгер для использования до создания Fastify приложения
+const bootstrapLogger = pino({
+  level: env.NODE_ENV === "production" ? "info" : "debug",
+});
 
 async function applyMigrations() {
   if (env.NODE_ENV === "development") {
@@ -18,7 +24,7 @@ async function applyMigrations() {
       },
     });
   } catch (error) {
-    console.error("Не удалось применить миграции", error);
+    bootstrapLogger.error({ error }, "Не удалось применить миграции");
     throw error;
   }
 }
@@ -31,7 +37,10 @@ async function bootstrap() {
   try {
     await discordService.initialize();
   } catch (error) {
-    console.error("Ошибка инициализации Discord сервиса:", error);
+    bootstrapLogger.warn(
+      { error },
+      "Ошибка инициализации Discord сервиса, продолжаем работу"
+    );
     // Продолжаем работу даже если Discord не инициализирован
   }
 
@@ -64,6 +73,6 @@ async function bootstrap() {
 }
 
 bootstrap().catch((error) => {
-  console.error("Fatal error during bootstrap", error);
+  bootstrapLogger.fatal({ error }, "Fatal error during bootstrap");
   process.exit(1);
 });

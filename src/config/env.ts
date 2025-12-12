@@ -85,6 +85,10 @@ const envSchema = z
       .url()
       .optional()
       .default("http://localhost:8080"),
+    FILE_LOG_LEVEL: z
+      .enum(["info", "warn"])
+      .optional()
+      .default("warn"), // По умолчанию только warn и error
   })
   .superRefine((data, ctx) => {
     if (isProduction) {
@@ -152,4 +156,5 @@ export const env: Env = envSchema.parse({
   ),
   STEAM_API_KEY: stripQuotes(process.env.STEAM_API_KEY),
   STEAM_BOT_URL: stripQuotes(process.env.STEAM_BOT_URL),
+  FILE_LOG_LEVEL: process.env.FILE_LOG_LEVEL,
 });
