@@ -89,6 +89,11 @@ const envSchema = z
       .enum(["info", "warn"])
       .optional()
       .default("warn"), // По умолчанию только warn и error
+    ENABLE_REQUEST_LOGGING: z
+      .string()
+      .transform((val) => val === "true")
+      .optional()
+      .default(false), // По умолчанию отключено для экономии ресурсов
   })
   .superRefine((data, ctx) => {
     if (isProduction) {
@@ -157,4 +162,5 @@ export const env: Env = envSchema.parse({
   STEAM_API_KEY: stripQuotes(process.env.STEAM_API_KEY),
   STEAM_BOT_URL: stripQuotes(process.env.STEAM_BOT_URL),
   FILE_LOG_LEVEL: process.env.FILE_LOG_LEVEL,
+  ENABLE_REQUEST_LOGGING: process.env.ENABLE_REQUEST_LOGGING,
 });

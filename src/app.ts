@@ -27,8 +27,9 @@ export const buildServer = (discordService?: DiscordService) => {
     bodyLimit: 1048576, // 1MB - ограничение размера тела запроса
     requestIdLogLabel: "reqId",
     requestIdHeader: "x-request-id",
-    // Отключаем ненужные функции для экономии памяти
-    disableRequestLogging: env.NODE_ENV === "production", // В продакшене отключаем детальное логирование запросов
+    // Управление логированием запросов через переменную окружения
+    // Установите ENABLE_REQUEST_LOGGING=true для включения логирования всех запросов
+    disableRequestLogging: !env.ENABLE_REQUEST_LOGGING,
   });
 
   app.register(swagger, {
