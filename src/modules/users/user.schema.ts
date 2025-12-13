@@ -30,6 +30,14 @@ export const userRegistrationSchema = userPayloadSchema
     receiptImageBase64: z.string().optional(),
   });
 
+export const updateProfileSchema = z.object({
+  nickname: z.string().min(1).optional().nullable(),
+  discordUsername: z.string().optional().nullable(),
+  photoBase64: z.string().optional().nullable(),
+  steamProfileLink: z.string().url().optional().nullable(),
+});
+
 export type UserPayload = z.infer<typeof userPayloadSchema>;
 export type UpdateUserPayload = z.infer<typeof updateUserSchema>;
 export type UserRegistrationPayload = z.infer<typeof userRegistrationSchema>;
+export type UpdateProfilePayload = z.infer<typeof updateProfileSchema>;

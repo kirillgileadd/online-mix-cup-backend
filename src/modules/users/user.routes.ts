@@ -6,6 +6,7 @@ import {
   applicationWithTournamentSchema,
 } from "../../docs/schemas";
 import {
+  updateProfileSchema,
   updateUserSchema,
   userPayloadSchema,
   userRegistrationSchema,
@@ -281,6 +282,116 @@ export async function userRoutes(app: FastifyInstance) {
         payload
       );
       reply.code(201).send(application);
+    }
+  );
+
+  // Роуты для профиля пользователя
+  const profilePreHandler = [app.authenticate];
+
+  app.get(
+    "/profile",
+    {
+      preHandler: profilePreHandler,
+      schema: {
+        tags: ["users", "profile"],
+        summary: "Получить текущий профиль пользователя",
+        response: {
+          200: userSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { sub: number }).sub;
+      const user = await service.findByIdWithRoles(userId);
+      if (!user) {
+        return reply.code(404).send({ message: "User not found" });
+      }
+      return serializeUser(user);
+    }
+  );
+
+  app.post(
+    "/profile",
+    {
+      preHandler: profilePreHandler,
+      schema: {
+        tags: ["users", "profile"],
+        summary: "Обновить профиль пользователя (POST)",
+        body: {
+          type: "object",
+          properties: {
+            nickname: { type: ["string", "null"] },
+            discordUsername: { type: ["string", "null"] },
+            photoBase64: { type: ["string", "null"] },
+            steamProfileLink: { type: ["string", "null"] },
+          },
+        },
+        response: {
+          200: userSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { sub: number }).sub;
+      const body = parseWithValidation(updateProfileSchema, request.body ?? {});
+
+      try {
+        await service.updateProfile(userId, body);
+        const fullUser = await service.findByIdWithRoles(userId);
+        if (!fullUser) {
+          return reply.code(404).send({ message: "User not found" });
+        }
+        return serializeUser(fullUser);
+      } catch (error) {
+        if (error instanceof Error && error.message === "User not found") {
+          return reply.code(404).send({ message: "User not found" });
+        }
+        throw error;
+      }
+    }
+  );
+
+  app.patch(
+    "/profile",
+    {
+      preHandler: profilePreHandler,
+      schema: {
+        tags: ["users", "profile"],
+        summary: "Обновить профиль пользователя (PATCH)",
+        body: {
+          type: "object",
+          properties: {
+            nickname: { type: ["string", "null"] },
+            discordUsername: { type: ["string", "null"] },
+            photoBase64: { type: ["string", "null"] },
+            steamProfileLink: { type: ["string", "null"] },
+          },
+        },
+        response: {
+          200: userSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { sub: number }).sub;
+      const body = parseWithValidation(updateProfileSchema, request.body ?? {});
+
+      try {
+        await service.updateProfile(userId, body);
+        const fullUser = await service.findByIdWithRoles(userId);
+        if (!fullUser) {
+          return reply.code(404).send({ message: "User not found" });
+        }
+        return serializeUser(fullUser);
+      } catch (error) {
+        if (error instanceof Error && error.message === "User not found") {
+          return reply.code(404).send({ message: "User not found" });
+        }
+        throw error;
+      }
     }
   );
 }

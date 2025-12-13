@@ -1,9 +1,14 @@
 import { Prisma, type User } from "@prisma/client";
 
 import { prisma } from "../../config/prisma";
+import { FileService } from "../files/file.service";
 import { RoleService } from "../roles/role.service";
 import { SteamService } from "../steam/steam.service";
-import type { UpdateUserPayload, UserPayload } from "./user.schema";
+import type {
+  UpdateProfilePayload,
+  UpdateUserPayload,
+  UserPayload,
+} from "./user.schema";
 
 const userWithRoles = {
   include: {
@@ -20,6 +25,7 @@ export type UserWithRoles = Prisma.UserGetPayload<typeof userWithRoles>;
 export class UserService {
   private readonly roleService = new RoleService();
   private readonly steamService = new SteamService();
+  private readonly fileService = new FileService();
 
   listUsersWithRoles() {
     return prisma.user.findMany({
@@ -39,7 +45,6 @@ export class UserService {
       steamId64 = await this.steamService.getSteamId64(
         payload.steamProfileLink
       );
-
     }
 
     if (existingUser) {
@@ -194,6 +199,79 @@ export class UserService {
 
     await prisma.user.delete({
       where: { id },
+    });
+  }
+
+  async updateProfile(id: number, data: UpdateProfilePayload) {
+    const updateData: Prisma.UserUpdateInput = {};
+
+    // Получаем текущего пользователя для удаления старого фото
+    const currentUser = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+
+    // Обрабатываем nickname
+    if (data.nickname !== undefined) {
+      updateData.nickname = data.nickname;
+    }
+
+    // Обрабатываем discordUsername
+    if (data.discordUsername !== undefined) {
+      updateData.discordUsername = data.discordUsername;
+    }
+
+    // Обрабатываем photoBase64
+    if (data.photoBase64 !== undefined) {
+      if (data.photoBase64) {
+        // Сохраняем новое фото
+        const filePath = await this.fileService.saveProfileImage(
+          data.photoBase64,
+          `profile_${id}`
+        );
+        updateData.photoUrl = this.fileService.getFileUrl(filePath);
+
+        // Удаляем старое фото, если оно было
+        if (currentUser.photoUrl) {
+          try {
+            await this.fileService.deleteFile(currentUser.photoUrl);
+          } catch (error) {
+            // Логируем ошибку, но не прерываем обновление
+            console.error("Failed to delete old profile photo:", error);
+          }
+        }
+      } else {
+        // Если передано null, удаляем фото
+        updateData.photoUrl = null;
+        if (currentUser.photoUrl) {
+          try {
+            await this.fileService.deleteFile(currentUser.photoUrl);
+          } catch (error) {
+            console.error("Failed to delete old profile photo:", error);
+          }
+        }
+      }
+    }
+
+    // Обрабатываем steamProfileLink
+    if (data.steamProfileLink !== undefined) {
+      if (data.steamProfileLink) {
+        const steamId64 = await this.steamService.getSteamId64(
+          data.steamProfileLink
+        );
+        updateData.steamId64 = steamId64;
+      } else {
+        // Если steamProfileLink установлен в null, очищаем steamId64
+        updateData.steamId64 = null;
+      }
+    }
+
+    return prisma.user.update({
+      where: { id },
+      data: updateData,
     });
   }
 }

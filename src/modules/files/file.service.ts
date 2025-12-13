@@ -21,6 +21,7 @@ export class FileService {
   private readonly uploadsDir = "uploads";
   private readonly receiptsDir = join(this.uploadsDir, "receipts");
   private readonly tournamentsDir = join(this.uploadsDir, "tournaments");
+  private readonly profilesDir = join(this.uploadsDir, "profiles");
 
   constructor() {
     this.ensureDirectoriesExist();
@@ -35,6 +36,9 @@ export class FileService {
     }
     if (!existsSync(this.tournamentsDir)) {
       await mkdir(this.tournamentsDir, { recursive: true });
+    }
+    if (!existsSync(this.profilesDir)) {
+      await mkdir(this.profilesDir, { recursive: true });
     }
   }
 
@@ -201,6 +205,23 @@ export class FileService {
       base64Data,
       filename,
       this.tournamentsDir
+    );
+  }
+
+  /**
+   * Сохраняет base64 изображение профиля пользователя в файл
+   * @param base64Data - строка base64 (может быть с префиксом data:image/...;base64,)
+   * @param filename - имя файла (без расширения, будет добавлено автоматически)
+   * @returns путь к сохраненному файлу относительно корня проекта
+   */
+  async saveProfileImage(
+    base64Data: string,
+    filename: string
+  ): Promise<string> {
+    return this.saveBase64ImageToDirectory(
+      base64Data,
+      filename,
+      this.profilesDir
     );
   }
 

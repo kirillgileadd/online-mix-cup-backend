@@ -265,8 +265,6 @@ export async function authRoutes(app: FastifyInstance) {
         const user = await userService.getOrCreate({
           telegramId: "admin",
           username: "admin",
-          photoUrl: null,
-          discordUsername: null,
         });
 
         await roleService.assignRoleToUser(user.id, "admin");
