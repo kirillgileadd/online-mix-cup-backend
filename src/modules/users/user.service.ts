@@ -46,6 +46,7 @@ export class UserService {
       // Собираем только те поля, которые нужно обновить (переданы и отличаются)
       const updateData: {
         username?: string | null;
+        nickname?: string | null;
         photoUrl?: string | null;
         discordUsername?: string | null;
         steamId64?: string | null;
@@ -57,6 +58,14 @@ export class UserService {
         payload.username !== existingUser.username
       ) {
         updateData.username = payload.username;
+      }
+
+      // Обновляем nickname только если он передан и отличается
+      if (
+        payload.nickname !== undefined &&
+        payload.nickname !== existingUser.nickname
+      ) {
+        updateData.nickname = payload.nickname;
       }
 
       // Обновляем photoUrl только если он передан и отличается
@@ -94,6 +103,7 @@ export class UserService {
       data: {
         telegramId: payload.telegramId,
         username: payload.username ?? null,
+        nickname: payload.nickname ?? null,
         photoUrl: payload.photoUrl ?? null,
         discordUsername: payload.discordUsername ?? null,
         steamId64: steamId64,
@@ -142,6 +152,9 @@ export class UserService {
     // Добавляем только те поля, которые определены (не undefined)
     if (data.username !== undefined) {
       updateData.username = data.username;
+    }
+    if (data.nickname !== undefined) {
+      updateData.nickname = data.nickname;
     }
     if (data.photoUrl !== undefined) {
       updateData.photoUrl = data.photoUrl;

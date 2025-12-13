@@ -48,11 +48,10 @@ export async function playerRoutes(app: FastifyInstance) {
         summary: "Создать игрока",
         body: {
           type: "object",
-          required: ["userId", "tournamentId", "nickname"],
+          required: ["userId", "tournamentId"],
           properties: {
             userId: { type: "integer" },
             tournamentId: { type: "integer" },
-            nickname: { type: "string" },
             gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },
@@ -134,7 +133,6 @@ export async function playerRoutes(app: FastifyInstance) {
         body: {
           type: "object",
           properties: {
-            nickname: { type: "string" },
             gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },
@@ -175,7 +173,6 @@ export async function playerRoutes(app: FastifyInstance) {
         body: {
           type: "object",
           properties: {
-            nickname: { type: "string" },
             gameRoles: { type: "string" },
             mmr: { type: "integer", minimum: 0 },
             seed: { type: ["integer", "null"], minimum: 0 },

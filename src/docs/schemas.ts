@@ -9,6 +9,7 @@ export const userSchema = {
     id: integerSchema,
     telegramId: { type: "string" },
     username: { type: ["string", "null"] },
+    nickname: { type: ["string", "null"] },
     photoUrl: { type: ["string", "null"] },
     discordUsername: { type: ["string", "null"] },
     steamId64: { type: ["string", "null"] },
@@ -115,7 +116,6 @@ export const playerSchema = {
     "id",
     "userId",
     "tournamentId",
-    "nickname",
     "mmr",
     "gameRoles",
     "chillZoneValue",
@@ -127,7 +127,6 @@ export const playerSchema = {
     id: integerSchema,
     userId: integerSchema,
     tournamentId: integerSchema,
-    nickname: { type: "string" },
     mmr: { type: "integer" },
     gameRoles: { type: "string" },
     seed: { type: ["integer", "null"] },
@@ -206,13 +205,13 @@ export const teamSchema = {
             type: ["object", "null"],
             properties: {
               id: integerSchema,
-              nickname: { type: "string" },
               user: {
                 type: ["object", "null"],
                 properties: {
                   id: integerSchema,
                   telegramId: { type: "string" },
                   username: { type: ["string", "null"] },
+                  nickname: { type: ["string", "null"] },
                   discordUsername: { type: ["string", "null"] },
                   steamId64: { type: ["string", "null"] },
                 },
@@ -246,7 +245,6 @@ export const participationSchema = {
         id: integerSchema,
         userId: integerSchema,
         tournamentId: integerSchema,
-        nickname: { type: "string" },
         mmr: { type: "integer" },
         gameRoles: { type: "string" },
         seed: { type: ["integer", "null"] },
@@ -261,6 +259,7 @@ export const participationSchema = {
             id: integerSchema,
             telegramId: { type: "string" },
             username: { type: ["string", "null"] },
+            nickname: { type: ["string", "null"] },
             photoUrl: { type: ["string", "null"] },
             discordUsername: { type: ["string", "null"] },
             steamId64: { type: ["string", "null"] },
@@ -304,7 +303,8 @@ export const lobbySchema = {
     },
     steamLobby: {
       type: ["object", "null"],
-      description: "Информация о созданном Steam лобби (присутствует после start-playing)",
+      description:
+        "Информация о созданном Steam лобби (присутствует после start-playing)",
       properties: {
         lobbyId: { type: "integer" },
         gameName: { type: "string" },
@@ -318,5 +318,19 @@ export const lobbySchema = {
         allchat: { type: "boolean" },
       },
     },
+  },
+};
+
+export const leaderboardSchema = {
+  type: "object",
+  required: ["id", "userId", "points", "createdAt", "updatedAt"],
+  properties: {
+    id: integerSchema,
+    userId: integerSchema,
+    points: { type: "integer" },
+    rank: { type: ["integer", "null"] },
+    createdAt: { type: "string", format: "date-time" },
+    updatedAt: { type: "string", format: "date-time" },
+    user: userSchema,
   },
 };

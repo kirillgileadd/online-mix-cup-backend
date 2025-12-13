@@ -14,6 +14,7 @@ export class UserRegistrationService {
     const user = await this.userService.getOrCreate({
       telegramId: payload.telegramId,
       username: payload.username,
+      nickname: payload.nickname,
       discordUsername: payload.discordUsername,
     });
 

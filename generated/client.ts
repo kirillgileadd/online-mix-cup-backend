@@ -87,3 +87,13 @@ export type Team = Prisma.TeamModel
  * 
  */
 export type Participation = Prisma.ParticipationModel
+/**
+ * Model Leaderboard
+ * 
+ */
+export type Leaderboard = Prisma.LeaderboardModel
+/**
+ * Model LeaderboardHistory
+ * 
+ */
+export type LeaderboardHistory = Prisma.LeaderboardHistoryModel

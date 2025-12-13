@@ -39,7 +39,6 @@ describe("Manual seed: 22 players", () => {
         playerService.createPlayer({
           userId: user.id,
           tournamentId: tournament.id,
-          nickname: `ManualSeed_${index}`,
           mmr: 2100 - index * 10,
           gameRoles: "flex",
         })

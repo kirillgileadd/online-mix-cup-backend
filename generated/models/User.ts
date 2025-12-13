@@ -37,6 +37,7 @@ export type UserSumAggregateOutputType = {
 export type UserMinAggregateOutputType = {
   telegramId: string | null
   username: string | null
+  nickname: string | null
   createdAt: Date | null
   photoUrl: string | null
   discordUsername: string | null
@@ -47,6 +48,7 @@ export type UserMinAggregateOutputType = {
 export type UserMaxAggregateOutputType = {
   telegramId: string | null
   username: string | null
+  nickname: string | null
   createdAt: Date | null
   photoUrl: string | null
   discordUsername: string | null
@@ -57,6 +59,7 @@ export type UserMaxAggregateOutputType = {
 export type UserCountAggregateOutputType = {
   telegramId: number
   username: number
+  nickname: number
   createdAt: number
   photoUrl: number
   discordUsername: number
@@ -77,6 +80,7 @@ export type UserSumAggregateInputType = {
 export type UserMinAggregateInputType = {
   telegramId?: true
   username?: true
+  nickname?: true
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
@@ -87,6 +91,7 @@ export type UserMinAggregateInputType = {
 export type UserMaxAggregateInputType = {
   telegramId?: true
   username?: true
+  nickname?: true
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
@@ -97,6 +102,7 @@ export type UserMaxAggregateInputType = {
 export type UserCountAggregateInputType = {
   telegramId?: true
   username?: true
+  nickname?: true
   createdAt?: true
   photoUrl?: true
   discordUsername?: true
@@ -194,6 +200,7 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   telegramId: string
   username: string | null
+  nickname: string | null
   createdAt: Date
   photoUrl: string | null
   discordUsername: string | null
@@ -227,6 +234,7 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   telegramId?: Prisma.StringFilter<"User"> | string
   username?: Prisma.StringNullableFilter<"User"> | string | null
+  nickname?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
@@ -236,11 +244,13 @@ export type UserWhereInput = {
   players?: Prisma.PlayerListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   roles?: Prisma.UserRoleListRelationFilter
+  leaderboard?: Prisma.XOR<Prisma.LeaderboardNullableScalarRelationFilter, Prisma.LeaderboardWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
   telegramId?: Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -250,6 +260,7 @@ export type UserOrderByWithRelationInput = {
   players?: Prisma.PlayerOrderByRelationAggregateInput
   refreshTokens?: Prisma.RefreshTokenOrderByRelationAggregateInput
   roles?: Prisma.UserRoleOrderByRelationAggregateInput
+  leaderboard?: Prisma.LeaderboardOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +270,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   username?: Prisma.StringNullableFilter<"User"> | string | null
+  nickname?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
@@ -267,11 +279,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   players?: Prisma.PlayerListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
   roles?: Prisma.UserRoleListRelationFilter
+  leaderboard?: Prisma.XOR<Prisma.LeaderboardNullableScalarRelationFilter, Prisma.LeaderboardWhereInput> | null
 }, "id" | "telegramId">
 
 export type UserOrderByWithAggregationInput = {
   telegramId?: Prisma.SortOrder
   username?: Prisma.SortOrderInput | Prisma.SortOrder
+  nickname?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -290,6 +304,7 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   telegramId?: Prisma.StringWithAggregatesFilter<"User"> | string
   username?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  nickname?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   photoUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -300,6 +315,7 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -308,11 +324,13 @@ export type UserCreateInput = {
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -322,11 +340,13 @@ export type UserUncheckedCreateInput = {
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -335,11 +355,13 @@ export type UserUpdateInput = {
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -349,11 +371,13 @@ export type UserUncheckedUpdateInput = {
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -364,6 +388,7 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -373,6 +398,7 @@ export type UserUpdateManyMutationInput = {
 export type UserUncheckedUpdateManyInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -383,6 +409,7 @@ export type UserUncheckedUpdateManyInput = {
 export type UserCountOrderByAggregateInput = {
   telegramId?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
@@ -397,6 +424,7 @@ export type UserAvgOrderByAggregateInput = {
 export type UserMaxOrderByAggregateInput = {
   telegramId?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
@@ -407,6 +435,7 @@ export type UserMaxOrderByAggregateInput = {
 export type UserMinOrderByAggregateInput = {
   telegramId?: Prisma.SortOrder
   username?: Prisma.SortOrder
+  nickname?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
@@ -499,9 +528,24 @@ export type UserUpdateOneRequiredWithoutRolesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRolesInput, Prisma.UserUpdateWithoutRolesInput>, Prisma.UserUncheckedUpdateWithoutRolesInput>
 }
 
+export type UserCreateNestedOneWithoutLeaderboardInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeaderboardInput, Prisma.UserUncheckedCreateWithoutLeaderboardInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeaderboardInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLeaderboardNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLeaderboardInput, Prisma.UserUncheckedCreateWithoutLeaderboardInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLeaderboardInput
+  upsert?: Prisma.UserUpsertWithoutLeaderboardInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLeaderboardInput, Prisma.UserUpdateWithoutLeaderboardInput>, Prisma.UserUncheckedUpdateWithoutLeaderboardInput>
+}
+
 export type UserCreateWithoutApplicationsInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -509,11 +553,13 @@ export type UserCreateWithoutApplicationsInput = {
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutApplicationsInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -522,6 +568,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutApplicationsInput = {
@@ -543,6 +590,7 @@ export type UserUpdateToOneWithWhereWithoutApplicationsInput = {
 export type UserUpdateWithoutApplicationsInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -550,11 +598,13 @@ export type UserUpdateWithoutApplicationsInput = {
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApplicationsInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -563,11 +613,13 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPlayersInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -575,11 +627,13 @@ export type UserCreateWithoutPlayersInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPlayersInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -588,6 +642,7 @@ export type UserUncheckedCreateWithoutPlayersInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPlayersInput = {
@@ -609,6 +664,7 @@ export type UserUpdateToOneWithWhereWithoutPlayersInput = {
 export type UserUpdateWithoutPlayersInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -616,11 +672,13 @@ export type UserUpdateWithoutPlayersInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPlayersInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -629,11 +687,13 @@ export type UserUncheckedUpdateWithoutPlayersInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRefreshTokensInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -641,11 +701,13 @@ export type UserCreateWithoutRefreshTokensInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRefreshTokensInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -654,6 +716,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRefreshTokensInput = {
@@ -675,6 +738,7 @@ export type UserUpdateToOneWithWhereWithoutRefreshTokensInput = {
 export type UserUpdateWithoutRefreshTokensInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -682,11 +746,13 @@ export type UserUpdateWithoutRefreshTokensInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -695,11 +761,13 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRolesInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -707,11 +775,13 @@ export type UserCreateWithoutRolesInput = {
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRolesInput = {
   telegramId: string
   username?: string | null
+  nickname?: string | null
   createdAt?: Date | string
   photoUrl?: string | null
   discordUsername?: string | null
@@ -720,6 +790,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  leaderboard?: Prisma.LeaderboardUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRolesInput = {
@@ -741,6 +812,7 @@ export type UserUpdateToOneWithWhereWithoutRolesInput = {
 export type UserUpdateWithoutRolesInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -748,11 +820,13 @@ export type UserUpdateWithoutRolesInput = {
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRolesInput = {
   telegramId?: Prisma.StringFieldUpdateOperationsInput | string
   username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -761,6 +835,81 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  leaderboard?: Prisma.LeaderboardUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLeaderboardInput = {
+  telegramId: string
+  username?: string | null
+  nickname?: string | null
+  createdAt?: Date | string
+  photoUrl?: string | null
+  discordUsername?: string | null
+  steamId64?: string | null
+  applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
+  players?: Prisma.PlayerCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
+  roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLeaderboardInput = {
+  telegramId: string
+  username?: string | null
+  nickname?: string | null
+  createdAt?: Date | string
+  photoUrl?: string | null
+  discordUsername?: string | null
+  steamId64?: string | null
+  id?: number
+  applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
+  players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
+  roles?: Prisma.UserRoleUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLeaderboardInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeaderboardInput, Prisma.UserUncheckedCreateWithoutLeaderboardInput>
+}
+
+export type UserUpsertWithoutLeaderboardInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLeaderboardInput, Prisma.UserUncheckedUpdateWithoutLeaderboardInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLeaderboardInput, Prisma.UserUncheckedCreateWithoutLeaderboardInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLeaderboardInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLeaderboardInput, Prisma.UserUncheckedUpdateWithoutLeaderboardInput>
+}
+
+export type UserUpdateWithoutLeaderboardInput = {
+  telegramId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
+  players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
+  roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLeaderboardInput = {
+  telegramId?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nickname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
+  players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
+  refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
+  roles?: Prisma.UserRoleUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -824,6 +973,7 @@ export type UserCountOutputTypeCountRolesArgs<ExtArgs extends runtime.Types.Exte
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   telegramId?: boolean
   username?: boolean
+  nickname?: boolean
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
@@ -833,12 +983,14 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
+  leaderboard?: boolean | Prisma.User$leaderboardArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   telegramId?: boolean
   username?: boolean
+  nickname?: boolean
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
@@ -849,6 +1001,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   telegramId?: boolean
   username?: boolean
+  nickname?: boolean
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
@@ -859,6 +1012,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectScalar = {
   telegramId?: boolean
   username?: boolean
+  nickname?: boolean
   createdAt?: boolean
   photoUrl?: boolean
   discordUsername?: boolean
@@ -866,12 +1020,13 @@ export type UserSelectScalar = {
   id?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "createdAt" | "photoUrl" | "discordUsername" | "steamId64" | "id", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "nickname" | "createdAt" | "photoUrl" | "discordUsername" | "steamId64" | "id", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
   refreshTokens?: boolean | Prisma.User$refreshTokensArgs<ExtArgs>
   roles?: boolean | Prisma.User$rolesArgs<ExtArgs>
+  leaderboard?: boolean | Prisma.User$leaderboardArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -884,10 +1039,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     players: Prisma.$PlayerPayload<ExtArgs>[]
     refreshTokens: Prisma.$RefreshTokenPayload<ExtArgs>[]
     roles: Prisma.$UserRolePayload<ExtArgs>[]
+    leaderboard: Prisma.$LeaderboardPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     telegramId: string
     username: string | null
+    nickname: string | null
     createdAt: Date
     photoUrl: string | null
     discordUsername: string | null
@@ -1291,6 +1448,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   players<T extends Prisma.User$playersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$playersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlayerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   refreshTokens<T extends Prisma.User$refreshTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refreshTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefreshTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   roles<T extends Prisma.User$rolesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  leaderboard<T extends Prisma.User$leaderboardArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$leaderboardArgs<ExtArgs>>): Prisma.Prisma__LeaderboardClient<runtime.Types.Result.GetResult<Prisma.$LeaderboardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1322,6 +1480,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly telegramId: Prisma.FieldRef<"User", 'String'>
   readonly username: Prisma.FieldRef<"User", 'String'>
+  readonly nickname: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly photoUrl: Prisma.FieldRef<"User", 'String'>
   readonly discordUsername: Prisma.FieldRef<"User", 'String'>
@@ -1808,6 +1967,25 @@ export type User$rolesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   take?: number
   skip?: number
   distinct?: Prisma.UserRoleScalarFieldEnum | Prisma.UserRoleScalarFieldEnum[]
+}
+
+/**
+ * User.leaderboard
+ */
+export type User$leaderboardArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Leaderboard
+   */
+  select?: Prisma.LeaderboardSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Leaderboard
+   */
+  omit?: Prisma.LeaderboardOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LeaderboardInclude<ExtArgs> | null
+  where?: Prisma.LeaderboardWhereInput
 }
 
 /**

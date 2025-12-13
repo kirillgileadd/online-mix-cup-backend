@@ -9,7 +9,6 @@ export class PlayerService {
       data: {
         userId: data.userId,
         tournamentId: data.tournamentId,
-        nickname: data.nickname,
         gameRoles: data.gameRoles ?? "flex",
         mmr: data.mmr ?? 1000,
         seed: data.seed ?? null,
@@ -110,7 +109,6 @@ export class PlayerService {
 
   updatePlayer(id: number, data: UpdatePlayerInput) {
     const updateData: {
-      nickname?: string;
       gameRoles?: string;
       mmr?: number;
       seed?: number | null;
@@ -120,9 +118,6 @@ export class PlayerService {
       status?: "active" | "eliminated";
     } = {};
 
-    if (data.nickname !== undefined) {
-      updateData.nickname = data.nickname;
-    }
     if (data.gameRoles !== undefined) {
       updateData.gameRoles = data.gameRoles;
     }

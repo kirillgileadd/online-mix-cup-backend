@@ -131,7 +131,6 @@ describe("Lobby System - Полный сценарий", () => {
         playerService.createPlayer({
           userId,
           tournamentId,
-          nickname: `Player_${index}`,
           mmr: mmrValues[index],
           lives: 3,
           chillZoneValue: 0,
@@ -543,7 +542,6 @@ describe("Lobby System - Множественные лобби в одном р�
         playerService.createPlayer({
           userId,
           tournamentId,
-          nickname: `Player_multi_${index}`,
           mmr: mmrValues[index],
           lives: 3,
           chillZoneValue: 0,

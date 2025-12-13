@@ -3,6 +3,7 @@ import { z } from "zod";
 export const userPayloadSchema = z.object({
   telegramId: z.string().min(1),
   username: z.string().optional().nullable(),
+  nickname: z.string().min(1).optional().nullable(),
   photoUrl: z.string().url().optional().nullable(),
   discordUsername: z.string().optional().nullable(),
   steamProfileLink: z.string().url().optional().nullable(),
@@ -11,6 +12,7 @@ export const userPayloadSchema = z.object({
 
 export const updateUserSchema = z.object({
   username: z.string().min(1).optional().nullable(),
+  nickname: z.string().min(1).optional().nullable(),
   photoUrl: z.string().url().optional().nullable(),
   discordUsername: z.string().optional().nullable(),
   steamProfileLink: z.string().url().optional().nullable(),

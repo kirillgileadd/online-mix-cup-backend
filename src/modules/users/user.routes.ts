@@ -51,6 +51,7 @@ type BasicUserShape = {
   id: number;
   telegramId: string;
   username: string | null;
+  nickname: string | null;
   photoUrl: string | null;
   discordUsername: string | null;
   steamId64: string | null;
@@ -61,6 +62,7 @@ const serializeBasicUser = (user: BasicUserShape, roles: string[] = []) => ({
   id: user.id,
   telegramId: user.telegramId,
   username: user.username,
+  nickname: user.nickname,
   photoUrl: user.photoUrl,
   discordUsername: user.discordUsername,
   steamId64: user.steamId64,

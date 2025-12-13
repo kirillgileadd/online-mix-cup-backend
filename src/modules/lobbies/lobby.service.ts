@@ -1083,9 +1083,9 @@ export class LobbyService {
         isCaptain: boolean;
         player: {
           id: number;
-          nickname: string;
           user: {
             id: number;
+            nickname?: string | null;
             discordUsername: string | null;
           };
         };
@@ -1130,14 +1130,14 @@ export class LobbyService {
           discordUsername: participation.player.user.discordUsername,
           userId: participation.player.user.id,
           isCaptain: participation.isCaptain,
-          nickname: participation.player.nickname,
+          nickname: participation.player.user.nickname ?? null,
         });
       } else if (participation.teamId === team2Id) {
         team2Members.push({
           discordUsername: participation.player.user.discordUsername,
           userId: participation.player.user.id,
           isCaptain: participation.isCaptain,
-          nickname: participation.player.nickname,
+          nickname: participation.player.user.nickname ?? null,
         });
       }
     }

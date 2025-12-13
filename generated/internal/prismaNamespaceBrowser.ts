@@ -60,7 +60,9 @@ export const ModelName = {
   UserRole: 'UserRole',
   Lobby: 'Lobby',
   Team: 'Team',
-  Participation: 'Participation'
+  Participation: 'Participation',
+  Leaderboard: 'Leaderboard',
+  LeaderboardHistory: 'LeaderboardHistory'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -82,6 +84,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const UserScalarFieldEnum = {
   telegramId: 'telegramId',
   username: 'username',
+  nickname: 'nickname',
   createdAt: 'createdAt',
   photoUrl: 'photoUrl',
   discordUsername: 'discordUsername',
@@ -127,7 +130,6 @@ export const PlayerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
-  nickname: 'nickname',
   seed: 'seed',
   score: 'score',
   status: 'status',
@@ -208,6 +210,29 @@ export const ParticipationScalarFieldEnum = {
 } as const
 
 export type ParticipationScalarFieldEnum = (typeof ParticipationScalarFieldEnum)[keyof typeof ParticipationScalarFieldEnum]
+
+
+export const LeaderboardScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  points: 'points',
+  rank: 'rank',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type LeaderboardScalarFieldEnum = (typeof LeaderboardScalarFieldEnum)[keyof typeof LeaderboardScalarFieldEnum]
+
+
+export const LeaderboardHistoryScalarFieldEnum = {
+  id: 'id',
+  leaderboardId: 'leaderboardId',
+  userId: 'userId',
+  points: 'points',
+  createdAt: 'createdAt'
+} as const
+
+export type LeaderboardHistoryScalarFieldEnum = (typeof LeaderboardHistoryScalarFieldEnum)[keyof typeof LeaderboardHistoryScalarFieldEnum]
 
 
 export const SortOrder = {

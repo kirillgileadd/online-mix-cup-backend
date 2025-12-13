@@ -10,6 +10,7 @@ datasource db {
 model User {
   telegramId      String         @unique
   username        String?
+  nickname        String?
   createdAt       DateTime       @default(now())
   photoUrl        String?
   discordUsername String?
@@ -19,6 +20,7 @@ model User {
   players         Player[]
   refreshTokens   RefreshToken[]
   roles           UserRole[]
+  leaderboard     Leaderboard?
 }
 
 model Tournament {
@@ -55,7 +57,6 @@ model Player {
   id             Int             @id @default(autoincrement())
   userId         Int
   tournamentId   Int
-  nickname       String
   seed           Int?
   score          Int?
   status         PlayerStatus    @default(active)
@@ -170,4 +171,32 @@ enum ParticipationResult {
   WIN
   LOSS
   NONE
+}
+
+model Leaderboard {
+  id        Int                  @id @default(autoincrement())
+  userId    Int                  @unique
+  points    Int                  @default(0)
+  rank      Int?
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  history   LeaderboardHistory[]
+
+  @@index([points])
+  @@index([rank])
+  @@index([userId])
+}
+
+model LeaderboardHistory {
+  id            Int         @id @default(autoincrement())
+  leaderboardId Int
+  userId        Int
+  points        Int
+  createdAt     DateTime    @default(now())
+  leaderboard   Leaderboard @relation(fields: [leaderboardId], references: [id], onDelete: Cascade)
+
+  @@index([leaderboardId])
+  @@index([userId])
+  @@index([createdAt])
 }

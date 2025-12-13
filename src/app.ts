@@ -18,6 +18,7 @@ import { playerRoutes } from "./modules/players/player.routes";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { roleRoutes } from "./modules/roles/role.routes";
 import { lobbyRoutes } from "./modules/lobbies/lobby.routes";
+import { leaderboardRoutes } from "./modules/leaderboard/leaderboard.routes";
 import { DiscordService } from "./modules/discord/discord.service";
 
 export const buildServer = (discordService?: DiscordService) => {
@@ -53,6 +54,10 @@ export const buildServer = (discordService?: DiscordService) => {
         {
           name: "lobbies",
           description: "Генерация лобби, драфт и управление матчами",
+        },
+        {
+          name: "leaderboard",
+          description: "Лидерборд пользователей с очками",
         },
       ],
       components: {
@@ -216,6 +221,7 @@ export const buildServer = (discordService?: DiscordService) => {
     prefix: "/lobbies",
     ...(discordService ? { discordService } : {}),
   });
+  app.register(leaderboardRoutes, { prefix: "/leaderboard" });
 
   return app;
 };
