@@ -78,6 +78,15 @@ export class UserService {
         payload.photoUrl !== undefined &&
         payload.photoUrl !== existingUser.photoUrl
       ) {
+        // Удаляем старое фото, если оно было
+        if (existingUser.photoUrl) {
+          try {
+            await this.fileService.deleteFile(existingUser.photoUrl);
+          } catch (error) {
+            // Логируем ошибку, но не прерываем обновление
+            console.error("Failed to delete old profile photo:", error);
+          }
+        }
         updateData.photoUrl = payload.photoUrl;
       }
 
@@ -154,6 +163,16 @@ export class UserService {
   async updateUser(id: number, data: Omit<UpdateUserPayload, "roles">) {
     const updateData: Prisma.UserUpdateInput = {};
 
+    // Получаем текущего пользователя для удаления старого фото
+    const currentUser = await prisma.user.findUnique({
+      where: { id },
+      select: { photoUrl: true },
+    });
+
+    if (!currentUser) {
+      throw new Error("User not found");
+    }
+
     // Добавляем только те поля, которые определены (не undefined)
     if (data.username !== undefined) {
       updateData.username = data.username;
@@ -162,6 +181,23 @@ export class UserService {
       updateData.nickname = data.nickname;
     }
     if (data.photoUrl !== undefined) {
+      // Удаляем старое фото, если оно было и обновляется на новое
+      if (currentUser.photoUrl && data.photoUrl !== currentUser.photoUrl) {
+        try {
+          await this.fileService.deleteFile(currentUser.photoUrl);
+        } catch (error) {
+          // Логируем ошибку, но не прерываем обновление
+          console.error("Failed to delete old profile photo:", error);
+        }
+      }
+      // Если устанавливаем photoUrl в null, также удаляем файл
+      if (currentUser.photoUrl && data.photoUrl === null) {
+        try {
+          await this.fileService.deleteFile(currentUser.photoUrl);
+        } catch (error) {
+          console.error("Failed to delete old profile photo:", error);
+        }
+      }
       updateData.photoUrl = data.photoUrl;
     }
     if (data.discordUsername !== undefined) {

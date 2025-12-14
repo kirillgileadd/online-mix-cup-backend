@@ -104,7 +104,11 @@ export class ApplicationService {
       } catch (error) {
         // Логируем ошибку, но не прерываем удаление заявки
         logger.error(
-          { error, applicationId: id, receiptImageUrl: application.receiptImageUrl },
+          {
+            error,
+            applicationId: id,
+            receiptImageUrl: application.receiptImageUrl,
+          },
           "Failed to delete receipt file for application"
         );
       }
