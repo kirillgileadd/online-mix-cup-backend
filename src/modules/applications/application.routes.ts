@@ -33,6 +33,14 @@ const applicationsQuerySchema = {
   },
 };
 
+const telegramIdQuerySchema = {
+  type: "object",
+  required: ["telegramId"],
+  properties: {
+    telegramId: { type: "string" },
+  },
+};
+
 export async function applicationRoutes(app: FastifyInstance) {
   const service = new ApplicationService();
   const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
@@ -162,6 +170,34 @@ export async function applicationRoutes(app: FastifyInstance) {
         return application;
       } catch {
         return reply.code(404).send({ message: "Application not found" });
+      }
+    }
+  );
+
+  app.get(
+    "/last-by-telegram-id",
+    {
+      schema: {
+        tags: ["applications"],
+        summary: "Получить последнюю заявку по telegram id пользователя",
+        querystring: telegramIdQuerySchema,
+        response: {
+          200: applicationSchema,
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const query = request.query as { telegramId: string };
+      try {
+        const application = await service.getLastApplicationByTelegramId(
+          query.telegramId
+        );
+        return application;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Application not found";
+        return reply.code(404).send({ message: errorMessage });
       }
     }
   );

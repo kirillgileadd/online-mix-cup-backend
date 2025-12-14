@@ -119,4 +119,32 @@ export class ApplicationService {
       },
     });
   }
+
+  async getLastApplicationByTelegramId(telegramId: string) {
+    // Сначала находим пользователя по telegramId
+    const user = await prisma.user.findUnique({
+      where: { telegramId },
+      select: { id: true },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Находим последнюю заявку пользователя
+    const application = await prisma.application.findFirst({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: true,
+        tournament: true,
+      },
+    });
+
+    if (!application) {
+      throw new Error("Application not found");
+    }
+
+    return application;
+  }
 }
