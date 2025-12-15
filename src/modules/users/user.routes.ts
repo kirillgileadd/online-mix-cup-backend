@@ -85,6 +85,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.get(
     "/",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Список пользователей",
@@ -128,6 +129,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.get(
     "/id/:id",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Получить пользователя по ID",
@@ -152,6 +154,7 @@ export async function userRoutes(app: FastifyInstance) {
   app.get(
     "/telegram/:telegramId",
     {
+      preHandler: adminPreHandler,
       schema: {
         tags: ["users"],
         summary: "Найти пользователя по telegramId",
