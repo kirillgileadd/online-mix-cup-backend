@@ -48,7 +48,7 @@ export class ApplicationService {
       where: {
         ...(typeof tournamentId === "number" ? { tournamentId } : {}),
       },
-      orderBy: { createdAt: "asc" },
+      orderBy: { createdAt: "desc" },
       include: {
         user: true,
         tournament: true,

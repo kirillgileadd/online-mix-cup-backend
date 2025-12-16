@@ -13,6 +13,7 @@ export const userSchema = {
     photoUrl: { type: ["string", "null"] },
     discordUsername: { type: ["string", "null"] },
     steamId64: { type: ["string", "null"] },
+    telegramChatId: { type: ["string", "null"] },
     createdAt: { type: "string", format: "date-time" },
     roles: {
       type: "array",

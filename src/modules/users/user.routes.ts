@@ -266,6 +266,7 @@ export async function userRoutes(app: FastifyInstance) {
             telegramId: { type: "string" },
             username: { type: ["string", "null"] },
             discordUsername: { type: ["string", "null"] },
+            telegramChatId: { type: ["string", "null"] },
             tournamentId: { type: "integer" },
             mmr: { type: "integer", minimum: 0 },
             gameRoles: { type: "string" },

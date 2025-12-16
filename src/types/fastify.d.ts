@@ -9,6 +9,10 @@ declare module "fastify" {
       request: FastifyRequest,
       reply: FastifyReply
     ) => Promise<void>;
+    authenticateSSE: (
+      request: FastifyRequest,
+      reply: FastifyReply
+    ) => Promise<void>;
     authorize: (
       roles?: string[]
     ) => (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
@@ -24,4 +28,3 @@ declare module "@fastify/jwt" {
     };
   }
 }
-

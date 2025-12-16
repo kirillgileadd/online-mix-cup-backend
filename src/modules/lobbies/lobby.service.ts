@@ -1,6 +1,7 @@
 import { prisma } from "../../config/prisma";
 import { DiscordService, TeamMember } from "../discord/discord.service";
 import { SteamBotService } from "../steam-bot/steam-bot.service";
+import { NotificationService } from "../notifications/notification.service";
 import pino from "pino";
 
 const logger = pino();
@@ -10,11 +11,16 @@ const LOBBY_SIZE = 10;
 export class LobbyService {
   private discordService: DiscordService;
   private steamBotService: SteamBotService;
+  private notificationService: NotificationService | undefined;
   private lobbyTimers: Map<number, NodeJS.Timeout> = new Map();
 
-  constructor(discordService?: DiscordService) {
+  constructor(
+    discordService?: DiscordService,
+    notificationService?: NotificationService
+  ) {
     this.discordService = discordService || new DiscordService();
     this.steamBotService = new SteamBotService();
+    this.notificationService = notificationService;
   }
   /**
    * Генерация лобби по алгоритму:
@@ -25,7 +31,7 @@ export class LobbyService {
    * 5. Попавшие в лобби: chillPriority = 0
    */
   async generateLobbies(tournamentId: number, round?: number) {
-    return prisma.$transaction(async (tx) => {
+    const createdLobbies = await prisma.$transaction(async (tx) => {
       // Проверяем количество активных игроков, готовых к участию (жизни >= 1)
       const alivePlayersCount = await tx.player.count({
         where: {
@@ -196,6 +202,11 @@ export class LobbyService {
               },
             },
             teams: true,
+            tournament: {
+              select: {
+                name: true,
+              },
+            },
           },
         });
         createdLobbies.push(createdLobby);
@@ -218,6 +229,21 @@ export class LobbyService {
 
       return createdLobbies;
     });
+
+    // Отправляем уведомления после успешной генерации лобби
+    // Делаем это вне транзакции, чтобы не блокировать ответ
+    if (this.notificationService && createdLobbies.length > 0) {
+      this.notificationService
+        .notifyLobbyCreated(createdLobbies)
+        .catch((error) => {
+          logger.error(
+            { error, tournamentId, lobbiesCount: createdLobbies.length },
+            "Ошибка отправки уведомлений о создании лобби"
+          );
+        });
+    }
+
+    return createdLobbies;
   }
 
   /**

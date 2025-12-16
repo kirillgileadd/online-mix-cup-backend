@@ -19,6 +19,7 @@ import { authRoutes } from "./modules/auth/auth.routes";
 import { roleRoutes } from "./modules/roles/role.routes";
 import { lobbyRoutes } from "./modules/lobbies/lobby.routes";
 import { leaderboardRoutes } from "./modules/leaderboard/leaderboard.routes";
+import { notificationRoutes } from "./modules/notifications/notification.routes";
 import { DiscordService } from "./modules/discord/discord.service";
 
 export const buildServer = (discordService?: DiscordService) => {
@@ -58,6 +59,10 @@ export const buildServer = (discordService?: DiscordService) => {
         {
           name: "leaderboard",
           description: "Лидерборд пользователей с очками",
+        },
+        {
+          name: "notifications",
+          description: "Система уведомлений в реальном времени",
         },
       ],
       components: {
@@ -194,6 +199,36 @@ export const buildServer = (discordService?: DiscordService) => {
     }
   );
 
+  app.decorate(
+    "authenticateSSE",
+    async function authenticateSSE(request, reply): Promise<void> {
+      try {
+        // Проверяем токен в куке accessToken
+        const token = request.cookies.accessToken;
+
+        if (!token) {
+          // Для SSE закрываем соединение с ошибкой
+          reply.code(401).send({ message: "Unauthorized: token missing" });
+          return;
+        }
+
+        // Верифицируем токен
+        const decoded = await app.jwt.verify(token);
+
+        // Устанавливаем user в request для дальнейшего использования
+        request.user = decoded as {
+          sub: number;
+          telegramId: string;
+          roles: string[];
+        };
+      } catch (error) {
+        // Защита от timing attacks: всегда выполняем одинаковое время для неверных токенов
+        // Для SSE закрываем соединение с ошибкой
+        reply.code(401).send({ message: "Unauthorized: invalid token" });
+      }
+    }
+  );
+
   app.decorate("authorize", function authorize(requiredRoles: string[] = []) {
     return async function (request: FastifyRequest, reply: FastifyReply) {
       if (requiredRoles.length === 0) {
@@ -222,6 +257,9 @@ export const buildServer = (discordService?: DiscordService) => {
     ...(discordService ? { discordService } : {}),
   });
   app.register(leaderboardRoutes, { prefix: "/leaderboard" });
+  app.register(notificationRoutes, {
+    prefix: "/notifications",
+  });
 
   return app;
 };

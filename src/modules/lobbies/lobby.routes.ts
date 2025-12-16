@@ -49,9 +49,15 @@ const sleep = (ms: number) =>
 
 export async function lobbyRoutes(
   app: FastifyInstance,
-  options: FastifyPluginOptions & { discordService?: DiscordService }
+  options: FastifyPluginOptions & {
+    discordService?: DiscordService;
+  }
 ) {
-  const service = new LobbyService(options.discordService);
+  const { NotificationService } = await import(
+    "../notifications/notification.service"
+  );
+  const notificationService = NotificationService.getInstance();
+  const service = new LobbyService(options.discordService, notificationService);
   const adminPreHandler = [app.authenticate, app.authorize(["admin"])];
 
   app.post(

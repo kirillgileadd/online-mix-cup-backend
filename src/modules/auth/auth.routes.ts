@@ -76,6 +76,13 @@ export async function authRoutes(app: FastifyInstance) {
     path: "/",
   };
 
+  const accessCookieOptions = {
+    httpOnly: true,
+    sameSite: "none" as const,
+    secure: true,
+    path: "/",
+  };
+
   const issueTokenPair = async (user: User) => {
     const roles = await roleService.getUserRoleNames(user.id);
 
@@ -140,10 +147,18 @@ export async function authRoutes(app: FastifyInstance) {
         const user = await telegramAuthService.authenticate(payload);
 
         const tokens = await issueTokenPair(user);
+        const accessTokenExpiresAt = new Date(
+          Date.now() + tokens.expiresIn * 1000
+        );
+
         reply
           .setCookie("refreshToken", tokens.refreshToken, {
             ...refreshCookieOptions,
             expires: new Date(tokens.refreshExpiresAt),
+          })
+          .setCookie("accessToken", tokens.accessToken, {
+            ...accessCookieOptions,
+            expires: accessTokenExpiresAt,
           })
           .send({
             accessToken: tokens.accessToken,
@@ -190,10 +205,18 @@ export async function authRoutes(app: FastifyInstance) {
         }
 
         const tokens = await issueTokenPair(user);
+        const accessTokenExpiresAt = new Date(
+          Date.now() + tokens.expiresIn * 1000
+        );
+
         reply
           .setCookie("refreshToken", tokens.refreshToken, {
             ...refreshCookieOptions,
             expires: new Date(tokens.refreshExpiresAt),
+          })
+          .setCookie("accessToken", tokens.accessToken, {
+            ...accessCookieOptions,
+            expires: accessTokenExpiresAt,
           })
           .send({
             accessToken: tokens.accessToken,
@@ -233,6 +256,11 @@ export async function authRoutes(app: FastifyInstance) {
           sameSite: refreshCookieOptions.sameSite,
           secure: refreshCookieOptions.secure,
         })
+        .clearCookie("accessToken", {
+          path: accessCookieOptions.path,
+          sameSite: accessCookieOptions.sameSite,
+          secure: accessCookieOptions.secure,
+        })
         .code(204)
         .send();
     }
@@ -270,10 +298,18 @@ export async function authRoutes(app: FastifyInstance) {
         await roleService.assignRoleToUser(user.id, "admin");
 
         const tokens = await issueTokenPair(user);
+        const accessTokenExpiresAt = new Date(
+          Date.now() + tokens.expiresIn * 1000
+        );
+
         reply
           .setCookie("refreshToken", tokens.refreshToken, {
             ...refreshCookieOptions,
             expires: new Date(tokens.refreshExpiresAt),
+          })
+          .setCookie("accessToken", tokens.accessToken, {
+            ...accessCookieOptions,
+            expires: accessTokenExpiresAt,
           })
           .send({
             accessToken: tokens.accessToken,

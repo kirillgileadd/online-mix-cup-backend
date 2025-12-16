@@ -7,6 +7,7 @@ export const userPayloadSchema = z.object({
   photoUrl: z.string().url().optional().nullable(),
   discordUsername: z.string().optional().nullable(),
   steamProfileLink: z.string().url().optional().nullable(),
+  telegramChatId: z.string().optional().nullable(),
   roles: z.array(z.string().min(1)).optional(),
 });
 

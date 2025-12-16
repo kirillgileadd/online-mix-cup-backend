@@ -55,6 +55,7 @@ export class UserService {
         photoUrl?: string | null;
         discordUsername?: string | null;
         steamId64?: string | null;
+        telegramChatId?: string | null;
       } = {};
 
       // Обновляем username только если он передан и отличается
@@ -103,6 +104,14 @@ export class UserService {
         updateData.steamId64 = steamId64;
       }
 
+      // Обновляем telegramChatId только если он передан и отличается
+      if (
+        payload.telegramChatId !== undefined &&
+        payload.telegramChatId !== existingUser.telegramChatId
+      ) {
+        updateData.telegramChatId = payload.telegramChatId;
+      }
+
       // Обновляем только если есть изменения
       if (Object.keys(updateData).length > 0) {
         return prisma.user.update({
@@ -121,6 +130,7 @@ export class UserService {
         photoUrl: payload.photoUrl ?? null,
         discordUsername: payload.discordUsername ?? null,
         steamId64: steamId64,
+        telegramChatId: payload.telegramChatId ?? null,
       },
     });
 

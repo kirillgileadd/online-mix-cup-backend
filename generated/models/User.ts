@@ -42,6 +42,7 @@ export type UserMinAggregateOutputType = {
   photoUrl: string | null
   discordUsername: string | null
   steamId64: string | null
+  telegramChatId: string | null
   id: number | null
 }
 
@@ -53,6 +54,7 @@ export type UserMaxAggregateOutputType = {
   photoUrl: string | null
   discordUsername: string | null
   steamId64: string | null
+  telegramChatId: string | null
   id: number | null
 }
 
@@ -64,6 +66,7 @@ export type UserCountAggregateOutputType = {
   photoUrl: number
   discordUsername: number
   steamId64: number
+  telegramChatId: number
   id: number
   _all: number
 }
@@ -85,6 +88,7 @@ export type UserMinAggregateInputType = {
   photoUrl?: true
   discordUsername?: true
   steamId64?: true
+  telegramChatId?: true
   id?: true
 }
 
@@ -96,6 +100,7 @@ export type UserMaxAggregateInputType = {
   photoUrl?: true
   discordUsername?: true
   steamId64?: true
+  telegramChatId?: true
   id?: true
 }
 
@@ -107,6 +112,7 @@ export type UserCountAggregateInputType = {
   photoUrl?: true
   discordUsername?: true
   steamId64?: true
+  telegramChatId?: true
   id?: true
   _all?: true
 }
@@ -205,6 +211,7 @@ export type UserGroupByOutputType = {
   photoUrl: string | null
   discordUsername: string | null
   steamId64: string | null
+  telegramChatId: string | null
   id: number
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -239,6 +246,7 @@ export type UserWhereInput = {
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
   steamId64?: Prisma.StringNullableFilter<"User"> | string | null
+  telegramChatId?: Prisma.StringNullableFilter<"User"> | string | null
   id?: Prisma.IntFilter<"User"> | number
   applications?: Prisma.ApplicationListRelationFilter
   players?: Prisma.PlayerListRelationFilter
@@ -255,6 +263,7 @@ export type UserOrderByWithRelationInput = {
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   steamId64?: Prisma.SortOrderInput | Prisma.SortOrder
+  telegramChatId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   applications?: Prisma.ApplicationOrderByRelationAggregateInput
   players?: Prisma.PlayerOrderByRelationAggregateInput
@@ -275,6 +284,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   photoUrl?: Prisma.StringNullableFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableFilter<"User"> | string | null
   steamId64?: Prisma.StringNullableFilter<"User"> | string | null
+  telegramChatId?: Prisma.StringNullableFilter<"User"> | string | null
   applications?: Prisma.ApplicationListRelationFilter
   players?: Prisma.PlayerListRelationFilter
   refreshTokens?: Prisma.RefreshTokenListRelationFilter
@@ -290,6 +300,7 @@ export type UserOrderByWithAggregationInput = {
   photoUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   discordUsername?: Prisma.SortOrderInput | Prisma.SortOrder
   steamId64?: Prisma.SortOrderInput | Prisma.SortOrder
+  telegramChatId?: Prisma.SortOrderInput | Prisma.SortOrder
   id?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -309,6 +320,7 @@ export type UserScalarWhereWithAggregatesInput = {
   photoUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   discordUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   steamId64?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  telegramChatId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
 }
 
@@ -320,6 +332,7 @@ export type UserCreateInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
@@ -335,6 +348,7 @@ export type UserUncheckedCreateInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -351,6 +365,7 @@ export type UserUpdateInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
@@ -366,6 +381,7 @@ export type UserUncheckedUpdateInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -382,6 +398,7 @@ export type UserCreateManyInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
 }
 
@@ -393,6 +410,7 @@ export type UserUpdateManyMutationInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -403,6 +421,7 @@ export type UserUncheckedUpdateManyInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -414,6 +433,7 @@ export type UserCountOrderByAggregateInput = {
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  telegramChatId?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -429,6 +449,7 @@ export type UserMaxOrderByAggregateInput = {
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  telegramChatId?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -440,6 +461,7 @@ export type UserMinOrderByAggregateInput = {
   photoUrl?: Prisma.SortOrder
   discordUsername?: Prisma.SortOrder
   steamId64?: Prisma.SortOrder
+  telegramChatId?: Prisma.SortOrder
   id?: Prisma.SortOrder
 }
 
@@ -550,6 +572,7 @@ export type UserCreateWithoutApplicationsInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -564,6 +587,7 @@ export type UserUncheckedCreateWithoutApplicationsInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
@@ -595,6 +619,7 @@ export type UserUpdateWithoutApplicationsInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -609,6 +634,7 @@ export type UserUncheckedUpdateWithoutApplicationsInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -624,6 +650,7 @@ export type UserCreateWithoutPlayersInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -638,6 +665,7 @@ export type UserUncheckedCreateWithoutPlayersInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenUncheckedCreateNestedManyWithoutUserInput
@@ -669,6 +697,7 @@ export type UserUpdateWithoutPlayersInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -683,6 +712,7 @@ export type UserUncheckedUpdateWithoutPlayersInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUncheckedUpdateManyWithoutUserNestedInput
@@ -698,6 +728,7 @@ export type UserCreateWithoutRefreshTokensInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   roles?: Prisma.UserRoleCreateNestedManyWithoutUserInput
@@ -712,6 +743,7 @@ export type UserUncheckedCreateWithoutRefreshTokensInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -743,6 +775,7 @@ export type UserUpdateWithoutRefreshTokensInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   roles?: Prisma.UserRoleUpdateManyWithoutUserNestedInput
@@ -757,6 +790,7 @@ export type UserUncheckedUpdateWithoutRefreshTokensInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -772,6 +806,7 @@ export type UserCreateWithoutRolesInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
@@ -786,6 +821,7 @@ export type UserUncheckedCreateWithoutRolesInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -817,6 +853,7 @@ export type UserUpdateWithoutRolesInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
@@ -831,6 +868,7 @@ export type UserUncheckedUpdateWithoutRolesInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -846,6 +884,7 @@ export type UserCreateWithoutLeaderboardInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   applications?: Prisma.ApplicationCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerCreateNestedManyWithoutUserInput
   refreshTokens?: Prisma.RefreshTokenCreateNestedManyWithoutUserInput
@@ -860,6 +899,7 @@ export type UserUncheckedCreateWithoutLeaderboardInput = {
   photoUrl?: string | null
   discordUsername?: string | null
   steamId64?: string | null
+  telegramChatId?: string | null
   id?: number
   applications?: Prisma.ApplicationUncheckedCreateNestedManyWithoutUserInput
   players?: Prisma.PlayerUncheckedCreateNestedManyWithoutUserInput
@@ -891,6 +931,7 @@ export type UserUpdateWithoutLeaderboardInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   applications?: Prisma.ApplicationUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUpdateManyWithoutUserNestedInput
   refreshTokens?: Prisma.RefreshTokenUpdateManyWithoutUserNestedInput
@@ -905,6 +946,7 @@ export type UserUncheckedUpdateWithoutLeaderboardInput = {
   photoUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   steamId64?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramChatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id?: Prisma.IntFieldUpdateOperationsInput | number
   applications?: Prisma.ApplicationUncheckedUpdateManyWithoutUserNestedInput
   players?: Prisma.PlayerUncheckedUpdateManyWithoutUserNestedInput
@@ -978,6 +1020,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   photoUrl?: boolean
   discordUsername?: boolean
   steamId64?: boolean
+  telegramChatId?: boolean
   id?: boolean
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
@@ -995,6 +1038,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   photoUrl?: boolean
   discordUsername?: boolean
   steamId64?: boolean
+  telegramChatId?: boolean
   id?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1006,6 +1050,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   photoUrl?: boolean
   discordUsername?: boolean
   steamId64?: boolean
+  telegramChatId?: boolean
   id?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -1017,10 +1062,11 @@ export type UserSelectScalar = {
   photoUrl?: boolean
   discordUsername?: boolean
   steamId64?: boolean
+  telegramChatId?: boolean
   id?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "nickname" | "createdAt" | "photoUrl" | "discordUsername" | "steamId64" | "id", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"telegramId" | "username" | "nickname" | "createdAt" | "photoUrl" | "discordUsername" | "steamId64" | "telegramChatId" | "id", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   applications?: boolean | Prisma.User$applicationsArgs<ExtArgs>
   players?: boolean | Prisma.User$playersArgs<ExtArgs>
@@ -1049,6 +1095,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     photoUrl: string | null
     discordUsername: string | null
     steamId64: string | null
+    telegramChatId: string | null
     id: number
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1485,6 +1532,7 @@ export interface UserFieldRefs {
   readonly photoUrl: Prisma.FieldRef<"User", 'String'>
   readonly discordUsername: Prisma.FieldRef<"User", 'String'>
   readonly steamId64: Prisma.FieldRef<"User", 'String'>
+  readonly telegramChatId: Prisma.FieldRef<"User", 'String'>
   readonly id: Prisma.FieldRef<"User", 'Int'>
 }
     

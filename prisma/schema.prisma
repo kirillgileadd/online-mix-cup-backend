@@ -15,6 +15,7 @@ model User {
   photoUrl        String?
   discordUsername String?
   steamId64       String?
+  telegramChatId  String?
   id              Int            @id @default(autoincrement())
   applications    Application[]
   players         Player[]

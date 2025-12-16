@@ -89,6 +89,7 @@ export const UserScalarFieldEnum = {
   photoUrl: 'photoUrl',
   discordUsername: 'discordUsername',
   steamId64: 'steamId64',
+  telegramChatId: 'telegramChatId',
   id: 'id'
 } as const
 
