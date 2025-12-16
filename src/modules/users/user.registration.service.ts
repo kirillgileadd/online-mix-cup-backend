@@ -13,6 +13,7 @@ export class UserRegistrationService {
   async registerForTournament(payload: UserRegistrationPayload) {
     const user = await this.userService.getOrCreate({
       telegramId: payload.telegramId,
+      telegramChatId: payload.telegramChatId,
       username: payload.username,
       nickname: payload.nickname,
       discordUsername: payload.discordUsername,

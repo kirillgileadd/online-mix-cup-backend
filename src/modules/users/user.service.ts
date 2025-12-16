@@ -66,6 +66,13 @@ export class UserService {
         updateData.username = payload.username;
       }
 
+      if (
+        payload.telegramChatId !== undefined &&
+        payload.telegramChatId !== existingUser.telegramChatId
+      ) {
+        updateData.telegramChatId = payload.telegramChatId;
+      }
+
       // Обновляем nickname только если он передан и отличается
       if (
         payload.nickname !== undefined &&
