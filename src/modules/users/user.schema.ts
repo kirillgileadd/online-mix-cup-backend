@@ -38,7 +38,16 @@ export const updateProfileSchema = z.object({
   steamProfileLink: z.string().url().optional().nullable(),
 });
 
+export const updateNotificationSettingsSchema = z.object({
+  isTelegramNotifications: z.boolean().optional(),
+  isSSENotifications: z.boolean().optional(),
+  notificationsVolume: z.number().int().min(1).max(10).optional(),
+});
+
 export type UserPayload = z.infer<typeof userPayloadSchema>;
 export type UpdateUserPayload = z.infer<typeof updateUserSchema>;
 export type UserRegistrationPayload = z.infer<typeof userRegistrationSchema>;
 export type UpdateProfilePayload = z.infer<typeof updateProfileSchema>;
+export type UpdateNotificationSettingsPayload = z.infer<
+  typeof updateNotificationSettingsSchema
+>;

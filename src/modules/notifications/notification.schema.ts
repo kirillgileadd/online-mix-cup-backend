@@ -12,4 +12,3 @@ export const notificationPayloadSchema = z.object({
 });
 
 export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
-

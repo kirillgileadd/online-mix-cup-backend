@@ -6,6 +6,7 @@ import {
   applicationWithTournamentSchema,
 } from "../../docs/schemas";
 import {
+  updateNotificationSettingsSchema,
   updateProfileSchema,
   updateUserSchema,
   userPayloadSchema,
@@ -57,6 +58,15 @@ type BasicUserShape = {
   discordUsername: string | null;
   steamId64: string | null;
   createdAt: Date;
+  notificationSettings?: {
+    id: number;
+    userId: number;
+    isTelegramNotifications: boolean;
+    isSSENotifications: boolean;
+    notificationsVolume: number;
+    createdAt: Date;
+    updatedAt: Date;
+  } | null;
 };
 
 const serializeBasicUser = (user: BasicUserShape, roles: string[] = []) => ({
@@ -69,6 +79,18 @@ const serializeBasicUser = (user: BasicUserShape, roles: string[] = []) => ({
   steamId64: user.steamId64,
   createdAt: user.createdAt,
   roles,
+  notificationSettings: user.notificationSettings
+    ? {
+        id: user.notificationSettings.id,
+        userId: user.notificationSettings.userId,
+        isTelegramNotifications:
+          user.notificationSettings.isTelegramNotifications,
+        isSSENotifications: user.notificationSettings.isSSENotifications,
+        notificationsVolume: user.notificationSettings.notificationsVolume,
+        createdAt: user.notificationSettings.createdAt,
+        updatedAt: user.notificationSettings.updatedAt,
+      }
+    : null,
 });
 
 const serializeUser = (user: UserWithRoles) =>
@@ -390,6 +412,89 @@ export async function userRoutes(app: FastifyInstance) {
           return reply.code(404).send({ message: "User not found" });
         }
         return serializeUser(fullUser);
+      } catch (error) {
+        if (error instanceof Error && error.message === "User not found") {
+          return reply.code(404).send({ message: "User not found" });
+        }
+        throw error;
+      }
+    }
+  );
+
+  // Роуты для настроек уведомлений
+  app.get(
+    "/profile/notifications",
+    {
+      preHandler: profilePreHandler,
+      schema: {
+        tags: ["users", "profile", "notifications"],
+        summary: "Получить настройки уведомлений текущего пользователя",
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              userId: { type: "integer" },
+              isTelegramNotifications: { type: "boolean" },
+              isSSENotifications: { type: "boolean" },
+              notificationsVolume: { type: "integer" },
+              createdAt: { type: "string", format: "date-time" },
+              updatedAt: { type: "string", format: "date-time" },
+            },
+          },
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { sub: number }).sub;
+      const settings = await service.getOrCreateNotificationSettings(userId);
+      return settings;
+    }
+  );
+
+  app.patch(
+    "/profile/notifications",
+    {
+      preHandler: profilePreHandler,
+      schema: {
+        tags: ["users", "profile", "notifications"],
+        summary: "Обновить настройки уведомлений текущего пользователя",
+        body: {
+          type: "object",
+          properties: {
+            isTelegramNotifications: { type: "boolean" },
+            isSSENotifications: { type: "boolean" },
+            notificationsVolume: { type: "integer", minimum: 1, maximum: 10 },
+          },
+        },
+        response: {
+          200: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              userId: { type: "integer" },
+              isTelegramNotifications: { type: "boolean" },
+              isSSENotifications: { type: "boolean" },
+              notificationsVolume: { type: "integer" },
+              createdAt: { type: "string", format: "date-time" },
+              updatedAt: { type: "string", format: "date-time" },
+            },
+          },
+          404: errorResponseSchema,
+        },
+      },
+    },
+    async (request, reply) => {
+      const userId = (request.user as { sub: number }).sub;
+      const body = parseWithValidation(
+        updateNotificationSettingsSchema,
+        request.body ?? {}
+      );
+
+      try {
+        const settings = await service.updateNotificationSettings(userId, body);
+        return settings;
       } catch (error) {
         if (error instanceof Error && error.message === "User not found") {
           return reply.code(404).send({ message: "User not found" });

@@ -20,6 +20,18 @@ export const userSchema = {
       items: { type: "string" },
       default: [],
     },
+    notificationSettings: {
+      type: ["object", "null"],
+      properties: {
+        id: integerSchema,
+        userId: integerSchema,
+        isTelegramNotifications: { type: "boolean" },
+        isSSENotifications: { type: "boolean" },
+        notificationsVolume: { type: "integer" },
+        createdAt: { type: "string", format: "date-time" },
+        updatedAt: { type: "string", format: "date-time" },
+      },
+    },
   },
 };
 

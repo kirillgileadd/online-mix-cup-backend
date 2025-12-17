@@ -8,20 +8,21 @@ datasource db {
 }
 
 model User {
-  telegramId      String         @unique
-  username        String?
-  nickname        String?
-  createdAt       DateTime       @default(now())
-  photoUrl        String?
-  discordUsername String?
-  steamId64       String?
-  telegramChatId  String?
-  id              Int            @id @default(autoincrement())
-  applications    Application[]
-  players         Player[]
-  refreshTokens   RefreshToken[]
-  roles           UserRole[]
-  leaderboard     Leaderboard?
+  telegramId           String                @unique
+  username             String?
+  nickname             String?
+  createdAt            DateTime              @default(now())
+  photoUrl             String?
+  discordUsername      String?
+  steamId64            String?
+  telegramChatId       String?
+  id                   Int                   @id @default(autoincrement())
+  applications         Application[]
+  players              Player[]
+  refreshTokens        RefreshToken[]
+  roles                UserRole[]
+  leaderboard          Leaderboard?
+  notificationSettings NotificationSettings?
 }
 
 model Tournament {
@@ -200,4 +201,17 @@ model LeaderboardHistory {
   @@index([leaderboardId])
   @@index([userId])
   @@index([createdAt])
+}
+
+model NotificationSettings {
+  id                     Int      @id @default(autoincrement())
+  userId                 Int      @unique
+  isTelegramNotifications Boolean @default(true)
+  isSSENotifications     Boolean  @default(true)
+  notificationsVolume    Int      @default(5)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

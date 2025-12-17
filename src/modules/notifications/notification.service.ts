@@ -30,15 +30,33 @@ export class TelegramNotificationService {
     message: string
   ): Promise<{ success: boolean; error?: string }> {
     try {
-      // Получаем пользователя и его telegramChatId
+      // Получаем пользователя, его telegramChatId и настройки уведомлений
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { telegramChatId: true },
+        select: {
+          telegramChatId: true,
+          notificationSettings: {
+            select: {
+              isTelegramNotifications: true,
+            },
+          },
+        },
       });
 
       if (!user) {
         logger.warn({ userId }, "Пользователь не найден");
         return { success: false, error: "User not found" };
+      }
+
+      // Проверяем настройки уведомлений (по умолчанию true, если настройки не найдены)
+      const isTelegramNotifications =
+        user.notificationSettings?.isTelegramNotifications ?? true;
+      if (!isTelegramNotifications) {
+        logger.info({ userId }, "Telegram уведомления отключены пользователем");
+        return {
+          success: false,
+          error: "Telegram notifications disabled by user",
+        };
       }
 
       // Используем только telegramChatId, если его нет - не отправляем уведомление
@@ -167,7 +185,23 @@ export class SSENotificationService {
   /**
    * Отправляет уведомление конкретному пользователю
    */
-  sendToUser(userId: number, notification: NotificationPayload): void {
+  async sendToUser(
+    userId: number,
+    notification: NotificationPayload
+  ): Promise<void> {
+    // Проверяем настройки уведомлений пользователя
+    const settings = await prisma.notificationSettings.findUnique({
+      where: { userId },
+      select: { isSSENotifications: true },
+    });
+
+    // По умолчанию уведомления включены, если настройки не найдены
+    const isSSENotifications = settings?.isSSENotifications ?? true;
+    if (!isSSENotifications) {
+      logger.info({ userId }, "SSE уведомления отключены пользователем");
+      return;
+    }
+
     const userConnections = this.connections.get(userId);
     if (!userConnections || userConnections.size === 0) {
       return;
@@ -201,10 +235,13 @@ export class SSENotificationService {
   /**
    * Отправляет уведомление множеству пользователей
    */
-  sendToUsers(userIds: number[], notification: NotificationPayload): void {
-    for (const userId of userIds) {
-      this.sendToUser(userId, notification);
-    }
+  async sendToUsers(
+    userIds: number[],
+    notification: NotificationPayload
+  ): Promise<void> {
+    await Promise.all(
+      userIds.map((userId) => this.sendToUser(userId, notification))
+    );
   }
 
   /**
@@ -385,10 +422,33 @@ export class NotificationService {
 
     // Отправляем SSE уведомления всем пользователям
     if (userIds.length > 0) {
+      // Загружаем настройки уведомлений для всех пользователей батчем
+      const uniqueUserIds = Array.from(new Set(userIds));
+      const notificationSettings = await prisma.notificationSettings.findMany({
+        where: {
+          userId: { in: uniqueUserIds },
+        },
+        select: {
+          userId: true,
+          isSSENotifications: true,
+        },
+      });
+
+      // Создаем Map для быстрого доступа к настройкам
+      const settingsMap = new Map(
+        notificationSettings.map((s) => [s.userId, s.isSSENotifications])
+      );
+
       // Для каждого уникального пользователя отправляем уведомление о каждом его лобби
       const userNotifications = new Map<number, NotificationPayload[]>();
 
       for (const notification of notifications) {
+        // Проверяем настройки (по умолчанию true, если настройки не найдены)
+        const isSSENotifications = settingsMap.get(notification.userId) ?? true;
+        if (!isSSENotifications) {
+          continue; // Пропускаем пользователей с отключенными SSE уведомлениями
+        }
+
         const payload: NotificationPayload = {
           type: "lobby_created",
           data: {
@@ -407,11 +467,13 @@ export class NotificationService {
       }
 
       // Отправляем уведомления
+      const ssePromises: Promise<void>[] = [];
       for (const [userId, payloads] of userNotifications.entries()) {
         for (const payload of payloads) {
-          this.sseService.sendToUser(userId, payload);
+          ssePromises.push(this.sseService.sendToUser(userId, payload));
         }
       }
+      await Promise.allSettled(ssePromises);
     }
 
     // Ждем завершения всех Telegram уведомлений

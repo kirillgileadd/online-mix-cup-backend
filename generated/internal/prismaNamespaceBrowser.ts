@@ -62,7 +62,8 @@ export const ModelName = {
   Team: 'Team',
   Participation: 'Participation',
   Leaderboard: 'Leaderboard',
-  LeaderboardHistory: 'LeaderboardHistory'
+  LeaderboardHistory: 'LeaderboardHistory',
+  NotificationSettings: 'NotificationSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -234,6 +235,19 @@ export const LeaderboardHistoryScalarFieldEnum = {
 } as const
 
 export type LeaderboardHistoryScalarFieldEnum = (typeof LeaderboardHistoryScalarFieldEnum)[keyof typeof LeaderboardHistoryScalarFieldEnum]
+
+
+export const NotificationSettingsScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  isTelegramNotifications: 'isTelegramNotifications',
+  isSSENotifications: 'isSSENotifications',
+  notificationsVolume: 'notificationsVolume',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationSettingsScalarFieldEnum = (typeof NotificationSettingsScalarFieldEnum)[keyof typeof NotificationSettingsScalarFieldEnum]
 
 
 export const SortOrder = {

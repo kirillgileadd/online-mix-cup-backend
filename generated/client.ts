@@ -97,3 +97,8 @@ export type Leaderboard = Prisma.LeaderboardModel
  * 
  */
 export type LeaderboardHistory = Prisma.LeaderboardHistoryModel
+/**
+ * Model NotificationSettings
+ * 
+ */
+export type NotificationSettings = Prisma.NotificationSettingsModel

@@ -5,6 +5,7 @@ import { FileService } from "../files/file.service";
 import { RoleService } from "../roles/role.service";
 import { SteamService } from "../steam/steam.service";
 import type {
+  UpdateNotificationSettingsPayload,
   UpdateProfilePayload,
   UpdateUserPayload,
   UserPayload,
@@ -17,6 +18,7 @@ const userWithRoles = {
         role: true,
       },
     },
+    notificationSettings: true,
   },
 } satisfies Prisma.UserDefaultArgs;
 
@@ -138,6 +140,13 @@ export class UserService {
         discordUsername: payload.discordUsername ?? null,
         steamId64: steamId64,
         telegramChatId: payload.telegramChatId ?? null,
+        notificationSettings: {
+          create: {
+            isTelegramNotifications: true,
+            isSSENotifications: true,
+            notificationsVolume: 5,
+          },
+        },
       },
     });
 
@@ -325,6 +334,81 @@ export class UserService {
     return prisma.user.update({
       where: { id },
       data: updateData,
+    });
+  }
+
+  /**
+   * Получает настройки уведомлений пользователя
+   */
+  getNotificationSettings(userId: number) {
+    return prisma.notificationSettings.findUnique({
+      where: { userId },
+    });
+  }
+
+  /**
+   * Получает или создает настройки уведомлений с дефолтными значениями
+   */
+  async getOrCreateNotificationSettings(userId: number) {
+    const existing = await prisma.notificationSettings.findUnique({
+      where: { userId },
+    });
+
+    if (existing) {
+      return existing;
+    }
+
+    return prisma.notificationSettings.create({
+      data: {
+        userId,
+        isTelegramNotifications: true,
+        isSSENotifications: true,
+        notificationsVolume: 5,
+      },
+    });
+  }
+
+  /**
+   * Обновляет настройки уведомлений пользователя
+   */
+  async updateNotificationSettings(
+    userId: number,
+    data: UpdateNotificationSettingsPayload
+  ) {
+    const updateData: Prisma.NotificationSettingsUpdateInput = {};
+
+    if (data.isTelegramNotifications !== undefined) {
+      updateData.isTelegramNotifications = data.isTelegramNotifications;
+    }
+
+    if (data.isSSENotifications !== undefined) {
+      updateData.isSSENotifications = data.isSSENotifications;
+    }
+
+    if (data.notificationsVolume !== undefined) {
+      updateData.notificationsVolume = data.notificationsVolume;
+    }
+
+    // Сначала пытаемся обновить существующие настройки
+    const existing = await prisma.notificationSettings.findUnique({
+      where: { userId },
+    });
+
+    if (existing) {
+      return prisma.notificationSettings.update({
+        where: { userId },
+        data: updateData,
+      });
+    }
+
+    // Если настроек нет, создаем новые с дефолтными значениями и применяем обновления
+    return prisma.notificationSettings.create({
+      data: {
+        userId,
+        isTelegramNotifications: data.isTelegramNotifications ?? true,
+        isSSENotifications: data.isSSENotifications ?? true,
+        notificationsVolume: data.notificationsVolume ?? 5,
+      },
     });
   }
 }
