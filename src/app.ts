@@ -4,9 +4,8 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import cors from "@fastify/cors";
-import fastifyStatic from "@fastify/static";
 import helmet from "@fastify/helmet";
-import { join, resolve, normalize } from "path";
+import fastifyMultipart from "@fastify/multipart";
 
 import { env } from "./config/env";
 import { loggerConfig } from "./config/logger";
@@ -101,7 +100,7 @@ export const buildServer = (discordService?: DiscordService) => {
       },
     },
     crossOriginEmbedderPolicy: false, // Отключаем для совместимости
-    crossOriginResourcePolicy: { policy: "cross-origin" }, // Для статических файлов
+    crossOriginResourcePolicy: { policy: "cross-origin" },
   });
 
   app.register(cors, {
@@ -119,68 +118,10 @@ export const buildServer = (discordService?: DiscordService) => {
     hook: "onRequest",
   });
 
-  // Раздача статических файлов из директории uploads с защитой от path traversal
-  const uploadsRoot = resolve(process.cwd(), "uploads");
-  const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
-
-  // Хук для проверки безопасности перед раздачей файлов
-  // Должен быть зарегистрирован до fastifyStatic
-  app.addHook("onRequest", async (request, reply) => {
-    if (request.url.startsWith("/uploads/")) {
-      const requestedPath = request.url.replace("/uploads/", "").split("?")[0]; // Убираем query параметры
-
-      // Проверяем, что путь существует
-      if (!requestedPath || requestedPath.length === 0) {
-        return reply.code(403).send({ message: "Forbidden" });
-      }
-
-      // Отладочный лог удален для продакшена
-
-      // Защита от path traversal
-      // Блокируем: .. (path traversal), абсолютные пути, скрытые файлы
-      if (
-        requestedPath.includes("..") ||
-        requestedPath.startsWith("/") ||
-        requestedPath.startsWith("\\") ||
-        requestedPath.startsWith(".")
-      ) {
-        return reply.code(403).send({ message: "Forbidden" });
-      }
-
-      // Проверяем расширение файла
-      const lastDotIndex = requestedPath.lastIndexOf(".");
-      if (lastDotIndex === -1) {
-        return reply
-          .code(403)
-          .send({ message: "Forbidden: file type not allowed" });
-      }
-
-      const ext = requestedPath.toLowerCase().substring(lastDotIndex);
-      if (!allowedExtensions.includes(ext)) {
-        return reply
-          .code(403)
-          .send({ message: "Forbidden: file type not allowed" });
-      }
-
-      // Проверяем, что путь находится внутри uploads директории
-      const fullPath = resolve(uploadsRoot, requestedPath);
-      const normalizedPath = normalize(fullPath);
-      const normalizedRoot = normalize(uploadsRoot);
-
-      if (!normalizedPath.startsWith(normalizedRoot)) {
-        return reply.code(403).send({ message: "Forbidden" });
-      }
-    }
-  });
-
-  app.register(fastifyStatic, {
-    root: uploadsRoot,
-    prefix: "/uploads/",
-    // Безопасные заголовки для файлов
-    setHeaders: (res) => {
-      res.setHeader("X-Content-Type-Options", "nosniff");
-      res.setHeader("X-Download-Options", "noopen");
-      res.setHeader("Cache-Control", "public, max-age=31536000"); // Кэширование на 1 год
+  // Поддержка multipart/form-data для загрузки файлов
+  app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB - соответствует лимиту в FileService
     },
   });
 
