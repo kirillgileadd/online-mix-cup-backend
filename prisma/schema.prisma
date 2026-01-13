@@ -59,6 +59,7 @@ model Player {
   id             Int             @id @default(autoincrement())
   userId         Int
   tournamentId   Int
+  nickname       String?
   seed           Int?
   score          Int?
   status         PlayerStatus    @default(active)

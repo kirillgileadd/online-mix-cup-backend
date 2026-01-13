@@ -1467,6 +1467,7 @@ export const PlayerScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   tournamentId: 'tournamentId',
+  nickname: 'nickname',
   seed: 'seed',
   score: 'score',
   status: 'status',
